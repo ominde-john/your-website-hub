@@ -53,9 +53,9 @@ const AboutPage = () => {
   const teamMembers: TeamMember[] = [
     {
       name: "Jeremy Bravoge",
-      role: "Founder & CEO",
-      portfolio: "https://www.jonzjohn.com",
+      role: "Founder & CEO",      
       image: JeremyBravoge,
+      portfolio: "https://www.jonzjohn.com",
       bio: "Visionary leader with a passion for technology and community building. Leading Tech Team to empower developers across Africa.",
     },
     {
@@ -178,7 +178,7 @@ const AboutPage = () => {
         <div className="container-custom text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">Want to be part of our journey?</h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join our growing community of tech enthusiasts and help us shape the future of technology in Africa.
+            Join our growing community of tech enthusiasts and help us shape the future of technology.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
