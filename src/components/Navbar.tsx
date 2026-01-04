@@ -98,34 +98,34 @@ const Navbar = () => {
   ];
 
   const projectLinks = [
-    { name: "Developers Community Hub", path: "/projects", icon: <Users className="w-4 h-4 text-techgold" /> },
-    { name: "Tech Workshops & Bootcamps", path: "/projects", icon: <Wrench className="w-4 h-4 text-techgold" /> },
-    { name: "Cybersecurity Squad", path: "/projects", icon: <Shield className="w-4 h-4 text-techgold" /> },
-    { name: "AI & Robotics Unit", path: "/projects", icon: <Cpu className="w-4 h-4 text-techgold" /> },
-    { name: "Web & Mobile Dev Missions", path: "/projects", icon: <Rocket className="w-4 h-4 text-techgold" /> },
-    { name: "Gaming & Innovation League", path: "/projects", icon: <Gamepad2 className="w-4 h-4 text-techgold" /> },
+    { name: "Developers Community Hub", path: "/projects/developers-hub", icon: <Users className="w-4 h-4 text-techgold" /> },
+    { name: "Tech Workshops & Bootcamps", path: "/projects/workshops", icon: <Wrench className="w-4 h-4 text-techgold" /> },
+    { name: "Cybersecurity Squad", path: "/projects/cybersecurity", icon: <Shield className="w-4 h-4 text-techgold" /> },
+    { name: "AI & Robotics Unit", path: "/projects/ai-robotics", icon: <Cpu className="w-4 h-4 text-techgold" /> },
+    { name: "Web & Mobile Dev Missions", path: "/projects/web-mobile", icon: <Rocket className="w-4 h-4 text-techgold" /> },
+    { name: "Gaming & Innovation League", path: "/projects/gaming", icon: <Gamepad2 className="w-4 h-4 text-techgold" /> },
   ];
 
   const aboutLinks = [
-    { name: "Who We Are", path: "/about", icon: <Users className="w-4 h-4 text-techgold" /> },
-    { name: "Leadership & Governance", path: "/about", icon: <Building2 className="w-4 h-4 text-techgold" /> },
-    { name: "Our Community", path: "/about", icon: <Users className="w-4 h-4 text-techgold" /> },
-    { name: "Innovation & Impact", path: "/about", icon: <Wrench className="w-4 h-4 text-techgold" /> },
-    { name: "Our Journey", path: "/about", icon: <Rocket className="w-4 h-4 text-techgold" /> },
-    { name: "Tech Programs", path: "/about", icon: <School className="w-4 h-4 text-techgold" /> },
-    { name: "Meet the Team", path: "/about", icon: <Users className="w-4 h-4 text-techgold" /> },
-    { name: "Partnerships", path: "/about", icon: <Handshake className="w-4 h-4 text-techgold" /> },
-    { name: "Awards", path: "/about", icon: <Trophy className="w-4 h-4 text-techgold" /> },
+    { name: "Who We Are", path: "/about/who-we-are", icon: <Users className="w-4 h-4 text-techgold" /> },
+    { name: "Leadership & Governance", path: "/about/leadership", icon: <Building2 className="w-4 h-4 text-techgold" /> },
+    { name: "Our Community", path: "/about/community", icon: <Users className="w-4 h-4 text-techgold" /> },
+    { name: "Innovation & Impact", path: "/about/innovation", icon: <Wrench className="w-4 h-4 text-techgold" /> },
+    { name: "Our Journey", path: "/about/journey", icon: <Rocket className="w-4 h-4 text-techgold" /> },
+    { name: "Tech Programs", path: "/about/programs", icon: <School className="w-4 h-4 text-techgold" /> },
+    { name: "Meet the Team", path: "/about/team", icon: <Users className="w-4 h-4 text-techgold" /> },
+    { name: "Partnerships", path: "/about/partnerships", icon: <Handshake className="w-4 h-4 text-techgold" /> },
+    { name: "Awards", path: "/about/awards", icon: <Trophy className="w-4 h-4 text-techgold" /> },
   ];
 
   const mediaLinks = [
-    { name: "News & Announcements", path: "/blogs", icon: <Megaphone className="w-4 h-4 text-techgold" /> },
-    { name: "Press Releases", path: "/blogs", icon: <Newspaper className="w-4 h-4 text-techgold" /> },
+    { name: "News & Announcements", path: "/media/news", icon: <Megaphone className="w-4 h-4 text-techgold" /> },
+    { name: "Press Releases", path: "/media/press", icon: <Newspaper className="w-4 h-4 text-techgold" /> },
     { name: "Blog / Articles", path: "/blogs", icon: <Globe className="w-4 h-4 text-techgold" /> },
-    { name: "Gallery", path: "/showcase", icon: <Image className="w-4 h-4 text-techgold" /> },
-    { name: "Videos", path: "/showcase", icon: <Video className="w-4 h-4 text-techgold" /> },
-    { name: "Podcasts", path: "/blogs", icon: <Mic className="w-4 h-4 text-techgold" /> },
-    { name: "Media Appearances", path: "/blogs", icon: <Share2 className="w-4 h-4 text-techgold" /> },
+    { name: "Gallery", path: "/media/gallery", icon: <Image className="w-4 h-4 text-techgold" /> },
+    { name: "Videos", path: "/media/videos", icon: <Video className="w-4 h-4 text-techgold" /> },
+    { name: "Podcasts", path: "/media/podcasts", icon: <Mic className="w-4 h-4 text-techgold" /> },
+    { name: "Media Appearances", path: "/media/appearances", icon: <Share2 className="w-4 h-4 text-techgold" /> },
     { name: "Social Media Channels", path: "/contact", icon: <Globe className="w-4 h-4 text-techgold" /> },
   ];
 
