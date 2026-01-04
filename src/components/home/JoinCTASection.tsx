@@ -33,7 +33,7 @@ const JoinCTASection = () => {
               size="lg"
               className="bg-techgold hover:bg-techgold-dark text-gray-900 border-0 font-semibold"
             >
-              <Link to="/about">Join Now</Link>
+              <Link to="/register">Join Now</Link>
             </Button>
             <Button
               asChild
