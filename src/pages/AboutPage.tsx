@@ -14,6 +14,7 @@ interface TeamMember {
   role: string;
   image: string;
   bio: string;
+  portfolio?: string;
 }
 
 const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => (
@@ -29,14 +30,28 @@ const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => (
       </div>
     </div>
     <div className="p-6">
-      <h3 className="text-xl font-extrabold mb-1 text-gray-900">{member.name}</h3>
+      <h3 className="text-xl font-extrabold mb-1 text-gray-900">
+        {member.name}
+      </h3>
       <p className="text-sm font-medium mb-3 text-techgold uppercase tracking-wider">
         {member.role}
       </p>
-      <p className="text-gray-600 text-sm line-clamp-3">{member.bio}</p>
+      <p className="text-gray-600 text-sm line-clamp-3">
+        {member.bio}
+      </p>
+
+      {member.portfolio && (
+        <a
+          href={member.portfolio}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center mt-4 text-sm font-semibold text-techblue hover:underline"
+        >
+          Read more <ArrowRight className="ml-1 h-4 w-4" />
+        </a>
+      )}
     </div>
-  </div>
-);
+
 
 const AboutPage = () => {
   const teamMembers: TeamMember[] = [
