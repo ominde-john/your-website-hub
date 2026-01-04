@@ -60,7 +60,7 @@ const AboutPage = () => {
     {
       name: "Evans Richard",
       role: "Technical Lead",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+      image: EvansChuchu,
       bio: "Expert in software architecture and mentoring junior developers. Committed to technical excellence.",
     },
   ];
