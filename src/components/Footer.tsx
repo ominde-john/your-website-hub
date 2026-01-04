@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { NavLink } from "@/components/NavLink";
 import { Mail, MapPin, Phone, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
@@ -91,29 +92,49 @@ const Footer = () => {
                 </h3>
                 <ul className="space-y-3">
                   <li>
-                    <Link to="/" className="text-gray-400 hover:text-white transition duration-200">
+                    <NavLink 
+                      to="/" 
+                      className="text-gray-400 hover:text-white transition duration-200"
+                      activeClassName="text-techgold font-semibold"
+                    >
                       Home
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
-                    <Link to="/about" className="text-gray-400 hover:text-white transition duration-200">
+                    <NavLink 
+                      to="/about" 
+                      className="text-gray-400 hover:text-white transition duration-200"
+                      activeClassName="text-techgold font-semibold"
+                    >
                       About Us
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
-                    <Link to="/events" className="text-gray-400 hover:text-white transition duration-200">
+                    <NavLink 
+                      to="/events" 
+                      className="text-gray-400 hover:text-white transition duration-200"
+                      activeClassName="text-techgold font-semibold"
+                    >
                       Events
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
-                    <Link to="/projects" className="text-gray-400 hover:text-white transition duration-200">
+                    <NavLink 
+                      to="/projects" 
+                      className="text-gray-400 hover:text-white transition duration-200"
+                      activeClassName="text-techgold font-semibold"
+                    >
                       Projects
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
-                    <Link to="/contact" className="text-gray-400 hover:text-white transition duration-200">
+                    <NavLink 
+                      to="/contact" 
+                      className="text-gray-400 hover:text-white transition duration-200"
+                      activeClassName="text-techgold font-semibold"
+                    >
                       Contact
-                    </Link>
+                    </NavLink>
                   </li>
                 </ul>
               </div>
