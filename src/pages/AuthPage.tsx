@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import teksoftLogo from "@/assets/teksoft-logo.png";
 
 const AuthPage = () => {
   const [email, setEmail] = useState("");
@@ -55,9 +56,7 @@ const AuthPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
       <Card className="w-full max-w-md shadow-xl border-0">
         <CardHeader className="text-center pb-2">
-          <div className="mx-auto h-12 w-12 rounded-full border-2 border-techblue bg-techblue flex items-center justify-center text-white font-bold text-lg mb-4">
-            TS
-          </div>
+          <img src={teksoftLogo} alt="Teksoft Community" className="h-16 w-auto mx-auto mb-4" />
           <CardTitle className="text-2xl font-bold text-gray-900">Member Login</CardTitle>
           <CardDescription className="text-gray-600">
             Sign in to access your Teksoft account
