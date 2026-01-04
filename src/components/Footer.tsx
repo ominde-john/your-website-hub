@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Mail, MapPin, Phone, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import teksoftLogo from "@/assets/teksoft-logo.png";
 
 const Footer = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -35,11 +36,8 @@ const Footer = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-16">
               {/* Logo + About */}
               <div>
-                <Link to="/" className="flex items-center space-x-3 mb-4">
-                  <div className="h-16 w-16 rounded-full bg-techblue flex items-center justify-center text-white font-bold text-xl">
-                    TS
-                  </div>
-                  <span className="font-bold text-2xl text-white">Teksoft</span>
+                <Link to="/" className="mb-4 inline-block">
+                  <img src={teksoftLogo} alt="Teksoft Community" className="h-20 w-auto" />
                 </Link>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
                   Empowering Technology Everywhere. A community of tech enthusiasts,
