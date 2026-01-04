@@ -16,6 +16,15 @@ const VerifyEmailPage = () => {
   const { toast } = useToast();
   
   const email = location.state?.email || "";
+  const firstName = location.state?.firstName || "";
+  const lastName = location.state?.lastName || "";
+  const username = location.state?.username || "";
+  const password = location.state?.password || "";
+
+  // Generate a random 6-digit code
+  const generateVerificationCode = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
 
   const handleVerify = async () => {
     if (otp.length !== 6) {
@@ -29,26 +38,68 @@ const VerifyEmailPage = () => {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.verifyOtp({
-      email,
-      token: otp,
-      type: "signup",
-    });
+    try {
+      // Verify code from database
+      const { data: codes, error: fetchError } = await supabase
+        .from("email_verification_codes")
+        .select("*")
+        .eq("email", email.toLowerCase())
+        .eq("code", otp)
+        .eq("used", false)
+        .gte("expires_at", new Date().toISOString())
+        .order("created_at", { ascending: false })
+        .limit(1);
 
-    setLoading(false);
+      if (fetchError || !codes || codes.length === 0) {
+        throw new Error("Invalid or expired verification code");
+      }
 
-    if (error) {
-      toast({
-        title: "Verification Failed",
-        description: error.message,
-        variant: "destructive",
+      // Mark code as used
+      await supabase
+        .from("email_verification_codes")
+        .update({ used: true })
+        .eq("id", codes[0].id);
+
+      // Now create the user account in Supabase Auth
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            username: username,
+          },
+        },
       });
-    } else {
+
+      if (signUpError) {
+        if (signUpError.message.includes("already registered")) {
+          toast({
+            title: "Account Exists",
+            description: "This email is already registered. Please login instead.",
+            variant: "destructive",
+          });
+          navigate("/auth");
+          return;
+        }
+        throw signUpError;
+      }
+
       toast({
         title: "Email Verified!",
-        description: "Your account has been verified successfully.",
+        description: "Your account has been created successfully.",
       });
       navigate("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Verification Failed",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,24 +115,49 @@ const VerifyEmailPage = () => {
 
     setResending(true);
 
-    const { error } = await supabase.auth.resend({
-      type: "signup",
-      email,
-    });
+    try {
+      // Generate new verification code
+      const verificationCode = generateVerificationCode();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
 
-    setResending(false);
+      // Store new verification code
+      const { error: codeError } = await supabase
+        .from("email_verification_codes")
+        .insert({
+          email: email.toLowerCase(),
+          code: verificationCode,
+          expires_at: expiresAt,
+        });
 
-    if (error) {
-      toast({
-        title: "Failed to Resend",
-        description: error.message,
-        variant: "destructive",
+      if (codeError) {
+        throw new Error("Failed to generate new code");
+      }
+
+      // Send new confirmation email
+      const { error: emailError } = await supabase.functions.invoke("send-confirmation-email", {
+        body: {
+          email: email,
+          firstName: firstName,
+          code: verificationCode,
+        },
       });
-    } else {
+
+      if (emailError) {
+        throw new Error("Failed to send confirmation email");
+      }
+
       toast({
         title: "Code Sent!",
         description: "A new verification code has been sent to your email.",
       });
+    } catch (error: any) {
+      toast({
+        title: "Failed to Resend",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setResending(false);
     }
   };
 

@@ -22,6 +22,11 @@ const registerSchema = z.object({
   path: ["confirmPassword"],
 });
 
+// Generate a random 6-digit code
+const generateVerificationCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -62,41 +67,62 @@ const RegisterPage = () => {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
-      email: formData.email.trim(),
-      password: formData.password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/dashboard`,
-        data: {
-          first_name: formData.firstName.trim(),
-          last_name: formData.lastName.trim(),
-          username: formData.username.trim(),
-        },
-      },
-    });
+    try {
+      // Generate verification code
+      const verificationCode = generateVerificationCode();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
 
-    setLoading(false);
+      // Store verification code in database
+      const { error: codeError } = await supabase
+        .from("email_verification_codes")
+        .insert({
+          email: formData.email.trim().toLowerCase(),
+          code: verificationCode,
+          expires_at: expiresAt,
+        });
 
-    if (error) {
-      if (error.message.includes("already registered")) {
-        toast({
-          title: "Account Exists",
-          description: "This email is already registered. Please login instead.",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Registration Failed",
-          description: error.message,
-          variant: "destructive",
-        });
+      if (codeError) {
+        console.error("Error storing verification code:", codeError);
+        throw new Error("Failed to generate verification code");
       }
-    } else {
+
+      // Send confirmation email via edge function
+      const { error: emailError } = await supabase.functions.invoke("send-confirmation-email", {
+        body: {
+          email: formData.email.trim(),
+          firstName: formData.firstName.trim(),
+          code: verificationCode,
+        },
+      });
+
+      if (emailError) {
+        console.error("Error sending email:", emailError);
+        throw new Error("Failed to send confirmation email");
+      }
+
       toast({
         title: "Check Your Email",
-        description: "We've sent you a confirmation code. Please verify your email.",
+        description: "We've sent you a 6-digit confirmation code.",
       });
-      navigate("/verify-email", { state: { email: formData.email } });
+
+      // Navigate to verify page with form data
+      navigate("/verify-email", { 
+        state: { 
+          email: formData.email.trim().toLowerCase(),
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
+          username: formData.username.trim(),
+          password: formData.password,
+        } 
+      });
+    } catch (error: any) {
+      toast({
+        title: "Registration Failed",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -252,7 +278,7 @@ const RegisterPage = () => {
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Creating account...
+                  Sending verification...
                 </>
               ) : (
                 <>
