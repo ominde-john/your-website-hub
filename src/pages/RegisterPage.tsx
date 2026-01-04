@@ -106,7 +106,7 @@ const RegisterPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
       <Card className="w-full max-w-md shadow-xl border-0">
         <CardHeader className="text-center pb-2">
-          <img src={teksoftLogo} alt="Teksoft Community" className="h-16 w-auto mx-auto mb-4" />
+          <img src={teksoftLogo} alt="Teksoft Community" className="h-16 w-16 rounded-full object-cover mx-auto mb-4" />
           <CardTitle className="text-2xl font-bold text-gray-900">Create Account</CardTitle>
           <CardDescription className="text-gray-600">
             Join Teksoft and become a member
