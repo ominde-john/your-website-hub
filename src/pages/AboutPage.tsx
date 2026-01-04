@@ -7,6 +7,7 @@ import { Lightbulb, GraduationCap, Network, History, ArrowRight } from "lucide-r
 // ✅ Local team images
 import EvansChuchu from "../assets/team/evanschuchu.jpg";
 import JohnOminde from "../assets/team/john-ominde.jpg";
+import JeremyBravoge from "../assets/team/jeremy-bravoge.jpg";
 
 interface TeamMember {
   name: string;
@@ -42,7 +43,7 @@ const AboutPage = () => {
     {
       name: "Jeremy Bravoge",
       role: "Founder & CEO",
-      image: EvansChuchu,
+      image: JeremyBravoge,
       bio: "Visionary leader with a passion for technology and community building. Leading Tech Team to empower developers across Africa.",
     },
     {
