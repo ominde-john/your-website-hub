@@ -47,7 +47,7 @@ const AboutPage = () => {
   const teamMembers: TeamMember[] = [
     {
       name: "Jeremy Bravoge",
-      role: "Founder & CEO",
+      role: "Founder and CEO",
       image: jeremyImg,
       bio: "Visionary leader with a passion for technology and community building. Leading Tech Team to empower developers across Africa.",
     },
