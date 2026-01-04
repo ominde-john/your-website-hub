@@ -1,16 +1,21 @@
 {
   "rewrites": [
+    { "source": "/dist/assets/(.*)", "destination": "/dist/assets/$1" },
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
     {
-      "source": "/dist/assets/(.*)",
-      "destination": "/dist/assets/$1"
+      "source": "/dist/assets/*.js",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript" }
+      ]
     },
     {
-      "source": "/assets/(.*)",
-      "destination": "/assets/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/dist/assets/*.wasm",
+      "headers": [
+        { "key": "Content-Type", "value": "application/wasm" }
+      ]
     }
   ]
 }
