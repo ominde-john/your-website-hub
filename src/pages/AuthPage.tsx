@@ -6,11 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Lock, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { User, Lock, ArrowRight, Loader2, Sparkles } from "lucide-react";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
 const AuthPage = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email.trim() || !password.trim()) {
+    if (!identifier.trim() || !password.trim()) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
@@ -30,8 +30,32 @@ const AuthPage = () => {
 
     setLoading(true);
     
+    let emailToUse = identifier.trim();
+    
+    // Check if the identifier is not an email (doesn't contain @)
+    if (!identifier.includes("@")) {
+      // Look up the email from the profiles table using the username
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("username", identifier.trim())
+        .maybeSingle();
+      
+      if (profileError || !profile) {
+        setLoading(false);
+        toast({
+          title: "Login Failed",
+          description: "Username not found. Please check your username or use your email.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      emailToUse = profile.email;
+    }
+    
     const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
+      email: emailToUse,
       password,
     });
 
@@ -85,15 +109,15 @@ const AuthPage = () => {
         <CardContent className="pt-2 pb-8 px-8">
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700 font-medium">Email Address</Label>
+              <Label htmlFor="identifier" className="text-gray-700 font-medium">Username or Email</Label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="identifier"
+                  type="text"
+                  placeholder="Enter your username or email"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
                   className="pl-12 h-12 text-base border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all"
                   required
                 />
