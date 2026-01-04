@@ -9,9 +9,9 @@ const Hero = () => {
       {/* 🔥 Sliding Background Images */}
       <div className="absolute inset-0 z-[1]">
         <div className="w-[300%] h-full flex animate-slide-bg opacity-60">
-          <img src="/WhatsApp Image 2025-03-31 at 6.47.58 PM.jpg" alt="Tech Team Event 1" className="w-1/3 object-cover" />
-          <img src="/WhatsApp Image 2025-09-29 at 15.42.41 (1).jpeg" alt="Tech Team Event 2" className="w-1/3 object-cover" />
-          <img src="/WhatsApp Image 2025-09-30 at 16.48.55.jpeg" alt="Tech Team Event 3" className="w-1/3 object-cover" />
+          <img src="/WhatsApp Image 2025-03-31 at 6.47.58 PM.jpg" alt="Teksoft Event 1" className="w-1/3 object-cover" />
+          <img src="/WhatsApp Image 2025-09-29 at 15.42.41 (1).jpeg" alt="Teksoft Event 2" className="w-1/3 object-cover" />
+          <img src="/WhatsApp Image 2025-09-30 at 16.48.55.jpeg" alt="Teksoft Event 3" className="w-1/3 object-cover" />
         </div>
 
         {/* Optional Dark Overlay */}

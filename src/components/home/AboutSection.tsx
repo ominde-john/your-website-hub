@@ -8,7 +8,7 @@ const AboutSection = () => {
       <div className="container-custom">
         <SectionTitle
           title="About Our Community"
-          subtitle="Tech Team is a community of technology professionals, enthusiasts, and innovators dedicated to sharing knowledge and fostering collaboration."
+          subtitle="Teksoft is a community of technology professionals, enthusiasts, and innovators dedicated to sharing knowledge and fostering collaboration."
           centered
         />
 
