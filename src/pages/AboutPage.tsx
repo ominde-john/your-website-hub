@@ -50,7 +50,7 @@ const AboutPage = () => {
       name: "John Ominde",
       role: "Lead Developer",
       image: JohnOminde,
-      portfolio: "https://www.jonzjohn.com",
+      link: "https://www.jonzjohn.com",
       bio: "Full-stack Data Engineer with expertise in Python, SQL, React, Node.js, and cloud technologies. Building the future of tech education.",
     },
     {
