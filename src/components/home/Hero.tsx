@@ -12,8 +12,8 @@ const Hero = () => {
           {/* TEXT SECTION */}
           <div className="w-full lg:w-1/2 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-up">
-              <span className="block">Empowering your Business with</span>
-              <span className="block text-techgold">Custom Software Solutions</span>
+              <span className="block">Empowering Technology</span>
+              <span className="block text-techgold">Everywhere</span>
             </h1>
 
             <p
