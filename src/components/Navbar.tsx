@@ -64,6 +64,7 @@ const Navbar = () => {
     { name: "Blogs", path: "/blogs" },
     { name: "Events", path: "/events" },
     { name: "Projects", path: "/projects", dropdown: true },
+    { name: "Marketplace", path: "/marketplace" },
     { name: "Media", path: "/media", dropdown: true },
     { name: "Discussion", path: "/discussion" },
     { name: "Career", path: "/careers" },
