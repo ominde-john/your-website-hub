@@ -4,6 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Lightbulb, GraduationCap, Network, History, ArrowRight } from "lucide-react";
 
+// ✅ Local team images
+import EvansChuchu from "../assets/team/evanschuchu.jpg";
+import JohnOminde from "../assets/team/john-ominde.jpg";
+
 interface TeamMember {
   name: string;
   role: string;
@@ -25,7 +29,9 @@ const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => (
     </div>
     <div className="p-6">
       <h3 className="text-xl font-extrabold mb-1 text-gray-900">{member.name}</h3>
-      <p className="text-sm font-medium mb-3 text-techgold uppercase tracking-wider">{member.role}</p>
+      <p className="text-sm font-medium mb-3 text-techgold uppercase tracking-wider">
+        {member.role}
+      </p>
       <p className="text-gray-600 text-sm line-clamp-3">{member.bio}</p>
     </div>
   </div>
@@ -36,13 +42,13 @@ const AboutPage = () => {
     {
       name: "Jeremy Bravoge",
       role: "Founder & CEO",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80",
+      image: EvansChuchu,
       bio: "Visionary leader with a passion for technology and community building. Leading Tech Team to empower developers across Africa.",
     },
     {
       name: "John Ominde",
       role: "Lead Developer",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+      image: JohnOminde,
       bio: "Full-stack developer with expertise in React, Node.js, and cloud technologies. Building the future of tech education.",
     },
     {
@@ -125,7 +131,11 @@ const AboutPage = () => {
       {/* Values Section */}
       <section className="section-padding bg-gray-100">
         <div className="container-custom">
-          <SectionTitle title="Our Values" subtitle="The principles that guide everything we do" centered />
+          <SectionTitle
+            title="Our Values"
+            subtitle="The principles that guide everything we do"
+            centered
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div
@@ -144,7 +154,11 @@ const AboutPage = () => {
       {/* Team Section */}
       <section className="section-padding bg-white">
         <div className="container-custom">
-          <SectionTitle title="Meet Our Team" subtitle="The passionate people behind Tech Team" centered />
+          <SectionTitle
+            title="Meet Our Team"
+            subtitle="The passionate people behind Tech Team"
+            centered
+          />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
               <TeamMemberCard key={index} member={member} />
@@ -156,7 +170,9 @@ const AboutPage = () => {
       {/* CTA Section */}
       <section className="section-padding bg-techblue text-white">
         <div className="container-custom text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Want to be part of our journey?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Want to be part of our journey?
+          </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join our growing community of tech enthusiasts and help us shape the future of technology in Africa.
           </p>
