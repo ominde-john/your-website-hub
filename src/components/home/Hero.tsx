@@ -4,20 +4,7 @@ import { ChevronRight } from "lucide-react";
 
 const Hero = () => {
   return (
-    <div className="relative text-white py-16 md:py-24 lg:py-32 overflow-hidden">
-
-      {/* 🔥 Sliding Background Images */}
-      <div className="absolute inset-0 z-[1]">
-        <div className="w-[300%] h-full flex animate-slide-bg opacity-60">
-          <img src="/WhatsApp Image 2025-03-31 at 6.47.58 PM.jpg" alt="Teksoft Event 1" className="w-1/3 object-cover" />
-          <img src="/WhatsApp Image 2025-09-29 at 15.42.41 (1).jpeg" alt="Teksoft Event 2" className="w-1/3 object-cover" />
-          <img src="/WhatsApp Image 2025-09-30 at 16.48.55.jpeg" alt="Teksoft Event 3" className="w-1/3 object-cover" />
-        </div>
-
-        {/* Optional Dark Overlay */}
-        <div className="absolute inset-0 bg-black/60"></div>
-      </div>
-
+    <div className="relative text-white py-16 md:py-24 lg:py-32 overflow-hidden bg-transparent">
       {/* CONTENT */}
       <div className="container-custom relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-16">
@@ -60,9 +47,6 @@ const Hero = () => {
               </Button>
             </div>
           </div>
-
-          {/* REMOVE OLD LOGO IMAGE — CLEANER LOOK */}
-          {/* No more image on the right */}
         </div>
       </div>
     </div>

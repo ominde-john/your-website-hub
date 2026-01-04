@@ -17,7 +17,7 @@ const VideoBackground = () => {
         <source src={backgroundVideo} type="video/mp4" />
       </video>
       {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-background/80" />
+      <div className="absolute inset-0 bg-black/50" />
     </div>
   );
 };
