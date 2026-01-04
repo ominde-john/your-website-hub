@@ -29,6 +29,7 @@ import {
   UserCircle,
   LogOut,
 } from "lucide-react";
+import teksoftLogo from "@/assets/teksoft-logo.png";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -148,10 +149,7 @@ const Navbar = () => {
       <div className="container-custom flex justify-between items-center py-3">
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-full border-2 border-techblue bg-techblue flex items-center justify-center text-white font-bold text-sm">
-            TS
-          </div>
-          <span className="text-xl font-bold text-gray-900">Teksoft</span>
+          <img src={teksoftLogo} alt="Teksoft Community" className="h-12 w-auto" />
         </Link>
 
         {/* DESKTOP NAV */}
