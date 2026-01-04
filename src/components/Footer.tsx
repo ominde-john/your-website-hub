@@ -37,9 +37,9 @@ const Footer = () => {
               <div>
                 <Link to="/" className="flex items-center space-x-3 mb-4">
                   <div className="h-16 w-16 rounded-full bg-techblue flex items-center justify-center text-white font-bold text-xl">
-                    TT
+                    TS
                   </div>
-                  <span className="font-bold text-2xl text-white">Tech Team</span>
+                  <span className="font-bold text-2xl text-white">Teksoft</span>
                 </Link>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
                   Empowering Technology Everywhere. A community of tech enthusiasts,
@@ -134,10 +134,10 @@ const Footer = () => {
                   <li className="flex items-center">
                     <Mail className="h-5 w-5 text-techgold flex-shrink-0 mr-3" />
                     <a
-                      href="mailto:info@techteam.org"
+                      href="mailto:info@teksoft.org"
                       className="text-gray-400 hover:text-white transition duration-200"
                     >
-                      info@techteam.org
+                      info@teksoft.org
                     </a>
                   </li>
                 </ul>
@@ -173,7 +173,7 @@ const Footer = () => {
         <div className="bg-gray-950 py-4 border-t border-gray-800">
           <div className="container-custom flex flex-col md:flex-row justify-center md:justify-between items-center gap-2">
             <div className="text-center text-gray-500 text-sm">
-              © {new Date().getFullYear()} Tech Team. All rights reserved.
+              © {new Date().getFullYear()} Teksoft. All rights reserved.
             </div>
             <div className="text-gray-500 text-sm space-x-4">
               <Link to="/privacy" className="hover:text-white transition-colors">

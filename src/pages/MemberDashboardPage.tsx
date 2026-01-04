@@ -7,7 +7,7 @@ const MemberDashboardPage = () => {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 text-center">
       <div className="max-w-3xl w-full bg-white rounded-2xl p-10 shadow-xl">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-          Welcome to <span className="text-techblue">Tech Team Hub</span>
+          Welcome to <span className="text-techblue">Teksoft Hub</span>
         </h1>
         <p className="text-gray-600 text-lg mb-8">
           A growing community where developers, tech students, and innovators connect. Since you are not yet registered, this is a preview of member benefits.

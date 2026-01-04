@@ -111,8 +111,8 @@ const Navbar = () => {
             <a href="tel:0115000514" className="flex items-center gap-1 hover:text-techgold transition-colors">
               <Phone className="w-4 h-4 text-techgold" /> 0115000514
             </a>
-            <a href="mailto:info@techteam.org" className="flex items-center gap-1 hover:text-techgold transition-colors">
-              <Mail className="w-4 h-4 text-techgold" /> info@techteam.org
+            <a href="mailto:info@teksoft.org" className="flex items-center gap-1 hover:text-techgold transition-colors">
+              <Mail className="w-4 h-4 text-techgold" /> info@teksoft.org
             </a>
           </div>
         </div>
@@ -123,9 +123,9 @@ const Navbar = () => {
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2">
           <div className="h-9 w-9 rounded-full border-2 border-techblue bg-techblue flex items-center justify-center text-white font-bold text-sm">
-            TT
+            TS
           </div>
-          <span className="text-xl font-bold text-gray-900">Tech Team</span>
+          <span className="text-xl font-bold text-gray-900">Teksoft</span>
         </Link>
 
         {/* DESKTOP NAV */}

@@ -9,7 +9,7 @@ const TestimonialsSection = () => {
       role: "Software Engineer",
       company: "TechCorp",
       image: "/john mark.jpg",
-      quote: "Being a part of the Tech Team community has been invaluable for my career growth. The educational resources and networking opportunities have helped me stay at the cutting edge of technology."
+      quote: "Being a part of the Teksoft community has been invaluable for my career growth. The educational resources and networking opportunities have helped me stay at the cutting edge of technology."
     },
     {
       name: "Jeremy bravoge",
@@ -37,7 +37,7 @@ const TestimonialsSection = () => {
       <div className="container-custom">
         <SectionTitle
           title="What Our Members Say"
-          subtitle="Hear from our community members about their experiences with Tech Team"
+          subtitle="Hear from our community members about their experiences with Teksoft"
           centered
         />
 
