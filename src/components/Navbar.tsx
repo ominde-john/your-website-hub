@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 import {
   Menu,
   X,
@@ -24,6 +26,8 @@ import {
   Mic,
   Globe,
   Share2,
+  UserCircle,
+  LogOut,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -34,13 +38,29 @@ const Navbar = () => {
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
   const aboutRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
 
   const location = useLocation();
+  const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
+
+  useEffect(() => {
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -57,6 +77,11 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate("/");
+  };
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -185,11 +210,31 @@ const Navbar = () => {
             )
           )}
 
-          <Link to="/auth">
-            <Button className="ml-3 h-9 text-sm bg-techblue hover:bg-techblue-dark text-white">
-              Member Login
-            </Button>
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2 ml-3">
+              <Link to="/profile">
+                <Button variant="outline" size="sm" className="h-9 text-sm">
+                  <UserCircle className="w-4 h-4 mr-1" />
+                  Profile
+                </Button>
+              </Link>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-9 text-sm"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4 mr-1" />
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Link to="/auth">
+              <Button className="ml-3 h-9 text-sm bg-techblue hover:bg-techblue-dark text-white">
+                Member Login
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* MOBILE TOGGLE */}
@@ -249,11 +294,33 @@ const Navbar = () => {
             )
           )}
 
-          <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-            <Button className="w-full mt-3 bg-techblue hover:bg-techblue-dark text-white">
-              Member Login
-            </Button>
-          </Link>
+          {user ? (
+            <div className="space-y-2 mt-3">
+              <Link to="/profile" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="outline" className="w-full">
+                  <UserCircle className="w-4 h-4 mr-2" />
+                  My Profile
+                </Button>
+              </Link>
+              <Button 
+                variant="ghost" 
+                className="w-full"
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+              <Button className="w-full mt-3 bg-techblue hover:bg-techblue-dark text-white">
+                Member Login
+              </Button>
+            </Link>
+          )}
         </div>
       )}
     </nav>
