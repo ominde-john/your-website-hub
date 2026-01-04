@@ -54,6 +54,7 @@ const AboutPage = () => {
     {
       name: "Jeremy Bravoge",
       role: "Founder & CEO",
+      portfolio: "https://www.jonzjohn.com",
       image: JeremyBravoge,
       bio: "Visionary leader with a passion for technology and community building. Leading Tech Team to empower developers across Africa.",
     },
