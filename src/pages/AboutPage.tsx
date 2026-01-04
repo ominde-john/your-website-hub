@@ -8,7 +8,7 @@ import { Lightbulb, GraduationCap, Network, History, ArrowRight } from "lucide-r
 import jeremyImg from "@/assets/team/jeremy.jpg";
 import johnImg from "@/assets/team/john.jpg";
 import sarahImg from "@/assets/team/sarah.jpg";
-import evansImg from "@/assets/team/evans.jpg";
+import evansImg from "@/assets/team/evanschuchu.jpg";
 import missionImg from "@/assets/mission.jpg";
 
 interface TeamMember {
