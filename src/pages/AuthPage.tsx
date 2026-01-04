@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2, Sparkles } from "lucide-react";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
 const AuthPage = () => {
@@ -53,46 +53,64 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
-      <Card className="w-full max-w-md shadow-xl border-0">
-        <CardHeader className="text-center pb-2">
-          <div className="h-20 w-20 rounded-full bg-[#000000] flex items-center justify-center p-1 mx-auto mb-4">
-            <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain rounded-full" />
+    <div className="min-h-screen flex items-center justify-center p-6 relative">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-techgold/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-techblue/10 rounded-full blur-3xl animate-pulse delay-1000" />
+      </div>
+
+      <Card className="w-full max-w-md shadow-2xl border border-white/20 bg-white/95 backdrop-blur-xl relative z-10">
+        {/* Top accent bar */}
+        <div className="h-1.5 bg-gradient-to-r from-techblue via-techgold to-techblue rounded-t-lg" />
+        
+        <CardHeader className="text-center pb-4 pt-8">
+          {/* Logo with glow effect */}
+          <div className="relative mx-auto mb-6">
+            <div className="absolute inset-0 bg-techgold/30 rounded-full blur-xl scale-150" />
+            <div className="h-24 w-24 rounded-full bg-[#000000] flex items-center justify-center p-1.5 relative shadow-xl ring-4 ring-techgold/20">
+              <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain rounded-full" />
+            </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">Member Login</CardTitle>
-          <CardDescription className="text-gray-600">
-            Sign in to access your Teksoft account
+          
+          <CardTitle className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-2">
+            Member Login
+            <Sparkles className="h-5 w-5 text-techgold" />
+          </CardTitle>
+          <CardDescription className="text-gray-600 mt-2">
+            Sign in to access your Teksoft Community account
           </CardDescription>
         </CardHeader>
-        <CardContent className="pt-6">
-          <form onSubmit={handleLogin} className="space-y-4">
+
+        <CardContent className="pt-2 pb-8 px-8">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Label htmlFor="email" className="text-gray-700 font-medium">Email Address</Label>
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
+                  className="pl-12 h-12 text-base border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all"
                   required
                 />
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-700">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
                 <Input
                   id="password"
                   type="password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10"
+                  className="pl-12 h-12 text-base border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all"
                   required
                 />
               </div>
@@ -100,33 +118,39 @@ const AuthPage = () => {
 
             <Button 
               type="submit" 
-              className="w-full bg-techblue hover:bg-techblue-dark text-white"
+              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-techblue to-techblue-dark hover:from-techblue-dark hover:to-techblue text-white shadow-lg shadow-techblue/25 transition-all duration-300 hover:shadow-xl hover:shadow-techblue/30 hover:scale-[1.02]"
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Signing in...
                 </>
               ) : (
                 <>
                   Sign In
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 text-sm">
-              Don't have an account?{" "}
-              <Link 
-                to="/register" 
-                className="text-techblue hover:text-techblue-dark font-semibold transition-colors"
-              >
-                Register here
-              </Link>
-            </p>
+          <div className="mt-8 text-center">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">New to Teksoft?</span>
+              </div>
+            </div>
+            <Link 
+              to="/register" 
+              className="mt-4 inline-flex items-center gap-2 text-techblue hover:text-techblue-dark font-semibold transition-all hover:gap-3"
+            >
+              Create an account
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </CardContent>
       </Card>
