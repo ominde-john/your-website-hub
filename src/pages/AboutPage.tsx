@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Lightbulb, GraduationCap, Network, History, ArrowRight } from "lucide-react";
 
+// 🔹 Local image imports
+import jeremyImg from "@/assets/team/jeremy.jpg";
+import johnImg from "@/assets/team/john.jpg";
+import sarahImg from "@/assets/team/sarah.jpg";
+import evansImg from "@/assets/team/evans.jpg";
+import missionImg from "@/assets/mission.jpg";
+
 interface TeamMember {
   name: string;
   role: string;
@@ -17,6 +24,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => (
       <img
         src={member.image}
         alt={member.name}
+        loading="lazy"
         className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute bottom-0 left-0 bg-black/50 text-white px-4 py-2 text-sm font-semibold w-full backdrop-blur-sm">
@@ -24,8 +32,12 @@ const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => (
       </div>
     </div>
     <div className="p-6">
-      <h3 className="text-xl font-extrabold mb-1 text-gray-900">{member.name}</h3>
-      <p className="text-sm font-medium mb-3 text-techgold uppercase tracking-wider">{member.role}</p>
+      <h3 className="text-xl font-extrabold mb-1 text-gray-900">
+        {member.name}
+      </h3>
+      <p className="text-sm font-medium mb-3 text-techgold uppercase tracking-wider">
+        {member.role}
+      </p>
       <p className="text-gray-600 text-sm line-clamp-3">{member.bio}</p>
     </div>
   </div>
@@ -36,25 +48,25 @@ const AboutPage = () => {
     {
       name: "Jeremy Bravoge",
       role: "Founder & CEO",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80",
+      image: jeremyImg,
       bio: "Visionary leader with a passion for technology and community building. Leading Tech Team to empower developers across Africa.",
     },
     {
       name: "John Ominde",
       role: "Lead Developer",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+      image: johnImg,
       bio: "Full-stack developer with expertise in React, Node.js, and cloud technologies. Building the future of tech education.",
     },
     {
       name: "Sarah Mwangi",
       role: "Community Manager",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80",
+      image: sarahImg,
       bio: "Passionate about connecting people and fostering meaningful relationships within the tech community.",
     },
     {
       name: "Evans Richard",
       role: "Technical Lead",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+      image: evansImg,
       bio: "Expert in software architecture and mentoring junior developers. Committed to technical excellence.",
     },
   ];
@@ -113,7 +125,7 @@ const AboutPage = () => {
             </div>
             <div>
               <img
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80"
+                src={missionImg}
                 alt="Team collaboration"
                 className="rounded-xl shadow-lg"
               />
@@ -125,16 +137,26 @@ const AboutPage = () => {
       {/* Values Section */}
       <section className="section-padding bg-gray-100">
         <div className="container-custom">
-          <SectionTitle title="Our Values" subtitle="The principles that guide everything we do" centered />
+          <SectionTitle
+            title="Our Values"
+            subtitle="The principles that guide everything we do"
+            centered
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div
                 key={index}
                 className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition-shadow"
               >
-                <div className="flex justify-center mb-4">{value.icon}</div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">{value.title}</h3>
-                <p className="text-gray-600 text-sm">{value.description}</p>
+                <div className="flex justify-center mb-4">
+                  {value.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-2 text-gray-900">
+                  {value.title}
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  {value.description}
+                </p>
               </div>
             ))}
           </div>
@@ -144,7 +166,11 @@ const AboutPage = () => {
       {/* Team Section */}
       <section className="section-padding bg-white">
         <div className="container-custom">
-          <SectionTitle title="Meet Our Team" subtitle="The passionate people behind Tech Team" centered />
+          <SectionTitle
+            title="Meet Our Team"
+            subtitle="The passionate people behind Tech Team"
+            centered
+          />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
               <TeamMemberCard key={index} member={member} />
@@ -156,7 +182,9 @@ const AboutPage = () => {
       {/* CTA Section */}
       <section className="section-padding bg-techblue text-white">
         <div className="container-custom text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Want to be part of our journey?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Want to be part of our journey?
+          </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join our growing community of tech enthusiasts and help us shape the future of technology in Africa.
           </p>
@@ -164,7 +192,12 @@ const AboutPage = () => {
             <Button asChild size="lg" className="bg-techgold hover:bg-techgold-dark text-gray-900">
               <Link to="/contact">Join Our Community</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-white text-white hover:bg-white/10"
+            >
               <Link to="/careers">View Open Positions</Link>
             </Button>
           </div>
