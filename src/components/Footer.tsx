@@ -36,8 +36,9 @@ const Footer = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-16">
               {/* Logo + About */}
               <div>
-                <Link to="/" className="mb-4 inline-block">
-                  <img src={teksoftLogo} alt="Teksoft Community" className="h-16 w-16 rounded-full object-cover" />
+                <Link to="/" className="flex items-center gap-3 mb-4">
+                  <img src={teksoftLogo} alt="Teksoft Community" className="h-16 w-auto" />
+                  <span className="font-bold text-xl text-white">Teksoft Community</span>
                 </Link>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
                   Empowering Technology Everywhere. A community of tech enthusiasts,
