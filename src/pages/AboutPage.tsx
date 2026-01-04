@@ -42,7 +42,7 @@ const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => (
           rel="noopener noreferrer"
           className="inline-flex items-center mt-4 text-sm font-semibold text-techblue hover:underline"
         >
-          Read more <ArrowRight className="ml-1 h-4 w-4" />
+          Go to portfolio <ArrowRight className="ml-1 h-4 w-4" />
         </a>
       )}
     </div>
@@ -115,7 +115,7 @@ const AboutPage = () => {
             <div>
               <SectionTitle title="Our Mission" />
               <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                Tech Team is dedicated to empowering technology professionals and enthusiasts across Africa.
+                Teksoft Community is dedicated to empowering technology professionals and enthusiasts across the globe.
                 We provide a platform for learning, collaboration, and growth in the ever-evolving tech landscape.
               </p>
               <p className="text-gray-600 text-lg leading-relaxed mb-6">
