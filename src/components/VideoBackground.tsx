@@ -31,13 +31,12 @@ const VideoBackground = () => {
         className="absolute w-full h-full object-cover"
         style={{ 
           pointerEvents: "none",
-          willChange: "transform",
         }}
       >
         <source src={backgroundVideo} type="video/mp4" />
       </video>
-      {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-black/50" />
+      {/* Lighter overlay for better video clarity */}
+      <div className="absolute inset-0 bg-black/30" />
     </div>
   );
 };
