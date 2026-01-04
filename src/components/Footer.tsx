@@ -37,8 +37,8 @@ const Footer = () => {
               {/* Logo + About */}
               <div>
                 <Link to="/" className="flex items-center gap-3 mb-4">
-                  <div className="h-16 w-16 rounded-full bg-black flex items-center justify-center p-1">
-                    <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain" />
+                  <div className="h-16 w-16 rounded-full bg-[#000000] flex items-center justify-center p-1 shrink-0">
+                    <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain rounded-full" />
                   </div>
                   <span className="font-bold text-xl text-white">Teksoft Community</span>
                 </Link>

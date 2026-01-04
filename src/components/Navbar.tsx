@@ -149,10 +149,10 @@ const Navbar = () => {
       <div className="container-custom flex justify-between items-center py-3">
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-10 w-10 rounded-full bg-black flex items-center justify-center p-0.5">
-            <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain" />
+          <div className="h-10 w-10 rounded-full bg-[#000000] flex items-center justify-center p-0.5 shrink-0">
+            <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain rounded-full" />
           </div>
-          <span className="text-xl font-bold text-gray-900">Teksoft Community</span>
+          <span className="text-xl font-bold text-gray-900 dark:text-white">Teksoft Community</span>
         </Link>
 
         {/* DESKTOP NAV */}
