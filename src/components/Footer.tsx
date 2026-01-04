@@ -37,7 +37,7 @@ const Footer = () => {
               {/* Logo + About */}
               <div>
                 <Link to="/" className="mb-4 inline-block">
-                  <img src={teksoftLogo} alt="Teksoft Community" className="h-20 w-auto" />
+                  <img src={teksoftLogo} alt="Teksoft Community" className="h-16 w-16 rounded-full object-cover" />
                 </Link>
                 <p className="text-gray-400 text-sm leading-relaxed mb-4">
                   Empowering Technology Everywhere. A community of tech enthusiasts,

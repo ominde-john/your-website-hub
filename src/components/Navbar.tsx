@@ -149,7 +149,7 @@ const Navbar = () => {
       <div className="container-custom flex justify-between items-center py-3">
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2">
-          <img src={teksoftLogo} alt="Teksoft Community" className="h-10 w-auto" />
+          <img src={teksoftLogo} alt="Teksoft Community" className="h-10 w-10 rounded-full object-cover" />
           <span className="text-xl font-bold text-gray-900">Teksoft Community</span>
         </Link>
 
