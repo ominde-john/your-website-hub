@@ -141,7 +141,7 @@ const RegisterPage = () => {
                     id="firstName"
                     name="firstName"
                     type="text"
-                    placeholder="John"
+                    placeholder="First Name"
                     value={formData.firstName}
                     onChange={handleChange}
                     className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.firstName ? "border-red-500 focus:border-red-500" : ""}`}
@@ -159,7 +159,7 @@ const RegisterPage = () => {
                     id="lastName"
                     name="lastName"
                     type="text"
-                    placeholder="Doe"
+                    placeholder="Last Name"
                     value={formData.lastName}
                     onChange={handleChange}
                     className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.lastName ? "border-red-500 focus:border-red-500" : ""}`}
@@ -196,7 +196,7 @@ const RegisterPage = () => {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder="yourname@domain.com"
                   value={formData.email}
                   onChange={handleChange}
                   className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.email ? "border-red-500 focus:border-red-500" : ""}`}
