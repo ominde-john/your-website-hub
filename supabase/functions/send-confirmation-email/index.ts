@@ -22,7 +22,6 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Only allow POST requests
   if (req.method !== "POST") {
     return new Response(
       JSON.stringify({ success: false, error: "Method not allowed" }),
@@ -42,7 +41,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Ominde <ominde@jonzjohn.com>",  // <-- Changed from address
+        from: "Ominde <ominde@jonzjohn.com>", // ✅ Set sender email
         to: [email],
         subject: "Confirm Your Email - TekSoft Registration",
         html: `
@@ -93,15 +92,13 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error(`Failed to send email: ${errorData}`);
     }
 
-    const data = await res.json();
-    console.log("Email sent successfully:", data);
-
+    console.log("Email sent successfully");
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error: any) {
-    console.error("Error in send-confirmation-email function:", error);
+    console.error("Error sending confirmation email:", error);
     return new Response(
       JSON.stringify({ success: false, error: error.message }),
       {
