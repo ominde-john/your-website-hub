@@ -2,6 +2,8 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
+if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY is not defined in environment variables");
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -20,6 +22,14 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Only allow POST requests
+  if (req.method !== "POST") {
+    return new Response(
+      JSON.stringify({ success: false, error: "Method not allowed" }),
+      { status: 405, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+  }
+
   try {
     const { email, firstName, code }: ConfirmationEmailRequest = await req.json();
 
@@ -32,7 +42,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "TekSoft <onboarding@resend.dev>",
+        from: "Ominde <ominde@jonzjohn.com>",  // <-- Changed from address
         to: [email],
         subject: "Confirm Your Email - TekSoft Registration",
         html: `
@@ -67,7 +77,7 @@ const handler = async (req: Request): Promise<Response> => {
               <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
               
               <p style="color: #999; font-size: 12px; text-align: center;">
-                © 2024 TekSoft. All rights reserved.<br>
+                © 2026 TekSoft. All rights reserved.<br>
                 This is an automated message, please do not reply.
               </p>
             </div>
@@ -86,12 +96,9 @@ const handler = async (req: Request): Promise<Response> => {
     const data = await res.json();
     console.log("Email sent successfully:", data);
 
-    return new Response(JSON.stringify({ success: true, data }), {
+    return new Response(JSON.stringify({ success: true }), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        ...corsHeaders,
-      },
+      headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error: any) {
     console.error("Error in send-confirmation-email function:", error);
