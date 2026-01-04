@@ -32,7 +32,7 @@ const Hero = () => {
                 size="lg"
                 className="bg-techgold hover:bg-techgold-dark text-white border-0"
               >
-                <Link to="/about">Join Our Community</Link>
+                <Link to="/register">Join Our Community</Link>
               </Button>
 
               <Button
