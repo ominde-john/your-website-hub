@@ -185,7 +185,7 @@ const Navbar = () => {
             )
           )}
 
-          <Link to="/dashboard">
+          <Link to="/auth">
             <Button className="ml-3 h-9 text-sm bg-techblue hover:bg-techblue-dark text-white">
               Member Login
             </Button>
@@ -249,7 +249,7 @@ const Navbar = () => {
             )
           )}
 
-          <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+          <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
             <Button className="w-full mt-3 bg-techblue hover:bg-techblue-dark text-white">
               Member Login
             </Button>
