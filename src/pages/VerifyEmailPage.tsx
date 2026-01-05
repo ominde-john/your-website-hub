@@ -65,7 +65,7 @@ const VerifyEmailPage = () => {
         email: email,
         password: password,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             first_name: firstName,
             last_name: lastName,
@@ -89,9 +89,9 @@ const VerifyEmailPage = () => {
 
       toast({
         title: "Email Verified!",
-        description: "Your account has been created successfully.",
+        description: "Your account has been created successfully. Welcome to TekSoft!",
       });
-      navigate("/dashboard");
+      navigate("/");
     } catch (error: any) {
       toast({
         title: "Verification Failed",

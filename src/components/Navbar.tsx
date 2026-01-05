@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import {
@@ -31,6 +32,12 @@ import {
 } from "lucide-react";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
+interface Profile {
+  first_name: string;
+  last_name: string;
+  avatar_url: string | null;
+}
+
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [projectsDropdown, setProjectsDropdown] = useState(false);
@@ -40,6 +47,7 @@ const Navbar = () => {
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   const aboutRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
@@ -49,15 +57,35 @@ const Navbar = () => {
   const navigate = useNavigate();
   const isActive = (path: string) => location.pathname === path;
 
+  const fetchProfile = async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("first_name, last_name, avatar_url")
+      .eq("user_id", userId)
+      .single();
+    
+    if (data) {
+      setProfile(data);
+    }
+  };
+
   useEffect(() => {
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        setTimeout(() => fetchProfile(session.user.id), 0);
+      }
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user) {
+        setTimeout(() => fetchProfile(session.user.id), 0);
+      } else {
+        setProfile(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -212,21 +240,25 @@ const Navbar = () => {
           )}
 
           {user ? (
-            <div className="flex items-center gap-2 ml-3">
-              <Link to="/profile">
-                <Button variant="outline" size="sm" className="h-9 text-sm">
-                  <UserCircle className="w-4 h-4 mr-1" />
-                  Profile
-                </Button>
+            <div className="flex items-center gap-3 ml-3">
+              <Link to="/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <Avatar className="h-9 w-9 border-2 border-techgold">
+                  <AvatarImage src={profile?.avatar_url || ""} alt="Profile" />
+                  <AvatarFallback className="bg-techblue text-white text-sm font-medium">
+                    {profile?.first_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium text-gray-700 hidden xl:block">
+                  {profile?.first_name || "Profile"}
+                </span>
               </Link>
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="h-9 text-sm"
+                className="h-9 text-sm text-gray-600 hover:text-red-600"
                 onClick={handleLogout}
               >
-                <LogOut className="w-4 h-4 mr-1" />
-                Logout
+                <LogOut className="w-4 h-4" />
               </Button>
             </div>
           ) : (
@@ -297,15 +329,20 @@ const Navbar = () => {
 
           {user ? (
             <div className="space-y-2 mt-3">
-              <Link to="/profile" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full">
-                  <UserCircle className="w-4 h-4 mr-2" />
-                  My Profile
-                </Button>
+              <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-2">
+                <Avatar className="h-10 w-10 border-2 border-techgold">
+                  <AvatarImage src={profile?.avatar_url || ""} alt="Profile" />
+                  <AvatarFallback className="bg-techblue text-white font-medium">
+                    {profile?.first_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium text-gray-700">
+                  {profile?.first_name ? `${profile.first_name} ${profile.last_name}` : "My Profile"}
+                </span>
               </Link>
               <Button 
                 variant="ghost" 
-                className="w-full"
+                className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
                 onClick={() => {
                   handleLogout();
                   setMobileMenuOpen(false);
