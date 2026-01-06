@@ -1,14 +1,17 @@
 import { HelmetProvider, Helmet } from "react-helmet-async";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 
-// Main pages
+/* ======================
+   MAIN PAGES
+====================== */
 import HomePage from "./pages/Index";
 import AboutPage from "./pages/AboutPage";
 import BlogsPage from "./pages/BlogsPage";
@@ -27,12 +30,21 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
-import TermsOfUsePage from "./pages/TermsOfUsePage";
 
-// Projects
+/* ======================
+   LEGAL PAGES
+====================== */
+import TermsOfUsePage from "./pages/TermsOfUsePage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+
+/* ======================
+   PROJECT PAGES
+====================== */
 import AIRoboticsPage from "./pages/projects/AIRoboticsPage";
 
-// About sub-pages
+/* ======================
+   ABOUT SUB-PAGES
+====================== */
 import WhoWeArePage from "./pages/about/WhoWeArePage";
 import LeadershipPage from "./pages/about/LeadershipPage";
 import CommunityPage from "./pages/about/CommunityPage";
@@ -43,8 +55,14 @@ import TeamPage from "./pages/about/TeamPage";
 import PartnershipsPage from "./pages/about/PartnershipsPage";
 import AwardsPage from "./pages/about/AwardsPage";
 
+/* ======================
+   QUERY CLIENT
+====================== */
 const queryClient = new QueryClient();
 
+/* ======================
+   APP
+====================== */
 const App = () => {
   return (
     <HelmetProvider>
@@ -66,6 +84,7 @@ const App = () => {
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Layout />}>
+
                 {/* Home */}
                 <Route index element={<HomePage />} />
 
@@ -81,21 +100,18 @@ const App = () => {
                 <Route path="about/partnerships" element={<PartnershipsPage />} />
                 <Route path="about/awards" element={<AwardsPage />} />
 
-                {/* Core pages */}
+                {/* Core */}
                 <Route path="blogs" element={<BlogsPage />} />
                 <Route path="events" element={<EventsPage />} />
-
-                {/* Projects */}
                 <Route path="projects" element={<ProjectsPage />} />
+
+                {/* Project Units */}
                 <Route
                   path="projects/ai-robotics"
                   element={<AIRoboticsPage />}
                 />
 
-                {/* Legal */}
-                <Route path="terms" element={<TermsOfUsePage />} />
-
-                {/* Other */}
+                {/* Community */}
                 <Route path="discussion" element={<DiscussionPage />} />
                 <Route path="dashboard" element={<MemberDashboardPage />} />
                 <Route path="contact" element={<ContactPage />} />
@@ -111,8 +127,13 @@ const App = () => {
                 <Route path="reset-password" element={<ResetPasswordPage />} />
                 <Route path="profile" element={<ProfilePage />} />
 
+                {/* Legal */}
+                <Route path="terms" element={<TermsOfUsePage />} />
+                <Route path="privacy" element={<PrivacyPolicyPage />} />
+
                 {/* 404 */}
                 <Route path="*" element={<NotFound />} />
+
               </Route>
             </Routes>
           </BrowserRouter>
