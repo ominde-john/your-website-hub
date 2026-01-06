@@ -138,9 +138,17 @@ const AuthPage = () => {
                   required
                 />
               </div>
+              <div className="flex justify-end">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-techblue hover:text-techblue-dark transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </div>
 
-            <Button 
+            <Button
               type="submit" 
               className="w-full h-12 text-base font-semibold bg-gradient-to-r from-techblue to-techblue-dark hover:from-techblue-dark hover:to-techblue text-white shadow-lg shadow-techblue/25 transition-all duration-300 hover:shadow-xl hover:shadow-techblue/30 hover:scale-[1.02]"
               disabled={loading}

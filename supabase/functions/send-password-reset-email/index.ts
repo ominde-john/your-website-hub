@@ -1,0 +1,112 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+
+if (!RESEND_API_KEY) throw new Error("RESEND_API_KEY is not defined in environment variables");
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
+
+interface PasswordResetRequest {
+  email: string;
+  firstName: string;
+  code: string;
+}
+
+const handler = async (req: Request): Promise<Response> => {
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  if (req.method !== "POST") {
+    return new Response(
+      JSON.stringify({ success: false, error: "Method not allowed" }),
+      { status: 405, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+  }
+
+  try {
+    const { email, firstName, code }: PasswordResetRequest = await req.json();
+
+    console.log(`Sending password reset email to ${email} with code ${code}`);
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Teksoft Community <teksoft@jonzjohn.com>",
+        to: [email],
+        subject: "Password Reset - TekSoft",
+        html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          </head>
+          <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 10px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #1a1a2e; margin: 0; font-size: 28px;">Password Reset Request</h1>
+              </div>
+              
+              <p style="color: #333; font-size: 16px; line-height: 1.6;">
+                Hi ${firstName || 'there'},
+              </p>
+              
+              <p style="color: #333; font-size: 16px; line-height: 1.6;">
+                We received a request to reset your password for your TekSoft account. Use the verification code below to reset your password:
+              </p>
+              
+              <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; text-align: center; margin: 30px 0;">
+                <span style="font-size: 36px; font-weight: bold; color: #ffffff; letter-spacing: 8px;">${code}</span>
+              </div>
+              
+              <p style="color: #666; font-size: 14px; line-height: 1.6;">
+                This code will expire in 10 minutes. If you didn't request a password reset, you can safely ignore this email.
+              </p>
+              
+              <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+              
+              <p style="color: #999; font-size: 12px; text-align: center;">
+                © 2026 TekSoft. All rights reserved.<br>
+                This is an automated message, please do not reply.
+              </p>
+            </div>
+          </body>
+          </html>
+        `,
+      }),
+    });
+
+    if (!res.ok) {
+      const errorData = await res.text();
+      console.error("Resend API error:", errorData);
+      throw new Error(`Failed to send email: ${errorData}`);
+    }
+
+    console.log("Password reset email sent successfully");
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
+  } catch (error: any) {
+    console.error("Error sending password reset email:", error);
+    return new Response(
+      JSON.stringify({ success: false, error: error.message }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
+  }
+};
+
+serve(handler);
