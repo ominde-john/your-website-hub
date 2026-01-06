@@ -11,7 +11,7 @@ const TestimonialsSection = () => {
       name: "John Mark",
       role: "Software Engineer",
       company: "TechCorp",
-      image: "/john mark.jpg",
+      image: JohnMark,
       quote: "Being a part of the Teksoft community has been invaluable for my career growth. The educational resources and networking opportunities have helped me stay at the cutting edge of technology."
     },
     {
