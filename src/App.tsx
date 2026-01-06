@@ -28,7 +28,10 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
-// About sub-pages ✅ REQUIRED
+// Projects
+import AIRoboticsPage from "./pages/projects/AIRoboticsPage";
+
+// About sub-pages
 import WhoWeArePage from "./pages/about/WhoWeArePage";
 import LeadershipPage from "./pages/about/LeadershipPage";
 import CommunityPage from "./pages/about/CommunityPage";
@@ -46,11 +49,12 @@ const App = () => {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
+          {/* Global SEO fallback */}
           <Helmet>
             <title>Teksoft Community | Empowering Technology Everywhere</title>
             <meta
               name="description"
-              content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts to learn, collaborate, and grow."
+              content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts."
             />
           </Helmet>
 
@@ -61,6 +65,7 @@ const App = () => {
             <ScrollToTop />
             <Routes>
               <Route path="/" element={<Layout />}>
+                {/* Home */}
                 <Route index element={<HomePage />} />
 
                 {/* About */}
@@ -75,21 +80,36 @@ const App = () => {
                 <Route path="about/partnerships" element={<PartnershipsPage />} />
                 <Route path="about/awards" element={<AwardsPage />} />
 
-                {/* Other pages */}
+                {/* Core pages */}
                 <Route path="blogs" element={<BlogsPage />} />
                 <Route path="events" element={<EventsPage />} />
+
+                {/* Projects */}
                 <Route path="projects" element={<ProjectsPage />} />
+                <Route
+                  path="projects/ai-robotics"
+                  element={<AIRoboticsPage />}
+                />
+
                 <Route path="discussion" element={<DiscussionPage />} />
                 <Route path="dashboard" element={<MemberDashboardPage />} />
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="showcase" element={<ShowcasePage />} />
                 <Route path="careers" element={<CareersPage />} />
                 <Route path="marketplace" element={<MarketplacePage />} />
+
+                {/* Auth */}
                 <Route path="auth" element={<AuthPage />} />
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="verify-email" element={<VerifyEmailPage />} />
-                <Route path="forgot-password" element={<ForgotPasswordPage />} />
-                <Route path="reset-password" element={<ResetPasswordPage />} />
+                <Route
+                  path="forgot-password"
+                  element={<ForgotPasswordPage />}
+                />
+                <Route
+                  path="reset-password"
+                  element={<ResetPasswordPage />}
+                />
                 <Route path="profile" element={<ProfilePage />} />
 
                 {/* 404 */}
