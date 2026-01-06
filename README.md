@@ -47,8 +47,8 @@ enforce its rights to the fullest extent permitted by law.
 
 For partnerships, licensing, or official authorization, contact:
 
-**Email:** contact@teksoftcommunity.com  
-**Website:** https://teksoftcommunity.com
+**Email:** contact@teksoftllc.jonzjohn.com  
+**Website:** https://teksoftllc.jonzjohn.com
 
 ---
 
