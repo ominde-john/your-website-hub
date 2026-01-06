@@ -27,6 +27,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
+import TermsOfUsePage from "./pages/TermsOfUsePage";
 
 // Projects
 import AIRoboticsPage from "./pages/projects/AIRoboticsPage";
@@ -91,6 +92,10 @@ const App = () => {
                   element={<AIRoboticsPage />}
                 />
 
+                {/* Legal */}
+                <Route path="terms" element={<TermsOfUsePage />} />
+
+                {/* Other */}
                 <Route path="discussion" element={<DiscussionPage />} />
                 <Route path="dashboard" element={<MemberDashboardPage />} />
                 <Route path="contact" element={<ContactPage />} />
@@ -102,14 +107,8 @@ const App = () => {
                 <Route path="auth" element={<AuthPage />} />
                 <Route path="register" element={<RegisterPage />} />
                 <Route path="verify-email" element={<VerifyEmailPage />} />
-                <Route
-                  path="forgot-password"
-                  element={<ForgotPasswordPage />}
-                />
-                <Route
-                  path="reset-password"
-                  element={<ResetPasswordPage />}
-                />
+                <Route path="forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="reset-password" element={<ResetPasswordPage />} />
                 <Route path="profile" element={<ProfilePage />} />
 
                 {/* 404 */}
