@@ -167,7 +167,7 @@ const RegisterPage = () => {
                     id="firstName"
                     name="firstName"
                     type="text"
-                    placeholder="First Name"
+                    placeholder="Firtname"
                     value={formData.firstName}
                     onChange={handleChange}
                     className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.firstName ? "border-red-500 focus:border-red-500" : ""}`}
@@ -185,7 +185,7 @@ const RegisterPage = () => {
                     id="lastName"
                     name="lastName"
                     type="text"
-                    placeholder="Last Name"
+                    placeholder="Lastname"
                     value={formData.lastName}
                     onChange={handleChange}
                     className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.lastName ? "border-red-500 focus:border-red-500" : ""}`}
