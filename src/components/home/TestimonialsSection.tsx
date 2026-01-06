@@ -2,6 +2,9 @@ import { useState } from "react";
 import SectionTitle from "../SectionTitle";
 import { ChevronLeft, ChevronRight, MessageSquareQuote } from "lucide-react";
 
+// ✅ Local team images
+import JohnMark from "../assets/team/evanschuchu.jpg";
+
 const TestimonialsSection = () => {
   const testimonials = [
     {
