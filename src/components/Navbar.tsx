@@ -2,6 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import {
@@ -27,7 +38,6 @@ import {
   Mic,
   Globe,
   Share2,
-  UserCircle,
   LogOut,
 } from "lucide-react";
 import teksoftLogo from "@/assets/teksoft-logo.png";
@@ -240,7 +250,7 @@ const Navbar = () => {
           )}
 
           {user ? (
-            <div className="flex items-center gap-3 ml-3">
+            <div className="flex items-center gap-2 ml-3">
               <Link to="/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <Avatar className="h-9 w-9 border-2 border-techgold">
                   <AvatarImage src={profile?.avatar_url || ""} alt="Profile" />
@@ -252,14 +262,39 @@ const Navbar = () => {
                   {profile?.first_name || "Profile"}
                 </span>
               </Link>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-9 text-sm text-gray-600 hover:text-red-600"
-                onClick={handleLogout}
-              >
-                <LogOut className="w-4 h-4" />
-              </Button>
+              
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-9 text-sm border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300 gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span className="hidden xl:inline">Sign Out</span>
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="sm:max-w-md">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="flex items-center gap-2">
+                      <LogOut className="w-5 h-5 text-red-500" />
+                      Confirm Sign Out
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to sign out of your account? You'll need to log in again to access your profile and member features.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="gap-2 sm:gap-0">
+                    <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={handleLogout}
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      Yes, Sign Out
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           ) : (
             <Link to="/auth">
@@ -340,17 +375,40 @@ const Navbar = () => {
                   {profile?.first_name ? `${profile.first_name} ${profile.last_name}` : "My Profile"}
                 </span>
               </Link>
-              <Button 
-                variant="ghost" 
-                className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
-                onClick={() => {
-                  handleLogout();
-                  setMobileMenuOpen(false);
-                }}
-              >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="sm:max-w-md">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="flex items-center gap-2">
+                      <LogOut className="w-5 h-5 text-red-500" />
+                      Confirm Sign Out
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to sign out of your account?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter className="gap-2 sm:gap-0">
+                    <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                    >
+                      Yes, Sign Out
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           ) : (
             <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
