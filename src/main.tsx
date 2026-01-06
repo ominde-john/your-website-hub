@@ -1,10 +1,15 @@
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
+import { HelmetProvider } from "react-helmet-async";
+import App from "./App";
 import "./index.css";
 
-import { HelmetProvider } from "react-helmet-async";
+const rootElement = document.getElementById("root");
 
-createRoot(document.getElementById("root")!).render(
+if (!rootElement) {
+  throw new Error("Root element not found");
+}
+
+createRoot(rootElement).render(
   <HelmetProvider>
     <App />
   </HelmetProvider>
