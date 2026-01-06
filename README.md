@@ -1,55 +1,58 @@
-# Welcome to Teksoft Community Project
+# Welcome to Teksoft Community
 
-## Project info
+Teksoft Community is a proprietary digital platform focused on empowering
+developers, innovators, and technology enthusiasts through collaboration,
+education, events, and real-world projects in areas such as software
+development, artificial intelligence, robotics, cybersecurity, and innovation.
 
-**URL**: https://teksoftllc.jonzjohn.com
+---
 
-## How can I edit this code?
+## 🚫 Copyright & Usage Notice
 
-There are several ways of editing your application.
+© 2026 **Teksoft Community**. All rights reserved.
 
-**Use your preferred IDE**
+This repository and all associated files, source code, designs, assets,
+documentation, and intellectual property are **private and proprietary**.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**Unauthorized copying, modification, reproduction, distribution, publishing,
+or use of this project, in whole or in part, is strictly prohibited** without
+explicit prior written permission from Teksoft Community.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+This project is made available **for viewing and evaluation purposes only**.
+Access to this repository does **not** grant any license or rights to reuse,
+modify, or redistribute the code or its contents.
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## ⚠️ Legal Warning
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Any unauthorized use of this project may result in legal action under
+applicable local and international copyright, intellectual property,
+and cybercrime laws.
 
-# Step 3: Install the necessary dependencies.
-npm i
+Teksoft Community actively monitors misuse and reserves the right to
+enforce its rights to the fullest extent permitted by law.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+## 🔒 Project Status
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- ❌ Not open-source  
+- ❌ Not licensed for reuse  
+- ❌ Not permitted for commercial or non-commercial duplication  
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📩 Permissions & Inquiries
 
-## What technologies are used for this project?
+For partnerships, licensing, or official authorization, contact:
 
-This project is built with:
+**Email:** contact@teksoftcommunity.com  
+**Website:** https://teksoftcommunity.com
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
+
+© 2026 Teksoft Community — All Rights Reserved.
+
+
+
