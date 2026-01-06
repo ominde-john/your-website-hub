@@ -19,6 +19,8 @@ import MarketplacePage from "./pages/MarketplacePage";
 import AuthPage from "./pages/AuthPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
@@ -47,6 +49,8 @@ const App = () => (
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/verify-email" element={<VerifyEmailPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
