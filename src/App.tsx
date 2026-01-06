@@ -3,8 +3,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Helmet, HelmetProvider } from "react-helmet-async";
+
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
+
 import HomePage from "./pages/Index";
 import AboutPage from "./pages/AboutPage";
 import BlogsPage from "./pages/BlogsPage";
@@ -38,46 +41,63 @@ import AwardsPage from "./pages/about/AwardsPage";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/about/who-we-are" element={<WhoWeArePage />} />
-            <Route path="/about/leadership" element={<LeadershipPage />} />
-            <Route path="/about/community" element={<CommunityPage />} />
-            <Route path="/about/innovation" element={<InnovationPage />} />
-            <Route path="/about/journey" element={<JourneyPage />} />
-            <Route path="/about/programs" element={<TechProgramsPage />} />
-            <Route path="/about/team" element={<TeamPage />} />
-            <Route path="/about/partnerships" element={<PartnershipsPage />} />
-            <Route path="/about/awards" element={<AwardsPage />} />
-            <Route path="/blogs" element={<BlogsPage />} />
-            <Route path="/events" element={<EventsPage />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/discussion" element={<DiscussionPage />} />
-            <Route path="/dashboard" element={<MemberDashboardPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/showcase" element={<ShowcasePage />} />
-            <Route path="/careers" element={<CareersPage />} />
-            <Route path="/marketplace" element={<MarketplacePage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+
+        {/* GLOBAL SEO (VERY IMPORTANT) */}
+        <Helmet>
+          <title>Teksoft Community | Empowering Technology Everywhere</title>
+          <meta
+            name="description"
+            content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts to learn, collaborate, share projects, and grow together."
+          />
+          <meta
+            name="keywords"
+            content="Teksoft Community, tech community, developers community, technology hub, programming community"
+          />
+          <link rel="canonical" href="https://teksoftllc.jonzjohn.com" />
+        </Helmet>
+
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/about/who-we-are" element={<WhoWeArePage />} />
+              <Route path="/about/leadership" element={<LeadershipPage />} />
+              <Route path="/about/community" element={<CommunityPage />} />
+              <Route path="/about/innovation" element={<InnovationPage />} />
+              <Route path="/about/journey" element={<JourneyPage />} />
+              <Route path="/about/programs" element={<TechProgramsPage />} />
+              <Route path="/about/team" element={<TeamPage />} />
+              <Route path="/about/partnerships" element={<PartnershipsPage />} />
+              <Route path="/about/awards" element={<AwardsPage />} />
+              <Route path="/blogs" element={<BlogsPage />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/discussion" element={<DiscussionPage />} />
+              <Route path="/dashboard" element={<MemberDashboardPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/showcase" element={<ShowcasePage />} />
+              <Route path="/careers" element={<CareersPage />} />
+              <Route path="/marketplace" element={<MarketplacePage />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/verify-email" element={<VerifyEmailPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 export default App;
