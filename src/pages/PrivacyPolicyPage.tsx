@@ -122,7 +122,7 @@ const PrivacyPolicyPage = () => {
                 If you have any questions about this Privacy Policy, please
                 contact us at{" "}
                 <span className="text-yellow-400 font-medium">
-                  support@teksoftcommunity.com
+                  support@teksoftllc.jonzjohn.com
                 </span>
                 .
               </p>
