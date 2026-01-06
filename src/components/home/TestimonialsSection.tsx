@@ -3,7 +3,8 @@ import SectionTitle from "../SectionTitle";
 import { ChevronLeft, ChevronRight, MessageSquareQuote } from "lucide-react";
 
 // ✅ Local team images
-import JohnMark from "../assets/team/johnmark.jpg";
+import JohnMark from "@/assets/team/johnmark.jpg";
+import JeremyBravoge from "@/assets/team/jeremy-bravoge.jpg";
 
 const TestimonialsSection = () => {
   const testimonials = [
@@ -15,10 +16,10 @@ const TestimonialsSection = () => {
       quote: "Being a part of the Teksoft community has been invaluable for my career growth. The educational resources and networking opportunities have helped me stay at the cutting edge of technology."
     },
     {
-      name: "Jeremy bravoge",
+      name: "Jeremy Bravoge",
       role: "Backend Developer",
       company: "TechCorp",
-      image: "/john mark.jpg",
+      image: JeremyBravoge,
       quote: "Being part of this team has impact me alot on my tech journey and i really appreciate alot from this team."
     },
   ];
