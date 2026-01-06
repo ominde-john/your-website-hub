@@ -12,15 +12,19 @@ const Hero = () => {
           {/* TEXT SECTION */}
           <div className="w-full lg:w-1/2 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-up">
-              <span className="block">Empowering Technology</span>
-              <span className="block text-techgold">Everywhere</span>
+              <span className="block">Teksoft Community</span>
+              <span className="block text-techgold">
+                Empowering Technology Everywhere
+              </span>
             </h1>
 
             <p
               className="text-xl md:text-2xl text-gray-100 mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-up"
               style={{ animationDelay: "0.1s" }}
             >
-              Join our community of tech enthusiasts, innovators, and developers to learn, collaborate, and grow together.
+              Teksoft Community is a global technology community for developers,
+              innovators, and tech enthusiasts to learn, collaborate, share
+              projects, and grow together.
             </p>
 
             <div
@@ -32,7 +36,7 @@ const Hero = () => {
                 size="lg"
                 className="bg-techgold hover:bg-techgold-dark text-white border-0"
               >
-                <Link to="/register">Join Our Community</Link>
+                <Link to="/register">Join Teksoft Community</Link>
               </Button>
 
               <Button
@@ -47,6 +51,7 @@ const Hero = () => {
               </Button>
             </div>
           </div>
+
         </div>
       </div>
     </div>
