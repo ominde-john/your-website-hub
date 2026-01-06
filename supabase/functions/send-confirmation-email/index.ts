@@ -41,7 +41,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Teksoft Community <teksoftllc@jonzjohn.com>", // ✅ Set sender email
+        from: "Teksoft Community <teksoft@jonzjohn.com>",
         to: [email],
         subject: "Confirm Your Email - TekSoft Registration",
         html: `
