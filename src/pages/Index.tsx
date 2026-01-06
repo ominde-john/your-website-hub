@@ -9,34 +9,47 @@ import JoinCTASection from "../components/home/JoinCTASection";
 const HomePage = () => {
   return (
     <>
-      {/* SEO METADATA */}
+      {/* SEO */}
       <Helmet>
-        <title>Teksoft Community | Empowering Technology Everywhere</title>
+        <title>Teksoft Community | Global Tech Network</title>
+
         <meta
           name="description"
-          content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts to learn, collaborate, and grow together."
+          content="Teksoft Community is a global technology community for developers and innovators to learn, collaborate, and grow through events, projects, and discussions."
         />
-        <meta name="keywords" content="Teksoft, tech community, developers, technology events, innovation" />
-        <meta name="author" content="Teksoft Community" />
 
-        {/* Open Graph (Social Sharing) */}
+        <link
+          rel="canonical"
+          href="https://teksoftllc.jonzjohn.com/"
+        />
+
+        {/* Open Graph */}
         <meta property="og:title" content="Teksoft Community" />
         <meta
           property="og:description"
-          content="A global community empowering developers and innovators through collaboration and technology."
+          content="A global tech community empowering developers and innovators through collaboration, events, and shared knowledge."
         />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://teksoftllc.jonzjohn.com/" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Teksoft Community" />
+        <meta
+          name="twitter:description"
+          content="Join a global community of developers and innovators building the future of technology."
+        />
       </Helmet>
 
-      {/* PAGE CONTENT */}
-      <div>
+      {/* Content */}
+      <main>
         <Hero />
         <AboutSection />
         <HighlightsSection />
         <TestimonialsSection />
         <QuickLinksSection />
         <JoinCTASection />
-      </div>
+      </main>
     </>
   );
 };
