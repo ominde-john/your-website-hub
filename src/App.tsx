@@ -1,10 +1,9 @@
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Helmet, HelmetProvider } from "react-helmet-async";
-
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -27,39 +26,22 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
-// About sub-pages
-import WhoWeArePage from "./pages/about/WhoWeArePage";
-import LeadershipPage from "./pages/about/LeadershipPage";
-import CommunityPage from "./pages/about/CommunityPage";
-import InnovationPage from "./pages/about/InnovationPage";
-import JourneyPage from "./pages/about/JourneyPage";
-import TechProgramsPage from "./pages/about/TechProgramsPage";
-import TeamPage from "./pages/about/TeamPage";
-import PartnershipsPage from "./pages/about/PartnershipsPage";
-import AwardsPage from "./pages/about/AwardsPage";
-
 const queryClient = new QueryClient();
 
 const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-
-        {/* GLOBAL SEO (VERY IMPORTANT) */}
         <Helmet>
           <title>Teksoft Community | Empowering Technology Everywhere</title>
           <meta
             name="description"
-            content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts to learn, collaborate, share projects, and grow together."
+            content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts to learn, collaborate, and grow."
           />
-          <meta
-            name="keywords"
-            content="Teksoft Community, tech community, developers community, technology hub, programming community"
-          />
-          <link rel="canonical" href="https://teksoftllc.jonzjohn.com" />
         </Helmet>
+
+        <Toaster />
+        <Sonner />
 
         <BrowserRouter>
           <ScrollToTop />
@@ -67,15 +49,6 @@ const App = () => (
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
-              <Route path="/about/who-we-are" element={<WhoWeArePage />} />
-              <Route path="/about/leadership" element={<LeadershipPage />} />
-              <Route path="/about/community" element={<CommunityPage />} />
-              <Route path="/about/innovation" element={<InnovationPage />} />
-              <Route path="/about/journey" element={<JourneyPage />} />
-              <Route path="/about/programs" element={<TechProgramsPage />} />
-              <Route path="/about/team" element={<TeamPage />} />
-              <Route path="/about/partnerships" element={<PartnershipsPage />} />
-              <Route path="/about/awards" element={<AwardsPage />} />
               <Route path="/blogs" element={<BlogsPage />} />
               <Route path="/events" element={<EventsPage />} />
               <Route path="/projects" element={<ProjectsPage />} />
