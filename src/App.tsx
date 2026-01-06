@@ -24,6 +24,17 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
+// About sub-pages
+import WhoWeArePage from "./pages/about/WhoWeArePage";
+import LeadershipPage from "./pages/about/LeadershipPage";
+import CommunityPage from "./pages/about/CommunityPage";
+import InnovationPage from "./pages/about/InnovationPage";
+import JourneyPage from "./pages/about/JourneyPage";
+import TechProgramsPage from "./pages/about/TechProgramsPage";
+import TeamPage from "./pages/about/TeamPage";
+import PartnershipsPage from "./pages/about/PartnershipsPage";
+import AwardsPage from "./pages/about/AwardsPage";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -37,6 +48,15 @@ const App = () => (
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/about/who-we-are" element={<WhoWeArePage />} />
+            <Route path="/about/leadership" element={<LeadershipPage />} />
+            <Route path="/about/community" element={<CommunityPage />} />
+            <Route path="/about/innovation" element={<InnovationPage />} />
+            <Route path="/about/journey" element={<JourneyPage />} />
+            <Route path="/about/programs" element={<TechProgramsPage />} />
+            <Route path="/about/team" element={<TeamPage />} />
+            <Route path="/about/partnerships" element={<PartnershipsPage />} />
+            <Route path="/about/awards" element={<AwardsPage />} />
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
