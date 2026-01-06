@@ -54,13 +54,9 @@ const VerifyEmailPage = () => {
         throw new Error("Invalid or expired verification code");
       }
 
-      // Mark code as used
-      await supabase
-        .from("email_verification_codes")
-        .update({ used: true })
-        .eq("id", codes[0].id);
+      const codeId = codes[0].id;
 
-      // Now create the user account in Supabase Auth
+      // Now create the user account in Supabase Auth FIRST
       const { error: signUpError } = await supabase.auth.signUp({
         email: email,
         password: password,
@@ -86,6 +82,12 @@ const VerifyEmailPage = () => {
         }
         throw signUpError;
       }
+
+      // Only mark code as used AFTER successful signup
+      await supabase
+        .from("email_verification_codes")
+        .update({ used: true })
+        .eq("id", codeId);
 
       toast({
         title: "Email Verified!",
