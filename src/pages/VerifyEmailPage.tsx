@@ -17,6 +17,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, ArrowRight, Loader2, RefreshCw } from "lucide-react";
 
+// Generate a random 6-digit code
+const generateVerificationCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
 const VerifyEmailPage = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,7 +31,12 @@ const VerifyEmailPage = () => {
   const location = useLocation();
   const { toast } = useToast();
 
+  // Get registration data from navigation state
   const email = location.state?.email;
+  const firstName = location.state?.firstName;
+  const lastName = location.state?.lastName;
+  const username = location.state?.username;
+  const password = location.state?.password;
 
   /* ---------------- VERIFY OTP ---------------- */
   const handleVerify = async () => {
@@ -42,13 +52,59 @@ const VerifyEmailPage = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.verifyOtp({
-        email,
-        token: otp,
-        type: "email",
+      // Verify code from database (similar to ResetPasswordPage)
+      const { data: codes, error: fetchError } = await supabase
+        .from("email_verification_codes")
+        .select("*")
+        .eq("email", email.toLowerCase())
+        .eq("code", otp)
+        .eq("used", false)
+        .gte("expires_at", new Date().toISOString())
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (fetchError || !codes || codes.length === 0) {
+        throw new Error("Invalid or expired verification code");
+      }
+
+      const codeId = codes[0].id;
+
+      // Now create the actual user account with Supabase Auth
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            username: username,
+          },
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+        },
       });
 
-      if (error) throw error;
+      if (signUpError) {
+        throw signUpError;
+      }
+
+      // Mark code as used after successful signup
+      await supabase
+        .from("email_verification_codes")
+        .update({ used: true })
+        .eq("id", codeId);
+
+      // Send welcome email
+      try {
+        await supabase.functions.invoke("send-welcome-email", {
+          body: {
+            email: email,
+            firstName: firstName,
+          },
+        });
+      } catch {
+        // Don't fail registration if welcome email fails
+        console.error("Failed to send welcome email");
+      }
 
       toast({
         title: "Email verified",
@@ -74,14 +130,35 @@ const VerifyEmailPage = () => {
     setResending(true);
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          shouldCreateUser: false,
+      // Generate new verification code
+      const verificationCode = generateVerificationCode();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+      // Store new verification code in database
+      const { error: codeError } = await supabase
+        .from("email_verification_codes")
+        .insert({
+          email: email.toLowerCase(),
+          code: verificationCode,
+          expires_at: expiresAt,
+        });
+
+      if (codeError) {
+        throw new Error("Failed to generate new code");
+      }
+
+      // Send confirmation email via edge function
+      const { error: emailError } = await supabase.functions.invoke("send-confirmation-email", {
+        body: {
+          email: email,
+          firstName: firstName,
+          code: verificationCode,
         },
       });
 
-      if (error) throw error;
+      if (emailError) {
+        throw new Error("Failed to send confirmation email");
+      }
 
       toast({
         title: "Code sent",
@@ -98,13 +175,13 @@ const VerifyEmailPage = () => {
     }
   };
 
-  if (!email) {
+  if (!email || !firstName || !lastName || !username || !password) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md text-center">
           <CardHeader>
-            <CardTitle>No email found</CardTitle>
-            <CardDescription>Please register first</CardDescription>
+            <CardTitle>Registration data not found</CardTitle>
+            <CardDescription>Please complete the registration form first</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild>
