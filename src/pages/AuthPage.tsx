@@ -78,7 +78,7 @@ const AuthPage = () => {
   };
 
   const handleGoogleLogin = async () => {
-    const redirectUrl = `${window.location.origin}/dashboard`;
+    const redirectUrl = "https://teksoftllc.jonzjohn.com/dashboard";
     
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
