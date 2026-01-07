@@ -1,40 +1,31 @@
-export type Product = {
-  id: number;
-  slug: string;
-  name: string;
-  description: string;
-  features: string[];
-  price: number;
-  rating: number;
-  reviews: number;
-  image: string;
-  category: string;
-};
-
-export const products: Product[] = [
+export const products = [
   {
     id: 1,
-    slug: "gaming-laptop-pro",
     name: "Gaming Laptop Pro",
-    description:
-      "A high-performance gaming laptop powered by the latest Intel processor, RTX graphics, 16GB RAM, and ultra-fast SSD storage.",
-    features: [
-      "Intel Core i7 Processor",
-      "NVIDIA RTX Graphics",
-      "16GB RAM",
-      "1TB SSD Storage",
-      "RGB Backlit Keyboard",
-    ],
+    slug: "gaming-laptop-pro",
     price: 189999,
     rating: 4.8,
     reviews: 156,
-    image: "/products/gaming-laptop.jpg",
-    category: "Laptops",
+    image: "/products/laptop.jpg",
+    description:
+      "A high-performance gaming laptop powered by the latest Intel processor, RTX graphics, 16GB RAM, and ultra-fast SSD storage. Ideal for gaming, AI workloads, and professional development.",
+    features: [
+      "Intel Core i7 Processor",
+      "RTX 4060 Graphics",
+      "16GB DDR5 RAM",
+      "1TB NVMe SSD",
+      "RGB Backlit Keyboard",
+    ],
   },
+
   {
     id: 2,
-    slug: "ultra-hd-monitor",
     name: 'Ultra HD Monitor 27"',
+    slug: "ultra-hd-monitor",
+    price: 64999,
+    rating: 4.6,
+    reviews: 89,
+    image: "/products/monitor.jpg",
     description:
       "A stunning 27-inch Ultra HD monitor offering crystal-clear visuals for designers, developers, and gamers.",
     features: [
@@ -44,29 +35,24 @@ export const products: Product[] = [
       "Slim Bezel Design",
       "HDMI & DisplayPort",
     ],
-    price: 64999,
-    rating: 4.6,
-    reviews: 89,
-    image: "/products/ultra-hd-monitor.jpg",
-    category: "Monitors",
   },
+
   {
     id: 3,
-    slug: "wireless-headphones",
     name: "Wireless Noise-Canceling Headphones",
-    description:
-      "Premium wireless headphones with active noise cancellation and superior sound quality.",
-    features: [
-      "Active Noise Cancellation",
-      "Bluetooth 5.3",
-      "30-Hour Battery Life",
-      "Fast Charging",
-      "Comfort Fit Design",
-    ],
+    slug: "wireless-headphones",
     price: 29999,
     rating: 4.9,
     reviews: 234,
-    image: "/products/wireless-headphones.jpg",
-    category: "Audio",
+    image: "/products/headphones.jpg",
+    description:
+      "Premium wireless headphones with active noise cancellation, deep bass, and all-day comfort.",
+    features: [
+      "Active Noise Cancellation",
+      "40-Hour Battery Life",
+      "Bluetooth 5.3",
+      "Fast Charging",
+      "Comfort Fit Design",
+    ],
   },
 ];
