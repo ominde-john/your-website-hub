@@ -6,9 +6,27 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { User, Mail, Lock, ArrowRight, Loader2, UserPlus } from "lucide-react";
+import { Mail, Lock, User, AtSign, ArrowRight, Loader2, UserPlus } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
+import { z } from "zod";
 import teksoftLogo from "@/assets/teksoft-logo.png";
+
+const registerSchema = z.object({
+  firstName: z.string().min(2, "First name must be at least 2 characters").max(50),
+  lastName: z.string().min(2, "Last name must be at least 2 characters").max(50),
+  username: z.string().min(3, "Username must be at least 3 characters").max(30).regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+// Generate a random 6-digit code
+const generateVerificationCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -20,102 +38,37 @@ const RegisterPage = () => {
     confirmPassword: "",
   });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Generate a random 6-digit verification code
-  const generateVerificationCode = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
 
-    // Validation
-    if (!formData.firstName || !formData.lastName || !formData.username || !formData.email || !formData.password) {
-      toast({
-        title: "Error",
-        description: "Please fill in all fields",
-        variant: "destructive",
+    const result = registerSchema.safeParse(formData);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = err.message;
+        }
       });
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      toast({
-        title: "Error",
-        description: "Password must be at least 6 characters long",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid email address",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Username validation (alphanumeric and underscore only)
-    const usernameRegex = /^[a-zA-Z0-9_]+$/;
-    if (!usernameRegex.test(formData.username)) {
-      toast({
-        title: "Error",
-        description: "Username can only contain letters, numbers, and underscores",
-        variant: "destructive",
-      });
+      setErrors(fieldErrors);
       return;
     }
 
     setLoading(true);
 
     try {
-      // Check if email or username already exists
-      const { data: existingUser } = await supabase
-        .from("profiles")
-        .select("email, username")
-        .or(`email.eq.${formData.email.toLowerCase()},username.eq.${formData.username}`)
-        .maybeSingle();
-
-      if (existingUser) {
-        if (existingUser.email === formData.email.toLowerCase()) {
-          toast({
-            title: "Email already exists",
-            description: "This email is already registered. Please login instead.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Username taken",
-            description: "This username is already taken. Please choose another one.",
-            variant: "destructive",
-          });
-        }
-        setLoading(false);
-        return;
-      }
-
       // Generate verification code
       const verificationCode = generateVerificationCode();
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
@@ -124,46 +77,46 @@ const RegisterPage = () => {
       const { error: codeError } = await supabase
         .from("email_verification_codes")
         .insert({
-          email: formData.email.toLowerCase(),
+          email: formData.email.trim().toLowerCase(),
           code: verificationCode,
           expires_at: expiresAt,
         });
 
       if (codeError) {
+        console.error("Error storing verification code:", codeError);
         throw new Error("Failed to generate verification code");
       }
 
-      // Send confirmation email with verification code
+      // Send confirmation email via edge function
       const { error: emailError } = await supabase.functions.invoke("send-confirmation-email", {
         body: {
-          email: formData.email,
-          firstName: formData.firstName,
+          email: formData.email.trim(),
+          firstName: formData.firstName.trim(),
           code: verificationCode,
         },
       });
 
       if (emailError) {
-        console.error("Email error:", emailError);
-        throw new Error("Failed to send verification email");
+        console.error("Error sending email:", emailError);
+        throw new Error("Failed to send confirmation email");
       }
 
       toast({
-        title: "Verification Email Sent!",
-        description: `A 6-digit code has been sent to ${formData.email}`,
+        title: "Check Your Email",
+        description: "We've sent you a 6-digit confirmation code.",
       });
 
-      // Navigate to verification page with user data
-      navigate("/verify-email", {
-        state: {
-          email: formData.email,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          username: formData.username,
+      // Navigate to verify page with form data
+      navigate("/verify-email", { 
+        state: { 
+          email: formData.email.trim().toLowerCase(),
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
+          username: formData.username.trim(),
           password: formData.password,
-        },
+        } 
       });
     } catch (error: any) {
-      console.error("Registration error:", error);
       toast({
         title: "Registration Failed",
         description: error.message || "Something went wrong. Please try again.",
@@ -174,192 +127,220 @@ const RegisterPage = () => {
     }
   };
 
-  const handleGoogleSignup = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/`,
-        },
-      });
-
-      if (error) throw error;
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to sign up with Google",
-        variant: "destructive",
-      });
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
-      <Card className="w-full max-w-lg shadow-xl border-0">
-        <CardHeader className="text-center pb-2">
-          <div className="mx-auto mb-4">
-            <img 
-              src={teksoftLogo} 
-              alt="Teksoft Community" 
-              className="h-16 w-auto mx-auto"
-            />
+    <div className="min-h-screen flex items-center justify-center p-6 relative">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 right-20 w-80 h-80 bg-techgold/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 left-20 w-72 h-72 bg-techblue/10 rounded-full blur-3xl animate-pulse delay-700" />
+      </div>
+
+      <Card className="w-full max-w-lg shadow-2xl border border-white/20 bg-white/95 backdrop-blur-xl relative z-10">
+        {/* Top accent bar */}
+        <div className="h-1.5 bg-gradient-to-r from-techgold via-techblue to-techgold rounded-t-lg" />
+        
+        <CardHeader className="text-center pb-4 pt-8">
+          {/* Logo with glow effect */}
+          <div className="relative mx-auto mb-6">
+            <div className="absolute inset-0 bg-techgold/30 rounded-full blur-xl scale-150" />
+            <div className="h-24 w-24 rounded-full bg-[#000000] flex items-center justify-center p-1.5 relative shadow-xl ring-4 ring-techgold/20">
+              <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain rounded-full" />
+            </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">Join Teksoft Community</CardTitle>
-          <CardDescription className="text-gray-600">
-            Create your account to get started
+          
+          <CardTitle className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-2">
+            Join Teksoft
+            <UserPlus className="h-6 w-6 text-techgold" />
+          </CardTitle>
+          <CardDescription className="text-gray-600 mt-2">
+            Create your account and become part of our community
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="pt-6">
+        <CardContent className="pt-2 pb-8 px-8">
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Label htmlFor="firstName" className="text-gray-700 font-medium">First Name</Label>
+                <div className="relative group">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
                   <Input
                     id="firstName"
                     name="firstName"
                     type="text"
-                    placeholder="John"
+                    placeholder="Firtname"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="pl-10"
+                    className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.firstName ? "border-red-500 focus:border-red-500" : ""}`}
                     required
                   />
                 </div>
+                {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
               </div>
-
+              
               <div className="space-y-2">
-                <Label htmlFor="lastName">Last Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Label htmlFor="lastName" className="text-gray-700 font-medium">Last Name</Label>
+                <div className="relative group">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
                   <Input
                     id="lastName"
                     name="lastName"
                     type="text"
-                    placeholder="Doe"
+                    placeholder="Lastname"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="pl-10"
+                    className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.lastName ? "border-red-500 focus:border-red-500" : ""}`}
                     required
                   />
                 </div>
+                {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <div className="relative">
-                <UserPlus className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Label htmlFor="username" className="text-gray-700 font-medium">Username</Label>
+              <div className="relative group">
+                <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
                 <Input
                   id="username"
                   name="username"
                   type="text"
-                  placeholder="johndoe"
+                  placeholder="johndoe123"
                   value={formData.username}
                   onChange={handleChange}
-                  className="pl-10"
+                  className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.username ? "border-red-500 focus:border-red-500" : ""}`}
                   required
                 />
               </div>
+              {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Label htmlFor="email" className="text-gray-700 font-medium">Email Address</Label>
+              <div className="relative group">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
                 <Input
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="john@example.com"
+                  placeholder="yourname@domain.com"
                   value={formData.email}
                   onChange={handleChange}
-                  className="pl-10"
+                  className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.email ? "border-red-500 focus:border-red-500" : ""}`}
                   required
                 />
               </div>
+              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.password ? "border-red-500 focus:border-red-500" : ""}`}
+                    required
+                  />
+                </div>
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="pl-10"
-                  required
-                />
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">Confirm</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.confirmPassword ? "border-red-500 focus:border-red-500" : ""}`}
+                    required
+                  />
+                </div>
+                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full bg-techblue hover:bg-techblue-dark text-white"
+            <Button 
+              type="submit" 
+              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-techgold to-yellow-500 hover:from-yellow-500 hover:to-techgold text-gray-900 shadow-lg shadow-techgold/25 transition-all duration-300 hover:shadow-xl hover:shadow-techgold/30 hover:scale-[1.02] mt-6"
               disabled={loading}
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating Account...
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Sending verification...
                 </>
               ) : (
                 <>
                   Create Account
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}
             </Button>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-12 text-base font-medium border-gray-300 hover:bg-gray-50 transition-all"
+              onClick={async () => {
+                const redirectUrl = "https://teksoftllc.jonzjohn.com/dashboard";
+                const { error } = await supabase.auth.signInWithOAuth({
+                  provider: "google",
+                  options: {
+                    redirectTo: redirectUrl,
+                  },
+                });
+                if (error) {
+                  toast({
+                    title: "Google Sign Up Failed",
+                    description: error.message,
+                    variant: "destructive",
+                  });
+                }
+              }}
+            >
+              <FcGoogle className="mr-2 h-5 w-5" />
+              Sign up with Google
+            </Button>
           </form>
 
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
+          <div className="mt-6 text-center">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">Already a member?</span>
+              </div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or continue with</span>
-            </div>
-          </div>
-
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={handleGoogleSignup}
-            type="button"
-          >
-            <FcGoogle className="mr-2 h-5 w-5" />
-            Sign up with Google
-          </Button>
-
-          <p className="text-center text-sm text-gray-600 mt-6">
-            Already have an account?{" "}
-            <Link to="/auth" className="text-techblue hover:text-techblue-dark font-medium transition-colors">
-              Sign in
+            <Link 
+              to="/auth" 
+              className="mt-4 inline-flex items-center gap-2 text-techblue hover:text-techblue-dark font-semibold transition-all hover:gap-3"
+            >
+              Sign in to your account
+              <ArrowRight className="h-4 w-4" />
             </Link>
-          </p>
+          </div>
         </CardContent>
       </Card>
     </div>
