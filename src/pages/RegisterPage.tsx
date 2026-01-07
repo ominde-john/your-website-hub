@@ -84,13 +84,19 @@ const RegisterPage = () => {
 
       if (codeError) {
         console.error("Error storing verification code:", codeError);
-        // Provide more helpful error message based on error type
+        console.error("Full error details:", JSON.stringify(codeError, null, 2));
+        
+        // Check for database access/permission related errors
+        const isAccessDenied = codeError.code === "42501" || 
+                              codeError.code === "PGRST301" || 
+                              /row\s*level\s*security/i.test(codeError.message || "");
+        
+        // Provide helpful error message based on error type
         if (codeError.code === "42P01") {
-          throw new Error("Database setup incomplete. Please contact support.");
-        } else if (codeError.code === "42501") {
-          throw new Error("Permission denied. Please contact support.");
+          throw new Error("Database setup incomplete. The email_verification_codes table may not exist. Please contact support.");
+        } else if (isAccessDenied) {
+          throw new Error("Database access denied. Please verify the database has proper permissions and RLS policies configured.");
         } else {
-          // Don't expose raw database errors to users
           throw new Error("Failed to generate verification code. Please try again or contact support.");
         }
       }
