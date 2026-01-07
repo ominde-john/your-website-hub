@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { User, Lock, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
 const AuthPage = () => {
@@ -73,6 +74,25 @@ const AuthPage = () => {
         description: "You have successfully logged in.",
       });
       navigate("/dashboard");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const redirectUrl = `${window.location.origin}/dashboard`;
+    
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: redirectUrl,
+      },
+    });
+
+    if (error) {
+      toast({
+        title: "Google Sign In Failed",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
@@ -164,6 +184,25 @@ const AuthPage = () => {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </>
               )}
+            </Button>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-12 text-base font-medium border-gray-300 hover:bg-gray-50 transition-all"
+              onClick={handleGoogleLogin}
+            >
+              <FcGoogle className="mr-2 h-5 w-5" />
+              Sign in with Google
             </Button>
           </form>
 
