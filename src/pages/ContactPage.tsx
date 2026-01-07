@@ -106,23 +106,49 @@ export default function ContactPage() {
     setLoading(true);
 
     try {
-      const payload: Record<string, string> = {
-        access_key: WEB3FORMS_KEY,
-        name: form.name,
-        email: form.email,
-        message: form.message,
-      };
+      let res: Response | undefined;
 
-      // Only include captcha token if available
-      if (captchaToken) {
-        payload["g-recaptcha-response"] = captchaToken;
+      // Try server-side API first (more secure, keeps API key on server)
+      try {
+        res = await fetch("/api/send-contact-message", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            message: form.message,
+            captchaToken: captchaToken,
+          }),
+        });
+
+        // If we get a 404, the API route doesn't exist (development mode)
+        if (res.status === 404) {
+          res = undefined;
+        }
+      } catch {
+        // Network error or API route doesn't exist, fall back to direct API
+        res = undefined;
       }
 
-      const res = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      // Fall back to direct Web3Forms API call
+      if (!res) {
+        const payload: Record<string, string> = {
+          access_key: WEB3FORMS_KEY,
+          name: form.name,
+          email: form.email,
+          message: form.message,
+        };
+
+        if (captchaToken) {
+          payload["g-recaptcha-response"] = captchaToken;
+        }
+
+        res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
 
       const data = await res.json();
 
