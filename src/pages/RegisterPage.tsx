@@ -84,7 +84,15 @@ const RegisterPage = () => {
 
       if (codeError) {
         console.error("Error storing verification code:", codeError);
-        throw new Error("Failed to generate verification code");
+        // Provide more helpful error message based on error type
+        if (codeError.code === "42P01") {
+          throw new Error("Database setup incomplete. Please contact support.");
+        } else if (codeError.code === "42501") {
+          throw new Error("Permission denied. Please contact support.");
+        } else {
+          // Don't expose raw database errors to users
+          throw new Error("Failed to generate verification code. Please try again or contact support.");
+        }
       }
 
       // Send confirmation email via edge function
