@@ -3,6 +3,7 @@ import SectionTitle from "../components/SectionTitle";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Lightbulb, GraduationCap, UsersRound, History, ArrowRight } from "lucide-react";
+import RecaptchaTest from "../components/RecaptchaTest";
 
 // ✅ Local team images
 import EvansChuchu from "../assets/team/evanschuchu.jpg";
