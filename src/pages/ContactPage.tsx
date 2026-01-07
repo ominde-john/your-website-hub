@@ -14,6 +14,7 @@ export default function ContactPage() {
   const [ReCAPTCHA, setReCAPTCHA] = useState<any>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [recaptchaLoading, setRecaptchaLoading] = useState(true);
 
   const [form, setForm] = useState({
     name: "",
@@ -25,8 +26,16 @@ export default function ContactPage() {
   useEffect(() => {
     if (typeof window !== "undefined" && SITE_KEY) {
       import("react-google-recaptcha")
-        .then((mod) => setReCAPTCHA(() => mod.default))
-        .catch(() => console.error("Failed to load reCAPTCHA"));
+        .then((mod) => {
+          setReCAPTCHA(() => mod.default);
+          setRecaptchaLoading(false);
+        })
+        .catch((err) => {
+          console.error("Failed to load reCAPTCHA:", err);
+          setRecaptchaLoading(false);
+        });
+    } else {
+      setRecaptchaLoading(false);
     }
   }, []);
 
@@ -127,14 +136,26 @@ export default function ContactPage() {
         />
 
         {/* ✅ reCAPTCHA renders ONLY if safe */}
-        {ReCAPTCHA && SITE_KEY && (
-          <ReCAPTCHA
-            sitekey={SITE_KEY}
-            onChange={(token: string | null) => setCaptchaToken(token)}
-          />
-        )}
+        {recaptchaLoading && SITE_KEY ? (
+          <div className="flex items-center justify-center p-4 border rounded-md bg-muted/50">
+            <p className="text-sm text-muted-foreground">Loading verification...</p>
+          </div>
+        ) : ReCAPTCHA && SITE_KEY ? (
+          <div className="flex justify-center">
+            <ReCAPTCHA
+              sitekey={SITE_KEY}
+              onChange={(token: string | null) => setCaptchaToken(token)}
+            />
+          </div>
+        ) : SITE_KEY ? (
+          <div className="flex items-center justify-center p-4 border border-amber-500/50 rounded-md bg-amber-500/10">
+            <p className="text-sm text-amber-600 dark:text-amber-400">
+              ⚠️ Unable to load verification. Please refresh the page or check your connection.
+            </p>
+          </div>
+        ) : null}
 
-        <Button type="submit" disabled={loading} className="w-full">
+        <Button type="submit" disabled={loading || !captchaToken} className="w-full">
           {loading ? "Sending..." : "Send Message"}
         </Button>
       </form>
