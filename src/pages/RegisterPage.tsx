@@ -1,34 +1,44 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Lock, User, AtSign, ArrowRight, Loader2, UserPlus } from "lucide-react";
-import { z } from "zod";
-import teksoftLogo from "@/assets/teksoft-logo.png";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
-const registerSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters").max(50),
-  lastName: z.string().min(2, "Last name must be at least 2 characters").max(50),
-  username: z.string().min(3, "Username must be at least 3 characters").max(30).regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
-  email: z.string().email("Please enter a valid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
+/* ---------------- SCHEMA ---------------- */
 
-// Generate a random 6-digit code
-const generateVerificationCode = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
+const registerSchema = z
+  .object({
+    firstName: z.string().min(2),
+    lastName: z.string().min(2),
+    username: z.string().min(3),
+    email: z.string().email(),
+    password: z.string().min(6),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
-const RegisterPage = () => {
-  const [formData, setFormData] = useState({
+/* ---------------- COMPONENT ---------------- */
+
+export default function RegisterPage() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
+  const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     username: "",
@@ -36,89 +46,66 @@ const RegisterPage = () => {
     password: "",
     confirmPassword: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const navigate = useNavigate();
-  const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  /* ---------------- REGISTER ---------------- */
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({});
 
-    const result = registerSchema.safeParse(formData);
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0] as string] = err.message;
-        }
+    const parsed = registerSchema.safeParse(form);
+    if (!parsed.success) {
+      toast({
+        title: "Invalid input",
+        description: parsed.error.errors[0].message,
+        variant: "destructive",
       });
-      setErrors(fieldErrors);
       return;
     }
 
     setLoading(true);
 
     try {
-      // Generate verification code
-      const verificationCode = generateVerificationCode();
-      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
-
-      // Store verification code in database
-      const { error: codeError } = await supabase
-        .from("email_verification_codes")
-        .insert({
-          email: formData.email.trim().toLowerCase(),
-          code: verificationCode,
-          expires_at: expiresAt,
-        });
-
-      if (codeError) {
-        console.error("Error storing verification code:", codeError);
-        throw new Error("Failed to generate verification code");
-      }
-
-      // Send confirmation email via edge function
-      const { error: emailError } = await supabase.functions.invoke("send-confirmation-email", {
-        body: {
-          email: formData.email.trim(),
-          firstName: formData.firstName.trim(),
-          code: verificationCode,
+      /* 1️⃣ CREATE AUTH USER */
+      const { data, error } = await supabase.auth.signUp({
+        email: form.email.toLowerCase(),
+        password: form.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth`,
         },
       });
 
-      if (emailError) {
-        console.error("Error sending email:", emailError);
-        throw new Error("Failed to send confirmation email");
-      }
+      if (error) throw error;
+      if (!data.user) throw new Error("User not created");
 
+      /* 2️⃣ INSERT USER PROFILE */
+      const { error: profileError } = await supabase
+        .from("profiles") // 🔁 CHANGE HERE ONLY if your table name is different
+        .insert({
+          id: data.user.id,
+          email: form.email.toLowerCase(),
+          first_name: form.firstName,
+          last_name: form.lastName,
+          username: form.username,
+        });
+
+      if (profileError) throw profileError;
+
+      /* 3️⃣ SUCCESS */
       toast({
-        title: "Check Your Email",
-        description: "We've sent you a 6-digit confirmation code.",
+        title: "Verify your email",
+        description:
+          "We sent you a verification email. Please verify before logging in.",
       });
 
-      // Navigate to verify page with form data
-      navigate("/verify-email", { 
-        state: { 
-          email: formData.email.trim().toLowerCase(),
-          firstName: formData.firstName.trim(),
-          lastName: formData.lastName.trim(),
-          username: formData.username.trim(),
-          password: formData.password,
-        } 
-      });
-    } catch (error: any) {
+      navigate("/auth");
+    } catch (err: any) {
       toast({
-        title: "Registration Failed",
-        description: error.message || "Something went wrong. Please try again.",
+        title: "Registration failed",
+        description: err.message || "Something went wrong",
         variant: "destructive",
       });
     } finally {
@@ -126,190 +113,43 @@ const RegisterPage = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative">
-      {/* Decorative elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 right-20 w-80 h-80 bg-techgold/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-10 left-20 w-72 h-72 bg-techblue/10 rounded-full blur-3xl animate-pulse delay-700" />
-      </div>
+  /* ---------------- UI ---------------- */
 
-      <Card className="w-full max-w-lg shadow-2xl border border-white/20 bg-white/95 backdrop-blur-xl relative z-10">
-        {/* Top accent bar */}
-        <div className="h-1.5 bg-gradient-to-r from-techgold via-techblue to-techgold rounded-t-lg" />
-        
-        <CardHeader className="text-center pb-4 pt-8">
-          {/* Logo with glow effect */}
-          <div className="relative mx-auto mb-6">
-            <div className="absolute inset-0 bg-techgold/30 rounded-full blur-xl scale-150" />
-            <div className="h-24 w-24 rounded-full bg-[#000000] flex items-center justify-center p-1.5 relative shadow-xl ring-4 ring-techgold/20">
-              <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain rounded-full" />
-            </div>
-          </div>
-          
-          <CardTitle className="text-3xl font-bold text-gray-900 flex items-center justify-center gap-2">
-            Join Teksoft
-            <UserPlus className="h-6 w-6 text-techgold" />
-          </CardTitle>
-          <CardDescription className="text-gray-600 mt-2">
-            Create your account and become part of our community
-          </CardDescription>
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Create Account</CardTitle>
+          <CardDescription>Verify email for authenticity</CardDescription>
         </CardHeader>
 
-        <CardContent className="pt-2 pb-8 px-8">
+        <CardContent>
           <form onSubmit={handleRegister} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-gray-700 font-medium">First Name</Label>
-                <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    placeholder="Firtname"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.firstName ? "border-red-500 focus:border-red-500" : ""}`}
-                    required
-                  />
-                </div>
-                {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-gray-700 font-medium">Last Name</Label>
-                <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    placeholder="Lastname"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.lastName ? "border-red-500 focus:border-red-500" : ""}`}
-                    required
-                  />
-                </div>
-                {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
-              </div>
-            </div>
+            <Input name="firstName" placeholder="First name" onChange={handleChange} />
+            <Input name="lastName" placeholder="Last name" onChange={handleChange} />
+            <Input name="username" placeholder="Username" onChange={handleChange} />
+            <Input name="email" type="email" placeholder="Email" onChange={handleChange} />
+            <Input name="password" type="password" placeholder="Password" onChange={handleChange} />
+            <Input
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm password"
+              onChange={handleChange}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="username" className="text-gray-700 font-medium">Username</Label>
-              <div className="relative group">
-                <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
-                <Input
-                  id="username"
-                  name="username"
-                  type="text"
-                  placeholder="johndoe123"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.username ? "border-red-500 focus:border-red-500" : ""}`}
-                  required
-                />
-              </div>
-              {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-700 font-medium">Email Address</Label>
-              <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="yourname@domain.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.email ? "border-red-500 focus:border-red-500" : ""}`}
-                  required
-                />
-              </div>
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
-                <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.password ? "border-red-500 focus:border-red-500" : ""}`}
-                    required
-                  />
-                </div>
-                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">Confirm</Label>
-                <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-techblue transition-colors" />
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    placeholder="••••••••"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.confirmPassword ? "border-red-500 focus:border-red-500" : ""}`}
-                    required
-                  />
-                </div>
-                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
-              </div>
-            </div>
-
-            <Button 
-              type="submit" 
-              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-techgold to-yellow-500 hover:from-yellow-500 hover:to-techgold text-gray-900 shadow-lg shadow-techgold/25 transition-all duration-300 hover:shadow-xl hover:shadow-techgold/30 hover:scale-[1.02] mt-6"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Sending verification...
-                </>
-              ) : (
-                <>
-                  Create Account
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </>
-              )}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? <Loader2 className="animate-spin" /> : "Create account"}
             </Button>
           </form>
 
-          <div className="mt-8 text-center">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">Already a member?</span>
-              </div>
-            </div>
-            <Link 
-              to="/auth" 
-              className="mt-4 inline-flex items-center gap-2 text-techblue hover:text-techblue-dark font-semibold transition-all hover:gap-3"
-            >
-              Sign in to your account
-              <ArrowRight className="h-4 w-4" />
+          <p className="text-sm text-center mt-4">
+            Already have an account?{" "}
+            <Link to="/auth" className="text-blue-600">
+              Login
             </Link>
-          </div>
+          </p>
         </CardContent>
       </Card>
     </div>
   );
-};
-
-export default RegisterPage;
+}
