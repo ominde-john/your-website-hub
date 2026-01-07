@@ -37,10 +37,10 @@ export default function ContactPage() {
           // Set a timeout to detect if reCAPTCHA fails to render
           // (e.g., blocked by ad blocker or network issues)
           const timeout = setTimeout(() => {
-            // Check if Google's reCAPTCHA script loaded
-            const recaptchaScript = document.querySelector('script[src*="recaptcha"]');
-            const recaptchaFrame = document.querySelector('iframe[src*="recaptcha"]');
-            if (!recaptchaScript || !recaptchaFrame) {
+            // Check if Google's reCAPTCHA API loaded successfully
+            // window.grecaptcha is the official reCAPTCHA API indicator
+            const grecaptcha = (window as { grecaptcha?: unknown }).grecaptcha;
+            if (!grecaptcha) {
               console.warn("reCAPTCHA failed to render - possibly blocked");
               setRecaptchaFailed(true);
             }
