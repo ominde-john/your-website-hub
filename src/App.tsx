@@ -24,6 +24,7 @@ import ShowcasePage from "./pages/ShowcasePage";
 import CareersPage from "./pages/CareersPage";
 import MarketplacePage from "./pages/MarketplacePage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+
 import AuthPage from "./pages/AuthPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
@@ -56,13 +57,21 @@ import TeamPage from "./pages/about/TeamPage";
 import PartnershipsPage from "./pages/about/PartnershipsPage";
 import AwardsPage from "./pages/about/AwardsPage";
 
+/* ======================
+   QUERY CLIENT
+====================== */
 const queryClient = new QueryClient();
 
+/* ======================
+   APP
+====================== */
 const App = () => {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
+
+          {/* Global SEO */}
           <Helmet>
             <title>Teksoft Community | Empowering Technology Everywhere</title>
             <meta
@@ -105,19 +114,19 @@ const App = () => {
                   element={<AIRoboticsPage />}
                 />
 
-                {/* Marketplace */}
-                <Route path="marketplace" element={<MarketplacePage />} />
-                <Route
-                  path="marketplace/product/:productId"
-                  element={<ProductDetailsPage />}
-                />
-
                 {/* Community */}
                 <Route path="discussion" element={<DiscussionPage />} />
                 <Route path="dashboard" element={<MemberDashboardPage />} />
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="showcase" element={<ShowcasePage />} />
                 <Route path="careers" element={<CareersPage />} />
+
+                {/* Marketplace */}
+                <Route path="marketplace" element={<MarketplacePage />} />
+                <Route
+                  path="marketplace/product/:slug"
+                  element={<ProductDetailsPage />}
+                />
 
                 {/* Auth */}
                 <Route path="auth" element={<AuthPage />} />
@@ -137,6 +146,7 @@ const App = () => {
               </Route>
             </Routes>
           </BrowserRouter>
+
         </TooltipProvider>
       </QueryClientProvider>
     </HelmetProvider>
