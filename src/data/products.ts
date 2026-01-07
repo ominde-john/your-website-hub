@@ -1,32 +1,23 @@
 export type Product = {
   id: number;
-  name: string;
   slug: string;
-  category: string;
+  name: string;
+  description: string;
+  features: string[];
   price: number;
-  originalPrice: number;
   rating: number;
   reviews: number;
   image: string;
-  description: string;
-  features: string[];
-  type: "electronics" | "software";
+  category: string;
 };
 
 export const products: Product[] = [
   {
     id: 1,
-    name: "Gaming Laptop Pro",
     slug: "gaming-laptop-pro",
-    category: "Laptops",
-    price: 189999,
-    originalPrice: 219999,
-    rating: 4.8,
-    reviews: 156,
-    image: "/images/products/laptop.png",
-    type: "electronics",
+    name: "Gaming Laptop Pro",
     description:
-      "A high-performance gaming laptop powered by the latest Intel processor and RTX graphics. Ideal for gaming, AI workloads, and professional development.",
+      "A high-performance gaming laptop powered by the latest Intel processor, RTX graphics, 16GB RAM, and ultra-fast SSD storage.",
     features: [
       "Intel Core i7 Processor",
       "NVIDIA RTX Graphics",
@@ -34,20 +25,18 @@ export const products: Product[] = [
       "1TB SSD Storage",
       "RGB Backlit Keyboard",
     ],
+    price: 189999,
+    rating: 4.8,
+    reviews: 156,
+    image: "/products/gaming-laptop.jpg",
+    category: "Laptops",
   },
   {
     id: 2,
-    name: "Ultra HD Monitor 27\"",
     slug: "ultra-hd-monitor",
-    category: "Monitors",
-    price: 64999,
-    originalPrice: 74999,
-    rating: 4.6,
-    reviews: 89,
-    image: "/images/products/monitor.png",
-    type: "electronics",
+    name: 'Ultra HD Monitor 27"',
     description:
-      "A stunning 27-inch Ultra HD monitor offering crystal-clear visuals, perfect for designers, developers, and gamers.",
+      "A stunning 27-inch Ultra HD monitor offering crystal-clear visuals for designers, developers, and gamers.",
     features: [
       "27-inch 4K Display",
       "144Hz Refresh Rate",
@@ -55,20 +44,18 @@ export const products: Product[] = [
       "Slim Bezel Design",
       "HDMI & DisplayPort",
     ],
+    price: 64999,
+    rating: 4.6,
+    reviews: 89,
+    image: "/products/ultra-hd-monitor.jpg",
+    category: "Monitors",
   },
   {
     id: 3,
-    name: "Wireless Noise-Canceling Headphones",
     slug: "wireless-headphones",
-    category: "Audio",
-    price: 29999,
-    originalPrice: 34999,
-    rating: 4.9,
-    reviews: 234,
-    image: "/images/products/headphones.png",
-    type: "electronics",
+    name: "Wireless Noise-Canceling Headphones",
     description:
-      "Premium wireless headphones with advanced noise cancellation and immersive sound quality.",
+      "Premium wireless headphones with active noise cancellation and superior sound quality.",
     features: [
       "Active Noise Cancellation",
       "Bluetooth 5.3",
@@ -76,5 +63,10 @@ export const products: Product[] = [
       "Fast Charging",
       "Comfort Fit Design",
     ],
+    price: 29999,
+    rating: 4.9,
+    reviews: 234,
+    image: "/products/wireless-headphones.jpg",
+    category: "Audio",
   },
 ];
