@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 
 
-const WEB3FORMS_ACCESS_KEY = "cfeb2c00-e884-4f54-8496-315cf9f85c42";
+const WEB3FORMS_ACCESS_KEY = "cfeb2c00-e884-4f54-8496-315cf9f85c4";
 const RECAPTCHA_SITE_KEY = "6LclbUMsAAAAAAHM7OYydYIFJpCRBPN4YJWdC7Dx"; // site key only
 
 const ContactPage = () => {
