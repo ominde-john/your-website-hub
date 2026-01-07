@@ -1,62 +1,66 @@
 import PageHeader from "@/components/PageHeader";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Star, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { products } from "@/data/products";
 
 const MarketplacePage = () => {
-  const electronics = products.filter(p => p.type === "electronics");
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#0b0f19] text-white">
       <PageHeader
         title="Marketplace"
-        description="Discover premium electronics curated by Teksoft"
+        description="Browse premium tech products curated by Teksoft Community"
       />
 
       <section className="py-16">
-        <div className="container-custom grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          {electronics.map(product => (
-            <Link
+        <div className="container-custom grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.map((product) => (
+            <Card
               key={product.id}
-              to={`/marketplace/product/${product.slug}`}
+              className="bg-[#111827] border border-gray-800 hover:border-techblue transition"
             >
-              <Card className="hover:shadow-xl transition cursor-pointer">
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-32 object-contain"
-                  />
+              {/* IMAGE */}
+              <div className="h-56 bg-black flex items-center justify-center overflow-hidden">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+
+              {/* CONTENT */}
+              <CardContent className="p-5">
+                <h3 className="text-lg font-semibold mb-2">
+                  {product.name}
+                </h3>
+
+                <div className="flex items-center gap-2 mb-3">
+                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                  <span className="text-sm text-gray-300">
+                    {product.rating} ({product.reviews})
+                  </span>
                 </div>
 
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-lg">{product.name}</h3>
+                <p className="text-techblue text-xl font-bold">
+                  Ksh {product.price.toLocaleString()}
+                </p>
+              </CardContent>
 
-                  <div className="flex items-center text-yellow-500 mt-1">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span className="ml-1 text-sm text-gray-700">
-                      {product.rating} ({product.reviews})
-                    </span>
-                  </div>
-
-                  <div className="mt-2 text-techblue font-bold text-xl">
-                    Ksh {product.price.toLocaleString()}
-                  </div>
-                </CardContent>
-
-                <CardFooter>
-                  <Button className="w-full gap-2">
+              {/* ACTION */}
+              <CardFooter className="p-5 pt-0">
+                <Link
+                  to={`/marketplace/product/${product.slug}`}
+                  className="w-full"
+                >
+                  <Button className="w-full bg-techblue hover:bg-techblue-dark text-white gap-2">
                     <ShoppingCart className="w-4 h-4" />
                     View Product
                   </Button>
-                </CardFooter>
-              </Card>
-            </Link>
+                </Link>
+              </CardFooter>
+            </Card>
           ))}
-
         </div>
       </section>
     </div>
