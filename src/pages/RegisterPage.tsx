@@ -312,8 +312,6 @@ const RegisterPage = () => {
               className="w-full h-12 text-base font-medium border-gray-300 hover:bg-gray-50 transition-all"
               onClick={async () => {
 
-                const redirectUrl = `${window.location.origin}/dashboard`;
-
                 const redirectUrl = "https://teksoftllc.jonzjohn.com/dashboard";
 
                 const { error } = await supabase.auth.signInWithOAuth({
