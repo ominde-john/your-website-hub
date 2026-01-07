@@ -106,10 +106,9 @@ export default function ContactPage() {
     setLoading(true);
 
     try {
-      // Try server-side API first (more secure, keeps API key on server)
-      let res: Response;
-      let useServerApi = true;
+      let res: Response | undefined;
 
+      // Try server-side API first (more secure, keeps API key on server)
       try {
         res = await fetch("/api/send-contact-message", {
           method: "POST",
@@ -124,15 +123,15 @@ export default function ContactPage() {
 
         // If we get a 404, the API route doesn't exist (development mode)
         if (res.status === 404) {
-          useServerApi = false;
+          res = undefined;
         }
       } catch {
         // Network error or API route doesn't exist, fall back to direct API
-        useServerApi = false;
+        res = undefined;
       }
 
       // Fall back to direct Web3Forms API call
-      if (!useServerApi) {
+      if (!res) {
         const payload: Record<string, string> = {
           access_key: WEB3FORMS_KEY,
           name: form.name,
