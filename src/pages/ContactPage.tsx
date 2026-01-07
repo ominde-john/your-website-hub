@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-const WEB3FORMS_KEY = "cfeb2c00-e884-4f54-8496-315cf9f85c42";
+const WEB3FORMS_KEY = "PASTE_YOUR_WEB3FORMS_ACCESS_KEY_HERE";
 
 const ContactPage = () => {
   const { toast } = useToast();
