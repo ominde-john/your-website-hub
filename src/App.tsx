@@ -23,7 +23,7 @@ import ContactPage from "./pages/ContactPage";
 import ShowcasePage from "./pages/ShowcasePage";
 import CareersPage from "./pages/CareersPage";
 import MarketplacePage from "./pages/MarketplacePage";
-import ProductDetailsPage from "./pages/ProductDetailsPage"; // ✅ ADD THIS
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 import AuthPage from "./pages/AuthPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
@@ -56,20 +56,13 @@ import TeamPage from "./pages/about/TeamPage";
 import PartnershipsPage from "./pages/about/PartnershipsPage";
 import AwardsPage from "./pages/about/AwardsPage";
 
-/* ======================
-   QUERY CLIENT
-====================== */
 const queryClient = new QueryClient();
 
-/* ======================
-   APP
-====================== */
 const App = () => {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          {/* Global SEO fallback */}
           <Helmet>
             <title>Teksoft Community | Empowering Technology Everywhere</title>
             <meta
@@ -107,12 +100,15 @@ const App = () => {
                 <Route path="projects" element={<ProjectsPage />} />
 
                 {/* Project Units */}
-                <Route path="projects/ai-robotics" element={<AIRoboticsPage />} />
+                <Route
+                  path="projects/ai-robotics"
+                  element={<AIRoboticsPage />}
+                />
 
                 {/* Marketplace */}
                 <Route path="marketplace" element={<MarketplacePage />} />
                 <Route
-                  path="marketplace/product/:id"
+                  path="marketplace/product/:productId"
                   element={<ProductDetailsPage />}
                 />
 
