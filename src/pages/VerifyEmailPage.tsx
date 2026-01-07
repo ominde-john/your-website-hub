@@ -71,13 +71,13 @@ const VerifyEmailPage = () => {
 
       // Now create the actual user account with Supabase Auth
       const { error: signUpError } = await supabase.auth.signUp({
-        email: email,
-        password: password,
+        email,
+        password,
         options: {
           data: {
             first_name: firstName,
             last_name: lastName,
-            username: username,
+            username,
           },
           emailRedirectTo: `${window.location.origin}/dashboard`,
         },
@@ -93,18 +93,7 @@ const VerifyEmailPage = () => {
         .update({ used: true })
         .eq("id", codeId);
 
-      // Send welcome email
-      try {
-        await supabase.functions.invoke("send-welcome-email", {
-          body: {
-            email: email,
-            firstName: firstName,
-          },
-        });
-      } catch {
-        // Don't fail registration if welcome email fails
-        console.error("Failed to send welcome email");
-      }
+      // Note: Welcome email is sent automatically via database webhook when email is confirmed
 
       toast({
         title: "Email verified",
