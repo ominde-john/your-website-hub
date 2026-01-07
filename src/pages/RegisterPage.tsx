@@ -168,11 +168,7 @@ const RegisterPage = () => {
                     id="firstName"
                     name="firstName"
                     type="text"
-
                     placeholder="First name"
-
-                    placeholder="Firtname"
-
                     value={formData.firstName}
                     onChange={handleChange}
                     className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.firstName ? "border-red-500 focus:border-red-500" : ""}`}
@@ -190,11 +186,7 @@ const RegisterPage = () => {
                     id="lastName"
                     name="lastName"
                     type="text"
-
                     placeholder="Last name"
-
-                    placeholder="Lastname"
-
                     value={formData.lastName}
                     onChange={handleChange}
                     className={`pl-12 h-11 border-gray-200 focus:border-techblue focus:ring-techblue/20 transition-all ${errors.lastName ? "border-red-500 focus:border-red-500" : ""}`}
@@ -311,10 +303,7 @@ const RegisterPage = () => {
               variant="outline"
               className="w-full h-12 text-base font-medium border-gray-300 hover:bg-gray-50 transition-all"
               onClick={async () => {
-
                 const redirectUrl = `${window.location.origin}/dashboard`;
-
-                const redirectUrl = "https://teksoftllc.jonzjohn.com/dashboard";
 
                 const { error } = await supabase.auth.signInWithOAuth({
                   provider: "google",
