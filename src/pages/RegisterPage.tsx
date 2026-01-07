@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, User, AtSign, ArrowRight, Loader2, UserPlus } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 import { z } from "zod";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
@@ -287,9 +288,43 @@ const RegisterPage = () => {
                 </>
               )}
             </Button>
+
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-12 text-base font-medium border-gray-300 hover:bg-gray-50 transition-all"
+              onClick={async () => {
+                const redirectUrl = `${window.location.origin}/dashboard`;
+                const { error } = await supabase.auth.signInWithOAuth({
+                  provider: "google",
+                  options: {
+                    redirectTo: redirectUrl,
+                  },
+                });
+                if (error) {
+                  toast({
+                    title: "Google Sign Up Failed",
+                    description: error.message,
+                    variant: "destructive",
+                  });
+                }
+              }}
+            >
+              <FcGoogle className="mr-2 h-5 w-5" />
+              Sign up with Google
+            </Button>
           </form>
 
-          <div className="mt-8 text-center">
+          <div className="mt-6 text-center">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200" />
