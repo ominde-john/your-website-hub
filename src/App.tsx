@@ -23,6 +23,7 @@ import ContactPage from "./pages/ContactPage";
 import ShowcasePage from "./pages/ShowcasePage";
 import CareersPage from "./pages/CareersPage";
 import MarketplacePage from "./pages/MarketplacePage";
+import ProductDetailsPage from "./pages/ProductDetailsPage"; // ✅ ADD THIS
 import AuthPage from "./pages/AuthPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
@@ -106,9 +107,13 @@ const App = () => {
                 <Route path="projects" element={<ProjectsPage />} />
 
                 {/* Project Units */}
+                <Route path="projects/ai-robotics" element={<AIRoboticsPage />} />
+
+                {/* Marketplace */}
+                <Route path="marketplace" element={<MarketplacePage />} />
                 <Route
-                  path="projects/ai-robotics"
-                  element={<AIRoboticsPage />}
+                  path="marketplace/product/:id"
+                  element={<ProductDetailsPage />}
                 />
 
                 {/* Community */}
@@ -117,7 +122,6 @@ const App = () => {
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="showcase" element={<ShowcasePage />} />
                 <Route path="careers" element={<CareersPage />} />
-                <Route path="marketplace" element={<MarketplacePage />} />
 
                 {/* Auth */}
                 <Route path="auth" element={<AuthPage />} />
