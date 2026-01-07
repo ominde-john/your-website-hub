@@ -28,6 +28,8 @@ export default function ContactPage() {
 
   // Load reCAPTCHA ONLY in browser (prevents Vercel crash)
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    
     if (typeof window !== "undefined" && SITE_KEY) {
       import("react-google-recaptcha")
         .then((mod) => {
@@ -36,7 +38,7 @@ export default function ContactPage() {
           
           // Set a timeout to detect if reCAPTCHA fails to render
           // (e.g., blocked by ad blocker or network issues)
-          const timeout = setTimeout(() => {
+          timeoutId = setTimeout(() => {
             // Check if Google's reCAPTCHA API loaded successfully
             // window.grecaptcha is the official reCAPTCHA API indicator
             const grecaptcha = (window as { grecaptcha?: unknown }).grecaptcha;
@@ -45,8 +47,6 @@ export default function ContactPage() {
               setRecaptchaFailed(true);
             }
           }, 5000);
-          
-          return () => clearTimeout(timeout);
         })
         .catch((err) => {
           console.error("Failed to load reCAPTCHA:", err);
@@ -56,6 +56,13 @@ export default function ContactPage() {
     } else {
       setRecaptchaLoading(false);
     }
+    
+    // Cleanup function to clear timeout on unmount
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   const handleChange = (
