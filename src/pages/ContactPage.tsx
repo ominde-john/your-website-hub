@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
-const SITE_KEY = import.meta.env.6LclbUMsAAAAAAHM7OYydYIFJpCRBPN4YJWdC7Dx;
-const WEB3FORMS_KEY = import.meta.env.cfeb2c00-e884-4f54-8496-315cf9f85c42;
+const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
 
 export default function ContactPage() {
   const { toast } = useToast();
