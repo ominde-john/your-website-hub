@@ -5,11 +5,11 @@ export type Product = {
   category: string;
   price: number;
   originalPrice: number;
-  description: string;
-  features: string[];
   rating: number;
   reviews: number;
   image: string;
+  description: string;
+  features: string[];
   type: "electronics" | "software";
 };
 
@@ -26,12 +26,12 @@ export const products: Product[] = [
     image: "/images/products/laptop.png",
     type: "electronics",
     description:
-      "A high-performance gaming laptop powered by the latest Intel processor, RTX graphics, 16GB RAM, and ultra-fast SSD storage. Perfect for gaming, AI workloads, and professional development.",
+      "A high-performance gaming laptop powered by the latest Intel processor and RTX graphics. Ideal for gaming, AI workloads, and professional development.",
     features: [
       "Intel Core i7 Processor",
       "NVIDIA RTX Graphics",
-      "16GB DDR5 RAM",
-      "1TB NVMe SSD",
+      "16GB RAM",
+      "1TB SSD Storage",
       "RGB Backlit Keyboard",
     ],
   },
@@ -47,12 +47,12 @@ export const products: Product[] = [
     image: "/images/products/monitor.png",
     type: "electronics",
     description:
-      "A stunning 27-inch Ultra HD monitor with crystal-clear visuals, vibrant colors, and ultra-smooth refresh rate for professionals and gamers.",
+      "A stunning 27-inch Ultra HD monitor offering crystal-clear visuals, perfect for designers, developers, and gamers.",
     features: [
       "27-inch 4K Display",
       "144Hz Refresh Rate",
       "HDR Support",
-      "Ultra-Thin Bezels",
+      "Slim Bezel Design",
       "HDMI & DisplayPort",
     ],
   },
@@ -68,7 +68,7 @@ export const products: Product[] = [
     image: "/images/products/headphones.png",
     type: "electronics",
     description:
-      "Premium wireless headphones with advanced noise cancellation, deep bass, and long battery life for immersive audio experiences.",
+      "Premium wireless headphones with advanced noise cancellation and immersive sound quality.",
     features: [
       "Active Noise Cancellation",
       "Bluetooth 5.3",
