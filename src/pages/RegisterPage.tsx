@@ -25,7 +25,7 @@ import { FcGoogle } from "react-icons/fc";
 import { z } from "zod";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
-/* -------------------- Validation -------------------- */
+/* -------------------- VALIDATION -------------------- */
 const registerSchema = z
   .object({
     firstName: z.string().min(2),
@@ -38,18 +38,13 @@ const registerSchema = z
     password: z.string().min(6),
     confirmPassword: z.string(),
   })
-  .refine((d) => d.password === d.confirmPassword, {
-    message: "Passwords do not match",
+  .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
+    message: "Passwords do not match",
   });
 
-/* -------------------- Component -------------------- */
+/* -------------------- COMPONENT -------------------- */
 const RegisterPage = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -59,32 +54,44 @@ const RegisterPage = () => {
     confirmPassword: "",
   });
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  /* -------------------- HANDLERS -------------------- */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
+    setErrors((p) => ({ ...p, [e.target.name]: "" }));
   };
 
-  /* -------------------- REGISTER (OTP) -------------------- */
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
     const parsed = registerSchema.safeParse(formData);
     if (!parsed.success) {
-      const map: Record<string, string> = {};
-      parsed.error.errors.forEach((e) => {
-        map[e.path[0] as string] = e.message;
+      const fieldErrors: Record<string, string> = {};
+      parsed.error.errors.forEach((err) => {
+        if (err.path[0]) fieldErrors[err.path[0]] = err.message;
       });
-      setErrors(map);
+      setErrors(fieldErrors);
       return;
     }
 
     setLoading(true);
 
     try {
+      /* 🔐 SEND OTP EMAIL (SUPABASE HANDLES EVERYTHING) */
       const { error } = await supabase.auth.signInWithOtp({
-        email: formData.email.trim().toLowerCase(),
+        email: formData.email.trim(),
         options: {
-          shouldCreateUser: true,
+          data: {
+            first_name: formData.firstName.trim(),
+            last_name: formData.lastName.trim(),
+            username: formData.username.trim(),
+          },
         },
       });
 
@@ -92,16 +99,13 @@ const RegisterPage = () => {
 
       toast({
         title: "Check your email",
-        description: "We sent you a 6-digit verification code.",
+        description: "We sent you a 6-digit verification code",
       });
 
+      /* ➜ GO TO VERIFY PAGE */
       navigate("/verify-email", {
         state: {
-          email: formData.email.trim().toLowerCase(),
-          firstName: formData.firstName.trim(),
-          lastName: formData.lastName.trim(),
-          username: formData.username.trim(),
-          password: formData.password,
+          email: formData.email.trim(),
         },
       });
     } catch (err: any) {
@@ -118,16 +122,14 @@ const RegisterPage = () => {
   /* -------------------- UI -------------------- */
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
-      <Card className="w-full max-w-lg bg-white/95 shadow-xl">
+      <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 h-24 w-24 rounded-full bg-black flex items-center justify-center">
-            <img src={teksoftLogo} className="h-full w-full rounded-full" />
+          <div className="mx-auto mb-4 h-20 w-20 rounded-full bg-black flex items-center justify-center">
+            <img src={teksoftLogo} alt="Teksoft" />
           </div>
-
-          <CardTitle className="text-3xl flex justify-center gap-2">
+          <CardTitle className="text-3xl flex items-center justify-center gap-2">
             Join Teksoft <UserPlus className="text-techgold" />
           </CardTitle>
-
           <CardDescription>
             Create your account using email verification
           </CardDescription>
@@ -136,42 +138,62 @@ const RegisterPage = () => {
         <CardContent>
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <Input name="firstName" placeholder="First name" onChange={handleChange} />
-              <Input name="lastName" placeholder="Last name" onChange={handleChange} />
+              <div>
+                <Label>First Name</Label>
+                <Input name="firstName" onChange={handleChange} />
+                {errors.firstName && (
+                  <p className="text-red-500 text-xs">{errors.firstName}</p>
+                )}
+              </div>
+              <div>
+                <Label>Last Name</Label>
+                <Input name="lastName" onChange={handleChange} />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs">{errors.lastName}</p>
+                )}
+              </div>
             </div>
 
-            <Input
-              name="username"
-              placeholder="Username"
-              onChange={handleChange}
-            />
+            <div>
+              <Label>Username</Label>
+              <Input name="username" onChange={handleChange} />
+              {errors.username && (
+                <p className="text-red-500 text-xs">{errors.username}</p>
+              )}
+            </div>
 
-            <Input
-              name="email"
-              type="email"
-              placeholder="Email address"
-              onChange={handleChange}
-            />
+            <div>
+              <Label>Email</Label>
+              <Input name="email" type="email" onChange={handleChange} />
+              {errors.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
+              )}
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Input
-                name="password"
-                type="password"
-                placeholder="Password"
-                onChange={handleChange}
-              />
-              <Input
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm"
-                onChange={handleChange}
-              />
+              <div>
+                <Label>Password</Label>
+                <Input
+                  name="password"
+                  type="password"
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <Label>Confirm</Label>
+                <Input
+                  name="confirmPassword"
+                  type="password"
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
-            <Button disabled={loading} className="w-full h-12">
+            <Button className="w-full" disabled={loading}>
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 animate-spin" /> Sending code…
+                  <Loader2 className="mr-2 animate-spin" />
+                  Sending OTP...
                 </>
               ) : (
                 <>
@@ -188,7 +210,7 @@ const RegisterPage = () => {
                 await supabase.auth.signInWithOAuth({
                   provider: "google",
                   options: {
-                    redirectTo: "https://teksoftllc.jonzjohn.com/dashboard",
+                    redirectTo: `${window.location.origin}/dashboard`,
                   },
                 });
               }}
@@ -196,11 +218,12 @@ const RegisterPage = () => {
               <FcGoogle className="mr-2" /> Sign up with Google
             </Button>
 
-            <div className="text-center">
+            <p className="text-center text-sm">
+              Already a member?{" "}
               <Link to="/auth" className="text-techblue font-semibold">
-                Already a member? Sign in →
+                Sign in →
               </Link>
-            </div>
+            </p>
           </form>
         </CardContent>
       </Card>
