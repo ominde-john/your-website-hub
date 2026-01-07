@@ -89,9 +89,23 @@ const VerifyEmailPage = () => {
         .update({ used: true })
         .eq("id", codeId);
 
+      // Send welcome email
+      try {
+        await supabase.functions.invoke("send-welcome-email", {
+          body: {
+            email: email,
+            firstName: firstName,
+          },
+        });
+        console.log("Welcome email sent successfully");
+      } catch (emailError) {
+        console.error("Failed to send welcome email:", emailError);
+        // Don't block signup if welcome email fails
+      }
+
       toast({
         title: "Email Verified!",
-        description: "Your account has been created successfully. Welcome to TekSoft!",
+        description: "Your account has been created successfully. Welcome to Teksoft Community!",
       });
       navigate("/");
     } catch (error: any) {
