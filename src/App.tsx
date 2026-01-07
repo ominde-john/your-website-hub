@@ -23,8 +23,6 @@ import ContactPage from "./pages/ContactPage";
 import ShowcasePage from "./pages/ShowcasePage";
 import CareersPage from "./pages/CareersPage";
 import MarketplacePage from "./pages/MarketplacePage";
-import ProductDetailsPage from "./pages/ProductDetailsPage";
-
 import AuthPage from "./pages/AuthPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
@@ -43,6 +41,11 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
    PROJECT PAGES
 ====================== */
 import AIRoboticsPage from "./pages/projects/AIRoboticsPage";
+import DevelopersHubPage from "./pages/projects/DevelopersHubPage";
+import WorkshopsPage from "./pages/projects/WorkshopsPage";
+import CybersecurityPage from "./pages/projects/CybersecurityPage";
+import WebMobilePage from "./pages/projects/WebMobilePage";
+import GamingPage from "./pages/projects/GamingPage";
 
 /* ======================
    ABOUT SUB-PAGES
@@ -70,8 +73,7 @@ const App = () => {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-
-          {/* Global SEO */}
+          {/* Global SEO fallback */}
           <Helmet>
             <title>Teksoft Community | Empowering Technology Everywhere</title>
             <meta
@@ -109,10 +111,12 @@ const App = () => {
                 <Route path="projects" element={<ProjectsPage />} />
 
                 {/* Project Units */}
-                <Route
-                  path="projects/ai-robotics"
-                  element={<AIRoboticsPage />}
-                />
+                <Route path="projects/developers-hub" element={<DevelopersHubPage />} />
+                <Route path="projects/workshops" element={<WorkshopsPage />} />
+                <Route path="projects/cybersecurity" element={<CybersecurityPage />} />
+                <Route path="projects/ai-robotics" element={<AIRoboticsPage />} />
+                <Route path="projects/web-mobile" element={<WebMobilePage />} />
+                <Route path="projects/gaming" element={<GamingPage />} />
 
                 {/* Community */}
                 <Route path="discussion" element={<DiscussionPage />} />
@@ -120,13 +124,7 @@ const App = () => {
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="showcase" element={<ShowcasePage />} />
                 <Route path="careers" element={<CareersPage />} />
-
-                {/* Marketplace */}
                 <Route path="marketplace" element={<MarketplacePage />} />
-                <Route
-                  path="marketplace/product/:slug"
-                  element={<ProductDetailsPage />}
-                />
 
                 {/* Auth */}
                 <Route path="auth" element={<AuthPage />} />
@@ -146,7 +144,6 @@ const App = () => {
               </Route>
             </Routes>
           </BrowserRouter>
-
         </TooltipProvider>
       </QueryClientProvider>
     </HelmetProvider>
