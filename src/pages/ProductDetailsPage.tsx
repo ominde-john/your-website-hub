@@ -1,92 +1,120 @@
-import { useParams, Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
-import { products } from "@/data/products";
+import { useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingCart, Star, MessageCircle } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+
+const products = [
+  {
+    id: "gaming-laptop-pro",
+    name: "Gaming Laptop Pro",
+    description:
+      "A high-performance gaming laptop powered by the latest Intel processor, RTX graphics, 16GB RAM, and ultra-fast SSD storage. Perfect for gaming, AI workloads, and professional development.",
+    price: 189999,
+    category: "Laptops",
+    rating: 4.8,
+    reviews: 156,
+    image:
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
+  },
+];
 
 const ProductDetailsPage = () => {
   const { productId } = useParams();
-
   const product = products.find((p) => p.id === productId);
 
   if (!product) {
     return (
-      <div className="container py-20 text-center">
-        <h2 className="text-2xl font-bold">Product not found</h2>
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Product not found
       </div>
     );
   }
 
-  const relatedProducts = products.filter(
-    (p) => p.category === product.category && p.id !== product.id
-  );
-
-  const whatsappNumber = "2547XXXXXXXX"; // replace
-  const message = encodeURIComponent(
-    `Hello Teksoft Community,\n\nI want to order:\n${product.name}\nPrice: Ksh ${product.price.toLocaleString()}`
-  );
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
+  const whatsappLink = `https://wa.me/254115000514?text=Hello%20Teksoft%20Community,%20I%20want%20to%20order%20${encodeURIComponent(
+    product.name
+  )}`;
 
   return (
-    <>
-      <Helmet>
-        <title>{product.name} | Teksoft Marketplace</title>
-      </Helmet>
+    <div className="min-h-screen bg-black text-white">
+      {/* HERO SECTION */}
+      <div
+        className="relative h-[85vh] flex items-center"
+        style={{
+          backgroundImage: `url(${product.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/30" />
 
-      <div className="container py-16">
-        <div className="grid md:grid-cols-2 gap-10">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="rounded-lg"
-          />
+        {/* CONTENT */}
+        <div className="relative z-10 container-custom max-w-4xl">
+          <Badge className="mb-4 bg-techgold text-black">
+            {product.category}
+          </Badge>
 
-          <div>
-            <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-            <p className="text-gray-600 mb-6">{product.description}</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            {product.name}
+          </h1>
 
-            <p className="text-2xl font-bold text-techblue mb-6">
-              Ksh {product.price.toLocaleString()}
-            </p>
+          <p className="text-gray-200 text-lg leading-relaxed mb-6">
+            {product.description}
+          </p>
 
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
+          {/* RATING */}
+          <div className="flex items-center gap-3 mb-6">
+            <Star className="text-yellow-400 fill-yellow-400 w-5 h-5" />
+            <span className="font-semibold">{product.rating}</span>
+            <span className="text-gray-400">
+              ({product.reviews} reviews)
+            </span>
+          </div>
+
+          {/* PRICE */}
+          <div className="text-3xl font-bold text-techblue mb-8">
+            Ksh {product.price.toLocaleString()}
+          </div>
+
+          {/* ACTION BUTTONS */}
+          <div className="flex flex-wrap gap-4">
+            <Button
+              size="lg"
+              className="bg-techblue hover:bg-techblue-dark text-white gap-2"
             >
-              <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold">
-                📲 Order Now via WhatsApp
-              </button>
+              <ShoppingCart className="w-5 h-5" />
+              Add to Cart
+            </Button>
+
+            <a href={whatsappLink} target="_blank" rel="noreferrer">
+              <Button
+                size="lg"
+                className="bg-green-600 hover:bg-green-700 text-white gap-2"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Order Now via WhatsApp
+              </Button>
             </a>
           </div>
         </div>
-
-        {/* RELATED PRODUCTS */}
-        {relatedProducts.length > 0 && (
-          <section className="mt-20">
-            <h3 className="text-2xl font-bold mb-6">Related Products</h3>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              {relatedProducts.map((item) => (
-                <Link
-                  key={item.id}
-                  to={`/marketplace/product/${item.id}`}
-                  className="border rounded-lg p-4 hover:shadow-md"
-                >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="h-40 w-full object-cover rounded"
-                  />
-                  <h4 className="mt-3 font-semibold">{item.name}</h4>
-                  <p className="text-techblue font-bold">
-                    Ksh {item.price.toLocaleString()}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
       </div>
-    </>
+
+      {/* DETAILS SECTION */}
+      <section className="py-16 bg-gray-950">
+        <div className="container-custom max-w-4xl">
+          <h2 className="text-2xl font-bold mb-4 text-techgold">
+            Product Overview
+          </h2>
+
+          <p className="text-gray-300 leading-relaxed">
+            This product is carefully selected by Teksoft Community to meet
+            professional, gaming, and AI computing needs. Built with
+            performance, durability, and future scalability in mind.
+          </p>
+        </div>
+      </section>
+    </div>
   );
 };
 
