@@ -48,7 +48,7 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!captchaToken) {
+    if (SITE_KEY && !captchaToken) {
       toast({
         title: "Verification required",
         description: "Please confirm you are not a robot.",
@@ -69,16 +69,22 @@ export default function ContactPage() {
     setLoading(true);
 
     try {
+      const payload: any = {
+        access_key: WEB3FORMS_KEY,
+        name: form.name,
+        email: form.email,
+        message: form.message,
+      };
+
+      // Only include captcha token if SITE_KEY is configured
+      if (SITE_KEY && captchaToken) {
+        payload["g-recaptcha-response"] = captchaToken;
+      }
+
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          name: form.name,
-          email: form.email,
-          message: form.message,
-          "g-recaptcha-response": captchaToken,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -155,7 +161,7 @@ export default function ContactPage() {
           </div>
         ) : null}
 
-        <Button type="submit" disabled={loading || !captchaToken} className="w-full">
+        <Button type="submit" disabled={loading || (SITE_KEY && !captchaToken)} className="w-full">
           {loading ? "Sending..." : "Send Message"}
         </Button>
       </form>
