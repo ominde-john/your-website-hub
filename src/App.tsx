@@ -23,6 +23,7 @@ import ContactPage from "./pages/ContactPage";
 import ShowcasePage from "./pages/ShowcasePage";
 import CareersPage from "./pages/CareersPage";
 import MarketplacePage from "./pages/MarketplacePage";
+import ProductDetailsPage from "./pages/ProductDetailsPage";
 import AuthPage from "./pages/AuthPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
@@ -128,6 +129,7 @@ const App = () => {
                 <Route path="showcase" element={<ShowcasePage />} />
                 <Route path="careers" element={<CareersPage />} />
                 <Route path="marketplace" element={<MarketplacePage />} />
+                <Route path="marketplace/product/:slug" element={<ProductDetailsPage />} />
 
                 {/* Community */}
                 <Route path="media/news" element={<NewsletterDetail />}/>
