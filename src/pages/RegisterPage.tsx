@@ -25,30 +25,28 @@ import { FcGoogle } from "react-icons/fc";
 import { z } from "zod";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
-/* -------------------- Validation -------------------- */
 const registerSchema = z
   .object({
-    firstName: z.string().min(2).max(50),
-    lastName: z.string().min(2).max(50),
+    firstName: z.string().min(2, "First name must be at least 2 characters").max(50),
+    lastName: z.string().min(2, "Last name must be at least 2 characters").max(50),
     username: z
       .string()
-      .min(3)
+      .min(3, "Username must be at least 3 characters")
       .max(30)
-      .regex(/^[a-zA-Z0-9_]+$/),
-    email: z.string().email(),
-    password: z.string().min(6),
+      .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
+    email: z.string().email("Please enter a valid email"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
     message: "Passwords do not match",
+    path: ["confirmPassword"],
   });
 
-/* -------------------- OTP Generator -------------------- */
-const generateVerificationCode = () =>
-  Math.floor(100000 + Math.random() * 900000).toString();
+const generateVerificationCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
 
-/* -------------------- Component -------------------- */
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -67,19 +65,23 @@ const RegisterPage = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((p) => ({ ...p, [name]: value }));
-    if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
-    const parsed = registerSchema.safeParse(formData);
-    if (!parsed.success) {
+    const result = registerSchema.safeParse(formData);
+    if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      parsed.error.errors.forEach((err) => {
-        if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
+      result.error.errors.forEach((err) => {
+        if (err.path[0]) {
+          fieldErrors[err.path[0] as string] = err.message;
+        }
       });
       setErrors(fieldErrors);
       return;
@@ -88,11 +90,8 @@ const RegisterPage = () => {
     setLoading(true);
     try {
       const verificationCode = generateVerificationCode();
-      const expiresAt = new Date(
-        Date.now() + 10 * 60 * 1000
-      ).toISOString();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-      /* Store OTP */
       const { error: codeError } = await supabase
         .from("email_verification_codes")
         .insert({
@@ -102,29 +101,27 @@ const RegisterPage = () => {
         });
 
       if (codeError) {
-        throw new Error("Failed to store verification code");
+        throw new Error("Failed to generate verification code.");
       }
 
-      /* Send Email */
-      const { error: emailError } =
-        await supabase.functions.invoke(
-          "send-confirmation-email",
-          {
-            body: {
-              email: formData.email.trim(),
-              firstName: formData.firstName.trim(),
-              code: verificationCode,
-            },
-          }
-        );
+      const { error: emailError } = await supabase.functions.invoke(
+        "send-confirmation-email",
+        {
+          body: {
+            email: formData.email.trim(),
+            firstName: formData.firstName.trim(),
+            code: verificationCode,
+          },
+        }
+      );
 
       if (emailError) {
         throw new Error("Failed to send confirmation email");
       }
 
       toast({
-        title: "Check your email",
-        description: "We sent you a 6-digit verification code.",
+        title: "Check Your Email",
+        description: "We've sent you a 6-digit confirmation code.",
       });
 
       navigate("/verify-email", {
@@ -136,10 +133,10 @@ const RegisterPage = () => {
           password: formData.password,
         },
       });
-    } catch (err: any) {
+    } catch (error: any) {
       toast({
-        title: "Registration failed",
-        description: err.message || "Something went wrong",
+        title: "Registration Failed",
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -149,43 +146,40 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 relative">
-      <Card className="w-full max-w-lg shadow-2xl bg-white/95">
-        <div className="h-1.5 bg-gradient-to-r from-techgold via-techblue to-techgold rounded-t-lg" />
-
-        <CardHeader className="text-center pt-8">
-          <div className="mx-auto mb-6 h-24 w-24 rounded-full bg-black p-2">
-            <img
-              src={teksoftLogo}
-              alt="Teksoft"
-              className="h-full w-full object-contain rounded-full"
-            />
-          </div>
-
+      <Card className="w-full max-w-lg shadow-2xl">
+        <CardHeader className="text-center">
+          <img src={teksoftLogo} className="mx-auto h-24" />
           <CardTitle className="text-3xl flex justify-center gap-2">
-            Join Teksoft <UserPlus className="text-techgold" />
+            Join Teksoft <UserPlus />
           </CardTitle>
           <CardDescription>
-            Create your account and join the community
+            Create your account and become part of our community
           </CardDescription>
         </CardHeader>
 
         <CardContent>
           <form onSubmit={handleRegister} className="space-y-4">
-            {/* Inputs omitted here for brevity in explanation,
-               but included exactly as fixed above */}
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full h-12"
-            >
+            <Input name="firstName" placeholder="First Name" onChange={handleChange} />
+            <Input name="lastName" placeholder="Last Name" onChange={handleChange} />
+            <Input name="username" placeholder="Username" onChange={handleChange} />
+            <Input name="email" type="email" placeholder="Email" onChange={handleChange} />
+            <Input name="password" type="password" placeholder="Password" onChange={handleChange} />
+            <Input
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm Password"
+              onChange={handleChange}
+            />
+
+            <Button type="submit" disabled={loading} className="w-full">
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  <Loader2 className="mr-2 animate-spin" />
                   Sending verification...
                 </>
               ) : (
                 <>
-                  Create Account <ArrowRight className="ml-2 h-5 w-5" />
+                  Create Account <ArrowRight className="ml-2" />
                 </>
               )}
             </Button>
@@ -193,35 +187,21 @@ const RegisterPage = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full h-12"
+              className="w-full"
               onClick={async () => {
                 const redirectUrl = `${window.location.origin}/dashboard`;
-                const { error } =
-                  await supabase.auth.signInWithOAuth({
-                    provider: "google",
-                    options: { redirectTo: redirectUrl },
-                  });
-                if (error) {
-                  toast({
-                    title: "Google sign up failed",
-                    description: error.message,
-                    variant: "destructive",
-                  });
-                }
+                await supabase.auth.signInWithOAuth({
+                  provider: "google",
+                  options: { redirectTo: redirectUrl },
+                });
               }}
             >
-              <FcGoogle className="mr-2 h-5 w-5" />
-              Sign up with Google
+              <FcGoogle className="mr-2" /> Sign up with Google
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <Link
-              to="/auth"
-              className="text-techblue font-semibold"
-            >
-              Sign in to your account
-            </Link>
+          <div className="text-center mt-4">
+            <Link to="/auth">Sign in to your account</Link>
           </div>
         </CardContent>
       </Card>
