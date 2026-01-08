@@ -18,7 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import PageHeader from "@/components/PageHeader";
 
 const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-const WEB3FORMS_KEY = "cfeb2c00-e884-4f54-8496-315cf9f85c42";
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
 
 export default function ContactPage() {
   const { toast } = useToast();
@@ -94,9 +94,15 @@ export default function ContactPage() {
     setLoading(true);
 
     try {
+      if (!WEB3FORMS_KEY) {
+        throw new Error("Web3Forms access key is not configured");
+      }
+
       const payload: Record<string, string> = {
         access_key: WEB3FORMS_KEY,
-        subject: "New Contact Form Message",
+        subject: "New Contact Form Message from Teksoft Website",
+        from_name: form.name,
+        replyto: form.email,
         name: form.name,
         email: form.email,
         message: form.message,
@@ -108,11 +114,15 @@ export default function ContactPage() {
 
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(payload),
       });
 
       const data = await res.json();
+      console.log("Web3Forms response:", data);
 
       if (data.success) {
         toast({
@@ -123,6 +133,7 @@ export default function ContactPage() {
         setForm({ name: "", email: "", message: "" });
         setCaptchaToken(null);
       } else {
+        console.error("Web3Forms error:", data);
         throw new Error(data.message || "Submission failed");
       }
     } catch (error) {
