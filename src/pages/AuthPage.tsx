@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,12 +10,51 @@ import { User, Lock, ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
+const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
 const AuthPage = () => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // reCAPTCHA state
+  const [ReCAPTCHA, setReCAPTCHA] = useState<any>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [recaptchaLoading, setRecaptchaLoading] = useState(true);
+  const [recaptchaFailed, setRecaptchaFailed] = useState(false);
+
+  // Load reCAPTCHA ONLY in browser (prevents Vercel crash)
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    if (typeof window !== "undefined" && SITE_KEY) {
+      import("react-google-recaptcha")
+        .then((mod) => {
+          setReCAPTCHA(() => mod.default);
+          setRecaptchaLoading(false);
+
+          timeoutId = setTimeout(() => {
+            const grecaptcha = (window as { grecaptcha?: unknown }).grecaptcha;
+            if (!grecaptcha) {
+              console.warn("reCAPTCHA failed to render");
+              setRecaptchaFailed(true);
+            }
+          }, 5000);
+        })
+        .catch(() => {
+          setRecaptchaLoading(false);
+          setRecaptchaFailed(true);
+        });
+    } else {
+      setRecaptchaLoading(false);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +63,16 @@ const AuthPage = () => {
       toast({
         title: "Error",
         description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate reCAPTCHA
+    if (SITE_KEY && ReCAPTCHA && !recaptchaFailed && !captchaToken) {
+      toast({
+        title: "Verification required",
+        description: "Please confirm you are not a robot.",
         variant: "destructive",
       });
       return;
@@ -94,6 +143,31 @@ const AuthPage = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const renderRecaptcha = () => {
+    if (recaptchaLoading && SITE_KEY) {
+      return (
+        <div className="flex items-center justify-center p-4">
+          <Loader2 className="animate-spin mr-2 h-5 w-5 text-techblue" />
+          <span className="text-gray-500">Loading verification...</span>
+        </div>
+      );
+    }
+
+    if (ReCAPTCHA && SITE_KEY && !recaptchaFailed) {
+      return (
+        <div className="flex justify-center">
+          <ReCAPTCHA
+            sitekey={SITE_KEY}
+            onChange={(token: string | null) => setCaptchaToken(token)}
+            onErrored={() => setRecaptchaFailed(true)}
+          />
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -167,6 +241,9 @@ const AuthPage = () => {
                 </Link>
               </div>
             </div>
+
+            {/* reCAPTCHA */}
+            {renderRecaptcha()}
 
             <Button
               type="submit" 
