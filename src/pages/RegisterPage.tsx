@@ -142,19 +142,27 @@ const RegisterPage = () => {
       const verificationCode = generateVerificationCode();
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-      const { error: codeError } = await supabase
+      console.log("Attempting to insert verification code for:", formData.email.trim().toLowerCase());
+
+      const { data: insertData, error: codeError } = await supabase
         .from("email_verification_codes")
         .insert({
           email: formData.email.trim().toLowerCase(),
           code: verificationCode,
           expires_at: expiresAt,
-        });
+        })
+        .select();
+
+      console.log("Insert result:", { insertData, codeError });
 
       if (codeError) {
-        throw new Error("Failed to generate verification code.");
+        console.error("Code insert error:", codeError);
+        throw new Error(`Failed to generate verification code: ${codeError.message}`);
       }
 
-      const { error: emailError } = await supabase.functions.invoke(
+      console.log("Sending confirmation email...");
+
+      const { data: emailData, error: emailError } = await supabase.functions.invoke(
         "send-confirmation-email",
         {
           body: {
@@ -165,8 +173,11 @@ const RegisterPage = () => {
         }
       );
 
+      console.log("Email result:", { emailData, emailError });
+
       if (emailError) {
-        throw new Error("Failed to send confirmation email");
+        console.error("Email error:", emailError);
+        throw new Error(`Failed to send confirmation email: ${emailError.message}`);
       }
 
       toast({
@@ -184,6 +195,7 @@ const RegisterPage = () => {
         },
       });
     } catch (error: any) {
+      console.error("Registration error:", error);
       toast({
         title: "Registration Failed",
         description: error.message || "Something went wrong. Please try again.",
