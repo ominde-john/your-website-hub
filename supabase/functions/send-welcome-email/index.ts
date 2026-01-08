@@ -43,18 +43,37 @@ serve(async (req) => {
         html: `
 <!DOCTYPE html>
 <html>
-<body style="font-family: Arial, sans-serif; background:#f4f4f4; padding:20px">
-  <div style="max-width:600px;background:#fff;padding:30px;border-radius:10px">
-    <h1>🎉 Welcome to Teksoft Community!</h1>
-    <p>Hi ${firstName},</p>
-    <p>Your account is now active. We’re excited to have you in the Teksoft Community.</p>
-    <a href="https://teksoftllc.jonzjohn.com/dashboard"
-       style="display:inline-block;margin-top:20px;padding:12px 24px;
-       background:#667eea;color:#fff;text-decoration:none;border-radius:6px">
-       Go to Dashboard
-    </a>
-    <p style="margin-top:30px;font-size:12px;color:#888">
-      © 2026 Teksoft Community
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #0a0f1c;">
+  <div style="max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #0d1526 0%, #1a2744 100%); padding: 40px; border-radius: 16px; border: 1px solid rgba(30, 64, 175, 0.3);">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <div style="font-size: 48px; margin-bottom: 10px;">🎉</div>
+      <h1 style="color: #1e79c9; margin: 0; font-size: 28px; font-weight: 700;">Welcome to Teksoft Community!</h1>
+      <div style="width: 60px; height: 3px; background: linear-gradient(90deg, #1e79c9, #d4a853); margin: 15px auto;"></div>
+    </div>
+    
+    <p style="color: #e2e8f0; font-size: 16px; line-height: 1.6;">
+      Hi ${firstName},
+    </p>
+    
+    <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6;">
+      Your account is now active! We're thrilled to have you as part of our growing tech community. Connect with developers, explore resources, and start your journey with us.
+    </p>
+    
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="https://teksoftllc.jonzjohn.com/dashboard"
+         style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #1e79c9 0%, #1565a8 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(30, 121, 201, 0.3);">
+         Go to Dashboard →
+      </a>
+    </div>
+    
+    <hr style="border: none; border-top: 1px solid rgba(30, 64, 175, 0.3); margin: 30px 0;">
+    
+    <p style="color: #64748b; font-size: 12px; text-align: center;">
+      © 2026 <span style="color: #d4a853;">Teksoft Community</span>. All rights reserved.
     </p>
   </div>
 </body>
