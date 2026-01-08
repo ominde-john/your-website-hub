@@ -17,7 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, ArrowRight, Loader2, RefreshCw } from "lucide-react";
 
-// Generate a random 6-digit code
+/* ---------- Generate 6-digit code ---------- */
 const generateVerificationCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
@@ -31,14 +31,14 @@ const VerifyEmailPage = () => {
   const location = useLocation();
   const { toast } = useToast();
 
-  // Get registration data from navigation state
+  // Data passed from Register page
   const email = location.state?.email;
   const firstName = location.state?.firstName;
   const lastName = location.state?.lastName;
   const username = location.state?.username;
   const password = location.state?.password;
 
-  /* ---------------- VERIFY OTP ---------------- */
+  /* ---------- VERIFY OTP ---------- */
   const handleVerify = async () => {
     if (otp.length !== 6) {
       toast({
@@ -52,24 +52,22 @@ const VerifyEmailPage = () => {
     setLoading(true);
 
     try {
-      // Verify code from database (similar to ResetPasswordPage)
-      const { data: codes, error: fetchError } = await supabase
-        .from("email_verification_codes")
-        .select("*")
-        .eq("email", email.toLowerCase())
-        .eq("code", otp)
-        .eq("used", false)
-        .gte("expires_at", new Date().toISOString())
-        .order("created_at", { ascending: false })
-        .limit(1);
+      // 🔐 Verify code via Edge Function
+      const { data, error } = await supabase.functions.invoke(
+        "dynamic-handler",
+        {
+          body: {
+            email: email.toLowerCase(),
+            code: otp,
+          },
+        }
+      );
 
-      if (fetchError || !codes || codes.length === 0) {
-        throw new Error("Invalid or expired verification code");
+      if (error || !data?.success) {
+        throw new Error(data?.message || "Invalid or expired verification code");
       }
 
-      const codeId = codes[0].id;
-
-      // Now create the actual user account with Supabase Auth
+      // ✅ OTP verified → create user
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
@@ -86,14 +84,6 @@ const VerifyEmailPage = () => {
       if (signUpError) {
         throw signUpError;
       }
-
-      // Mark code as used after successful signup
-      await supabase
-        .from("email_verification_codes")
-        .update({ used: true })
-        .eq("id", codeId);
-
-      // Note: Welcome email is sent automatically via database webhook when email is confirmed
 
       toast({
         title: "Email verified",
@@ -112,19 +102,18 @@ const VerifyEmailPage = () => {
     }
   };
 
-  /* ---------------- RESEND OTP ---------------- */
+  /* ---------- RESEND OTP ---------- */
   const handleResend = async () => {
     if (!email) return;
 
     setResending(true);
 
     try {
-      // Generate new verification code
       const verificationCode = generateVerificationCode();
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-      // Store new verification code in database
-      const { error: codeError } = await supabase
+      // Store new code
+      const { error: insertError } = await supabase
         .from("email_verification_codes")
         .insert({
           email: email.toLowerCase(),
@@ -132,18 +121,20 @@ const VerifyEmailPage = () => {
           expires_at: expiresAt,
         });
 
-      if (codeError) {
+      if (insertError) {
         throw new Error("Failed to generate new code");
       }
 
-      // Send confirmation email via edge function
-      const { error: emailError } = await supabase.functions.invoke("send-confirmation-email", {
-        body: {
-          email: email,
-          firstName: firstName,
-          code: verificationCode,
-        },
-      });
+      // Send email via Edge Function
+      const { error: emailError } = await supabase.functions.invoke(
+        "send-confirmation-email",
+        {
+          body: {
+            email,
+            code: verificationCode,
+          },
+        }
+      );
 
       if (emailError) {
         throw new Error("Failed to send confirmation email");
@@ -164,13 +155,16 @@ const VerifyEmailPage = () => {
     }
   };
 
+  /* ---------- SAFETY CHECK ---------- */
   if (!email || !firstName || !lastName || !username || !password) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md text-center">
           <CardHeader>
             <CardTitle>Registration data not found</CardTitle>
-            <CardDescription>Please complete the registration form first</CardDescription>
+            <CardDescription>
+              Please complete the registration form first
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild>
@@ -182,6 +176,7 @@ const VerifyEmailPage = () => {
     );
   }
 
+  /* ---------- UI ---------- */
   return (
     <div className="min-h-screen flex items-center justify-center p-6">
       <Card className="w-full max-w-md">
@@ -197,7 +192,7 @@ const VerifyEmailPage = () => {
         <CardContent className="space-y-6">
           <InputOTP maxLength={6} value={otp} onChange={setOtp}>
             <InputOTPGroup>
-              {[0,1,2,3,4,5].map((i) => (
+              {[0, 1, 2, 3, 4, 5].map((i) => (
                 <InputOTPSlot key={i} index={i} />
               ))}
             </InputOTPGroup>
