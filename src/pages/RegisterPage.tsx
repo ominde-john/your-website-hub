@@ -213,6 +213,31 @@ const RegisterPage = () => {
     }
   };
 
+  const renderRecaptcha = () => {
+    if (recaptchaLoading && SITE_KEY) {
+      return (
+        <div className="flex items-center justify-center p-4">
+          <Loader2 className="animate-spin mr-2 h-5 w-5 text-techblue" />
+          <span className="text-gray-500">Loading verification...</span>
+        </div>
+      );
+    }
+
+    if (ReCAPTCHA && SITE_KEY && !recaptchaFailed) {
+      return (
+        <div className="flex justify-center">
+          <ReCAPTCHA
+            sitekey={SITE_KEY}
+            onChange={(token: string | null) => setCaptchaToken(token)}
+            onErrored={() => setRecaptchaFailed(true)}
+          />
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-6 relative">
       {/* Decorative elements */}
@@ -354,20 +379,7 @@ const RegisterPage = () => {
             </div>
 
             {/* reCAPTCHA */}
-            {recaptchaLoading && SITE_KEY ? (
-              <div className="flex items-center justify-center p-4">
-                <Loader2 className="animate-spin mr-2 h-5 w-5 text-techblue" />
-                <span className="text-gray-500">Loading verification...</span>
-              </div>
-            ) : ReCAPTCHA && SITE_KEY && !recaptchaFailed ? (
-              <div className="flex justify-center">
-                <ReCAPTCHA
-                  sitekey={SITE_KEY}
-                  onChange={(token: string | null) => setCaptchaToken(token)}
-                  onErrored={() => setRecaptchaFailed(true)}
-                />
-              </div>
-            ) : null}
+            {renderRecaptcha()}
 
             <Button
               type="submit" 
