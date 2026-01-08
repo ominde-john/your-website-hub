@@ -104,13 +104,12 @@ export default function ContactPage() {
         name: form.name,
         email: form.email,
         message: form.message,
+        // Web3Forms free bot protection (honeypot) - must be empty
+        botcheck: "",
       };
 
-      if (captchaToken) {
-        payload["g-recaptcha-response"] = captchaToken;
-      }
-
-      console.log("Sending to Web3Forms with payload:", payload);
+      // Note: Don't send g-recaptcha-response to Web3Forms on free plan
+      // The reCAPTCHA widget still provides client-side protection
 
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
