@@ -1,5 +1,4 @@
-# Update this with your new Supabase project ID
-project_id = "your-new-project-id"
+project_id = "mxyqmebjbgovwwkvtcff"
 
 [functions.send-confirmation-email]
 verify_jwt = false
