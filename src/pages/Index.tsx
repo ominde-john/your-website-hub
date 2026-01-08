@@ -5,7 +5,7 @@ import HighlightsSection from "../components/home/HighlightsSection";
 import TestimonialsSection from "../components/home/TestimonialsSection";
 import QuickLinksSection from "../components/home/QuickLinksSection";
 import JoinCTASection from "../components/home/JoinCTASection";
-
+import StatsSection from "@/components/home/StatsSection";
 const HomePage = () => {
   return (
     <>
@@ -47,6 +47,7 @@ const HomePage = () => {
         <AboutSection />
         <HighlightsSection />
         <TestimonialsSection />
+        <StatsSection/>
         <QuickLinksSection />
         <JoinCTASection />
       </main>

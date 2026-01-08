@@ -39,6 +39,10 @@ import {
   Globe,
   Share2,
   LogOut,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Youtube,
 } from "lucide-react";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 
@@ -80,7 +84,6 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -88,7 +91,6 @@ const Navbar = () => {
       }
     });
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -157,6 +159,7 @@ const Navbar = () => {
   ];
 
   const mediaLinks = [
+    { name: "Newsletter", path: "/media/newsletter", icon: <Megaphone className="w-4 h-4 text-techgold" /> },
     { name: "News & Announcements", path: "/media/news", icon: <Megaphone className="w-4 h-4 text-techgold" /> },
     { name: "Press Releases", path: "/media/press", icon: <Newspaper className="w-4 h-4 text-techgold" /> },
     { name: "Blog / Articles", path: "/blogs", icon: <Globe className="w-4 h-4 text-techgold" /> },
@@ -169,28 +172,38 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
-      {/* TOP BAR */}
-      <div className="hidden md:block bg-gray-900 text-gray-300 text-xs border-b border-techgold/20">
-        <div className="container-custom flex justify-between items-center py-2">
-          <div className="flex gap-6">
-            <a href="tel:0115000514" className="flex items-center gap-1 hover:text-techgold transition-colors">
-              <Phone className="w-4 h-4 text-techgold" /> 0115000514
+      {/* TOP BAR - UPDATED TO MATCH IMAGE EXACTLY */}
+      <div className="hidden md:block bg-[#0a0a0a] text-white text-[13px] border-b border-white/5">
+        <div className="container-custom flex justify-between items-center py-2.5 px-4">
+          <div className="flex gap-6 items-center">
+            <span className="font-bold text-white">Contact Us:</span>
+            <a href="tel:0115000514" className="flex items-center gap-2 hover:text-techgold transition-colors">
+              <Phone className="w-3.5 h-3.5 fill-white text-white" /> 0115000514
             </a>
-            <a href="mailto:info@teksoft.org" className="flex items-center gap-1 hover:text-techgold transition-colors">
-              <Mail className="w-4 h-4 text-techgold" /> info@teksoft.org
+            <a href="mailto:info@teksoft.org" className="flex items-center gap-2 hover:text-techgold transition-colors">
+              <Mail className="w-3.5 h-3.5 fill-white text-white" /> info@teksoft.org
             </a>
+          </div>
+          
+          {/* SOCIAL ICONS SECTION */}
+          <div className="flex gap-5 items-center">
+            <Facebook className="w-4 h-4 cursor-pointer hover:text-techgold transition-colors" />
+            <span className="text-[14px] font-bold cursor-pointer hover:text-techgold transition-colors leading-none">𝕏</span>
+            <Instagram className="w-4 h-4 cursor-pointer hover:text-techgold transition-colors" />
+            <Linkedin className="w-4 h-4 cursor-pointer hover:text-techgold transition-colors" />
+            <Phone className="w-4 h-4 cursor-pointer hover:text-techgold transition-colors" /> {/* Used as WhatsApp Placeholder */}
+            <Youtube className="w-4 h-4 cursor-pointer hover:text-techgold transition-colors" />
           </div>
         </div>
       </div>
 
       {/* MAIN NAV */}
-      <div className="container-custom flex justify-between items-center py-3">
-        {/* LOGO */}
+      <div className="container-custom flex justify-between items-center py-3 px-4">
         <Link to="/" className="flex items-center gap-2">
           <div className="h-10 w-10 rounded-full bg-[#000000] flex items-center justify-center p-0.5 shrink-0">
             <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain rounded-full" />
           </div>
-          <span className="text-xl font-bold text-gray-900 dark:text-white">Teksoft Community</span>
+          <span className="text-xl font-bold text-gray-900">Teksoft Community</span>
         </Link>
 
         {/* DESKTOP NAV */}
@@ -208,7 +221,7 @@ const Navbar = () => {
                     setAboutDropdown(item.name === "About" ? !aboutDropdown : false);
                     setMediaDropdown(item.name === "Media" ? !mediaDropdown : false);
                   }}
-                  className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 hover:text-techgold transition-colors"
+                  className="flex items-center gap-1 px-3 py-2 text-[14px] font-semibold text-gray-700 hover:text-techgold transition-colors"
                 >
                   {item.name} <ChevronDown className="w-4 h-4" />
                 </button>
@@ -216,7 +229,7 @@ const Navbar = () => {
                 {((item.name === "Projects" && projectsDropdown) ||
                   (item.name === "About" && aboutDropdown) ||
                   (item.name === "Media" && mediaDropdown)) && (
-                  <div className="absolute left-0 mt-3 w-[540px] grid grid-cols-2 gap-2 rounded-xl bg-white p-4 border shadow-xl animate-fade-in">
+                  <div className="absolute left-0 mt-3 w-[540px] grid grid-cols-2 gap-2 rounded-xl bg-white p-4 border shadow-xl animate-fade-in z-50">
                     {(item.name === "Projects"
                       ? projectLinks
                       : item.name === "About"
@@ -226,7 +239,12 @@ const Navbar = () => {
                       <Link
                         key={link.name}
                         to={link.path}
-                        className="flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-50 hover:text-techgold transition-colors"
+                        onClick={() => {
+                          setProjectsDropdown(false);
+                          setAboutDropdown(false);
+                          setMediaDropdown(false);
+                        }}
+                        className="flex items-center gap-3 px-3 py-2 text-[13px] rounded-md hover:bg-gray-50 hover:text-techgold transition-colors"
                       >
                         {link.icon} {link.name}
                       </Link>
@@ -238,10 +256,10 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                className={`px-3 py-2 text-[14px] font-semibold rounded-md transition-colors ${
                   isActive(item.path)
                     ? "text-techgold"
-                    : "text-gray-700 hover:text-techgold hover:bg-gray-100"
+                    : "text-gray-700 hover:text-techgold"
                 }`}
               >
                 {item.name}
@@ -258,47 +276,29 @@ const Navbar = () => {
                     {profile?.first_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U"}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-medium text-gray-700 hidden xl:block">
-                  {profile?.first_name || "Profile"}
-                </span>
               </Link>
               
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-9 text-sm border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300 gap-2"
-                  >
+                  <Button variant="ghost" size="sm" className="h-9 px-2 text-red-600 hover:bg-red-50">
                     <LogOut className="w-4 h-4" />
-                    <span className="hidden xl:inline">Sign Out</span>
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="sm:max-w-md">
+                <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="flex items-center gap-2">
-                      <LogOut className="w-5 h-5 text-red-500" />
-                      Confirm Sign Out
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to sign out of your account? You'll need to log in again to access your profile and member features.
-                    </AlertDialogDescription>
+                    <AlertDialogTitle>Sign Out</AlertDialogTitle>
+                    <AlertDialogDescription>Are you sure you want to log out?</AlertDialogDescription>
                   </AlertDialogHeader>
-                  <AlertDialogFooter className="gap-2 sm:gap-0">
-                    <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
-                      onClick={handleLogout}
-                      className="bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      Yes, Sign Out
-                    </AlertDialogAction>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleLogout} className="bg-red-600 hover:bg-red-700">Logout</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
             </div>
           ) : (
             <Link to="/auth">
-              <Button className="ml-3 h-9 text-sm bg-techblue hover:bg-techblue-dark text-white">
+              <Button className="ml-3 h-9 text-xs bg-techblue hover:bg-techblue/90 text-white font-bold uppercase tracking-wider">
                 Member Login
               </Button>
             </Link>
@@ -306,141 +306,93 @@ const Navbar = () => {
         </div>
 
         {/* MOBILE TOGGLE */}
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2">
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 text-gray-700">
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-{/* MOBILE MENU */}
-{mobileMenuOpen && (
-  <div className="lg:hidden fixed inset-0 z-50 bg-techgold text-black overflow-y-auto">
-    
-    {/* HEADER */}
-    <div className="flex items-center justify-between px-4 py-4 border-b border-black/10">
-      <span className="text-lg font-semibold">Menu</span>
-      <button onClick={() => setMobileMenuOpen(false)}>
-        <X className="w-7 h-7" />
-      </button>
-    </div>
-
-    {/* NAV ITEMS */}
-    <div className="px-4 py-4 space-y-4">
-      {navItems.map((item) =>
-        item.dropdown ? (
-          <div key={item.name} className="border-b border-black/10 pb-2">
-            <button
-              onClick={() => {
-                setMobileProjectsOpen(item.name === "Projects" ? !mobileProjectsOpen : false);
-                setMobileAboutOpen(item.name === "About" ? !mobileAboutOpen : false);
-                setMobileMediaOpen(item.name === "Media" ? !mobileMediaOpen : false);
-              }}
-              className="w-full flex justify-between items-center py-3 text-base font-medium"
-            >
-              {item.name}
-              <ChevronDown
-                className={`w-5 h-5 transition-transform ${
-                  (item.name === "Projects" && mobileProjectsOpen) ||
-                  (item.name === "About" && mobileAboutOpen) ||
-                  (item.name === "Media" && mobileMediaOpen)
-                    ? "rotate-180"
-                    : ""
-                }`}
-              />
+      {/* MOBILE MENU (KEEPING YOUR GOLD STRUCTURE) */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-[60] bg-techgold text-black overflow-y-auto">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-black/10">
+            <span className="text-xl font-bold">Menu</span>
+            <button onClick={() => setMobileMenuOpen(false)}>
+              <X className="w-8 h-8" />
             </button>
+          </div>
 
-            {/* SUB ITEMS */}
-            {((item.name === "Projects" && mobileProjectsOpen) ||
-              (item.name === "About" && mobileAboutOpen) ||
-              (item.name === "Media" && mobileMediaOpen)) && (
-              <div className="mt-2 ml-3 space-y-2">
-                {(item.name === "Projects"
-                  ? projectLinks
-                  : item.name === "About"
-                  ? aboutLinks
-                  : mediaLinks
-                ).map((sub) => {
-                  const active = location.pathname === sub.path;
+          <div className="px-6 py-6 space-y-2">
+            {navItems.map((item) =>
+              item.dropdown ? (
+                <div key={item.name} className="border-b border-black/5 pb-2">
+                  <button
+                    onClick={() => {
+                      setMobileProjectsOpen(item.name === "Projects" ? !mobileProjectsOpen : false);
+                      setMobileAboutOpen(item.name === "About" ? !mobileAboutOpen : false);
+                      setMobileMediaOpen(item.name === "Media" ? !mobileMediaOpen : false);
+                    }}
+                    className="w-full flex justify-between items-center py-4 text-lg font-bold"
+                  >
+                    {item.name}
+                    <ChevronDown className={`w-5 h-5 transition-transform ${
+                        (item.name === "Projects" && mobileProjectsOpen) ||
+                        (item.name === "About" && mobileAboutOpen) ||
+                        (item.name === "Media" && mobileMediaOpen) ? "rotate-180" : ""
+                    }`} />
+                  </button>
 
-                  return (
-                    <Link
-                      key={sub.name}
-                      to={sub.path}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`block rounded-lg px-4 py-3 text-sm transition-all
-                        ${
-                          active
-                            ? "bg-black/10 border-l-4 border-black font-semibold"
-                            : "hover:bg-black/5"
-                        }
-                      `}
-                    >
-                      {sub.name}
-                    </Link>
-                  );
-                })}
-              </div>
+                  {((item.name === "Projects" && mobileProjectsOpen) ||
+                    (item.name === "About" && mobileAboutOpen) ||
+                    (item.name === "Media" && mobileMediaOpen)) && (
+                    <div className="mt-2 space-y-1 bg-black/5 rounded-lg p-2">
+                      {(item.name === "Projects" ? projectLinks : item.name === "About" ? aboutLinks : mediaLinks).map((sub) => (
+                        <Link
+                          key={sub.name}
+                          to={sub.path}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block px-4 py-3 text-[15px] font-medium hover:bg-black/10 rounded-md"
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block py-4 text-lg font-bold border-b border-black/5 ${isActive(item.path) ? "text-white bg-black/10 px-2 rounded-sm" : ""}`}
+                >
+                  {item.name}
+                </Link>
+              )
+            )}
+
+            {user ? (
+               <div className="pt-8 space-y-4">
+                  <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-4 p-4 bg-black/10 rounded-xl">
+                    <Avatar className="h-12 w-12 border-2 border-black">
+                      <AvatarImage src={profile?.avatar_url || ""} />
+                      <AvatarFallback>{profile?.first_name?.[0] || "U"}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-lg font-bold">My Profile</span>
+                  </Link>
+                  <Button variant="outline" className="w-full h-12 border-black text-black font-bold" onClick={handleLogout}>
+                    Sign Out
+                  </Button>
+               </div>
+            ) : (
+              <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+                <Button className="w-full h-14 mt-8 bg-black text-white text-lg font-bold hover:bg-black/90">
+                  Member Login
+                </Button>
+              </Link>
             )}
           </div>
-        ) : (
-          <Link
-            key={item.name}
-            to={item.path}
-            onClick={() => setMobileMenuOpen(false)}
-            className={`block py-3 text-base border-b border-black/10
-              ${
-                isActive(item.path)
-                  ? "font-semibold border-l-4 border-black pl-3"
-                  : ""
-              }
-            `}
-          >
-            {item.name}
-          </Link>
-        )
-      )}
-
-      {/* AUTH SECTION */}
-      {user ? (
-        <div className="pt-4 border-t border-black/10">
-          <Link
-            to="/profile"
-            onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-3 py-3"
-          >
-            <Avatar className="h-10 w-10 border-2 border-black">
-              <AvatarImage src={profile?.avatar_url || ""} />
-              <AvatarFallback>
-                {profile?.first_name?.[0] || "U"}
-              </AvatarFallback>
-            </Avatar>
-            <span className="font-medium">
-              {profile?.first_name} {profile?.last_name}
-            </span>
-          </Link>
-
-          <Button
-            variant="outline"
-            className="w-full mt-3 border-black text-black"
-            onClick={() => {
-              handleLogout();
-              setMobileMenuOpen(false);
-            }}
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Sign Out
-          </Button>
         </div>
-      ) : (
-        <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-          <Button className="w-full mt-6 bg-black text-white hover:bg-black/80">
-            Member Login
-          </Button>
-        </Link>
       )}
-    </div>
-  </div>
-)}
-
     </nav>
   );
 };

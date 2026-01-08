@@ -31,6 +31,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import NotFound from "./pages/NotFound";
 
+
 /* ======================
    LEGAL PAGES
 ====================== */
@@ -59,6 +60,8 @@ import TechProgramsPage from "./pages/about/TechProgramsPage";
 import TeamPage from "./pages/about/TeamPage";
 import PartnershipsPage from "./pages/about/PartnershipsPage";
 import AwardsPage from "./pages/about/AwardsPage";
+import NewsletterDetail from "./pages/Newsletter";
+import NewsletterDetailPage from "./pages/NewsletterDetailPage";
 
 /* ======================
    QUERY CLIENT
@@ -126,6 +129,9 @@ const App = () => {
                 <Route path="careers" element={<CareersPage />} />
                 <Route path="marketplace" element={<MarketplacePage />} />
 
+                {/* Community */}
+                <Route path="media/news" element={<NewsletterDetail />}/>
+                <Route path="media/newsletter" element={<NewsletterDetailPage/>} />
                 {/* Auth */}
                 <Route path="auth" element={<AuthPage />} />
                 <Route path="register" element={<RegisterPage />} />

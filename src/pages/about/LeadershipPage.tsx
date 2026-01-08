@@ -3,8 +3,10 @@ import SectionTitle from "@/components/SectionTitle";
 import { Building2, Users, Shield, Lightbulb, ArrowRight } from "lucide-react";
 
 import JeremyBravoge from "@/assets/team/jeremy-bravoge.jpg";
+import Jeremy from "@/assets/team/WhatsApp_Image_2026-01-08_at_11.37.34_PM-removebg-preview.png";
 import JohnOminde from "@/assets/team/john-ominde.jpg";
 import EvansChuchu from "@/assets/team/evanschuchu.jpg";
+import john from "@/assets/team/john-ominde-removebg-preview.png";
 
 interface Leader {
   name: string;
@@ -84,7 +86,7 @@ const LeadershipPage = () => {
   ];
 
   return (
-    <div>
+    <div className="bg-gray-100 min-h-screen p-8 font-sans">
       <PageHeader
         title="Leadership & Governance"
         description="Meet the visionaries guiding Teksoft Community towards excellence"
@@ -173,6 +175,61 @@ const LeadershipPage = () => {
                 <p className="text-gray-600 text-sm">{item.description}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Executive Summary */}
+      <section className="section-padding bg-gray-50">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            <div className="rounded-3xl overflow-hidden shadow-sm">
+              <img 
+                src={Jeremy}
+                alt="Professional man"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="bg-white/60 backdrop-blur-sm p-10 rounded-3xl shadow-sm border border-white/20 flex flex-col justify-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <span className="w-1.5 h-6 bg-yellow-500 rounded-full mr-3"></span>
+                Executive Summary
+              </h2>
+              <p className="text-gray-600 leading-relaxed mb-4">
+                
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                There is increased focus to ensure that members are reaping the maximum possible 
+                value out of the Institute's activities. This then translates to increased quality 
+                membership and retention levels.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Value Proposition Statement */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            <div className="bg-white/60 backdrop-blur-sm p-10 rounded-3xl shadow-sm border border-white/20 flex flex-col justify-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <span className="w-1.5 h-6 bg-yellow-500 rounded-full mr-3"></span>
+                Value Proposition Statement
+              </h2>
+              <p className="text-gray-600 leading-relaxed">
+                Tech soft is driven by the need to create and offer lifelong value to our members, who as 
+                professional developers, are expected to be effective in their work, adding value to 
+                those who rely on them including their clients, employers, and the public in general.
+              </p>
+            </div>
+            <div className="rounded-3xl overflow-hidden shadow-sm">
+              <img 
+                src={john}
+                alt="Professional man Smiling" 
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
       </section>
