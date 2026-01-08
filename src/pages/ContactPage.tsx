@@ -4,6 +4,9 @@ import {
   Phone,
   MapPin,
   Clock,
+  User,
+  MessageSquare,
+  Send,
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,20 +35,35 @@ export default function ContactPage() {
     message: "",
   });
 
+  // Load reCAPTCHA ONLY in browser (prevents Vercel crash)
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
     if (typeof window !== "undefined" && SITE_KEY) {
       import("react-google-recaptcha")
         .then((mod) => {
           setReCAPTCHA(() => mod.default);
           setRecaptchaLoading(false);
+
+          timeoutId = setTimeout(() => {
+            const grecaptcha = (window as { grecaptcha?: unknown }).grecaptcha;
+            if (!grecaptcha) {
+              console.warn("reCAPTCHA failed to render");
+              setRecaptchaFailed(true);
+            }
+          }, 5000);
         })
         .catch(() => {
-          setRecaptchaFailed(true);
           setRecaptchaLoading(false);
+          setRecaptchaFailed(true);
         });
     } else {
       setRecaptchaLoading(false);
     }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   const handleChange = (
@@ -54,10 +72,17 @@ export default function ContactPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const canSubmit = () => {
+    if (loading) return false;
+    if (!form.name || !form.email || !form.message) return false;
+    if (SITE_KEY && ReCAPTCHA && !recaptchaFailed && !captchaToken) return false;
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (SITE_KEY && !captchaToken && !recaptchaFailed) {
+    if (SITE_KEY && ReCAPTCHA && !recaptchaFailed && !captchaToken) {
       toast({
         title: "Verification required",
         description: "Please confirm you are not a robot.",
@@ -71,6 +96,7 @@ export default function ContactPage() {
     try {
       const payload: Record<string, string> = {
         access_key: WEB3FORMS_KEY,
+        to: "ominde@jonzjohn.com",
         subject: "New Contact Form Message",
         name: form.name,
         email: form.email,
@@ -89,18 +115,18 @@ export default function ContactPage() {
 
       const data = await res.json();
 
-      if (!data.success) {
-        throw new Error(data.message);
+      if (data.success) {
+        toast({
+          title: "Message Sent Successfully!",
+          description: "Thank you for reaching out. We'll get back to you shortly.",
+        });
+
+        setForm({ name: "", email: "", message: "" });
+        setCaptchaToken(null);
+      } else {
+        throw new Error(data.message || "Submission failed");
       }
-
-      toast({
-        title: "Message Sent Successfully",
-        description: "Thank you for reaching out. We'll get back to you shortly.",
-      });
-
-      setForm({ name: "", email: "", message: "" });
-      setCaptchaToken(null);
-    } catch (err) {
+    } catch (error) {
       toast({
         title: "Failed to Send Message",
         description:
@@ -112,6 +138,33 @@ export default function ContactPage() {
     }
   };
 
+  const contactInfo = [
+    {
+      icon: <Mail className="h-6 w-6 text-techgold" />,
+      title: "Email Us",
+      value: "info@teksoft.org",
+      link: "mailto:info@teksoft.org",
+    },
+    {
+      icon: <Phone className="h-6 w-6 text-techgold" />,
+      title: "Call Us",
+      value: "0115 000 514",
+      link: "tel:0115000514",
+    },
+    {
+      icon: <MapPin className="h-6 w-6 text-techgold" />,
+      title: "Visit Us",
+      value: "Nairobi CBD, Kenya",
+      link: null,
+    },
+    {
+      icon: <Clock className="h-6 w-6 text-techgold" />,
+      title: "Working Hours",
+      value: "Mon – Fri, 9am – 5pm",
+      link: null,
+    },
+  ];
+
   return (
     <div>
       <PageHeader
@@ -121,53 +174,102 @@ export default function ContactPage() {
 
       <section className="section-padding bg-gray-50">
         <div className="container-custom">
-          <Card className="shadow-xl border-0 bg-white max-w-xl mx-auto">
-            <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <Label>Your Name</Label>
-                  <Input name="name" value={form.name} onChange={handleChange} />
-                </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <Card className="shadow-xl border-0 bg-white">
+              <div className="h-1.5 bg-gradient-to-r from-techgold via-techblue to-techgold rounded-t-lg" />
+              <CardContent className="p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Send us a Message
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  Fill out the form below and we'll respond as soon as possible.
+                </p>
 
-                <div>
-                  <Label>Email</Label>
-                  <Input
-                    name="email"
-                    type="email"
-                    value={form.email}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <Label>Message</Label>
-                  <Textarea
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {recaptchaLoading && SITE_KEY ? (
-                  <div className="flex justify-center">
-                    <Loader2 className="animate-spin" />
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Your Name</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
-                ) : ReCAPTCHA && SITE_KEY && !recaptchaFailed ? (
-                  <ReCAPTCHA
-                    sitekey={SITE_KEY}
-                    onChange={(token: string | null) =>
-                      setCaptchaToken(token)
-                    }
-                    onErrored={() => setRecaptchaFailed(true)}
-                  />
-                ) : null}
 
-                <Button type="submit" disabled={loading} className="w-full">
-                  {loading ? "Sending..." : "Send Message"}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Your Message</Label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      value={form.message}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  {recaptchaLoading && SITE_KEY ? (
+                    <div className="flex items-center justify-center p-4">
+                      <Loader2 className="animate-spin mr-2" />
+                      Loading verification...
+                    </div>
+                  ) : ReCAPTCHA && SITE_KEY && !recaptchaFailed ? (
+                    <div className="flex justify-center">
+                      <ReCAPTCHA
+                        sitekey={SITE_KEY}
+                        onChange={(token: string | null) =>
+                          setCaptchaToken(token)
+                        }
+                        onErrored={() => setRecaptchaFailed(true)}
+                      />
+                    </div>
+                  ) : null}
+
+                  <Button
+                    type="submit"
+                    disabled={!canSubmit()}
+                    className="w-full"
+                  >
+                    {loading ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Contact Info */}
+            <div className="space-y-6">
+              {contactInfo.map((item, index) => (
+                <Card key={index}>
+                  <CardContent className="p-5">
+                    <div className="flex gap-4">
+                      {item.icon}
+                      <div>
+                        <h3>{item.title}</h3>
+                        {item.link ? (
+                          <a href={item.link}>{item.value}</a>
+                        ) : (
+                          <p>{item.value}</p>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </div>
