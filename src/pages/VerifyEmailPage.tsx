@@ -54,7 +54,7 @@ const VerifyEmailPage = () => {
     try {
       // 🔐 Verify code via Edge Function
       const { data, error } = await supabase.functions.invoke(
-        "dynamic-handler",
+        "verify-code",
         {
           body: {
             email: email.toLowerCase(),
@@ -84,6 +84,14 @@ const VerifyEmailPage = () => {
       if (signUpError) {
         throw signUpError;
       }
+
+      // Send welcome email
+      await supabase.functions.invoke("send-welcome-email", {
+        body: {
+          email,
+          firstName,
+        },
+      });
 
       toast({
         title: "Email verified",
@@ -131,6 +139,7 @@ const VerifyEmailPage = () => {
         {
           body: {
             email,
+            firstName,
             code: verificationCode,
           },
         }
