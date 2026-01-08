@@ -82,6 +82,7 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form submission started", { form, captchaToken, recaptchaFailed, SITE_KEY: !!SITE_KEY });
 
     if (SITE_KEY && ReCAPTCHA && !recaptchaFailed && !captchaToken) {
       toast({
@@ -95,10 +96,6 @@ export default function ContactPage() {
     setLoading(true);
 
     try {
-      if (!WEB3FORMS_KEY) {
-        throw new Error("Web3Forms access key is not configured");
-      }
-
       const payload: Record<string, string> = {
         access_key: WEB3FORMS_KEY,
         subject: "New Contact Form Message from Teksoft Website",
@@ -112,6 +109,8 @@ export default function ContactPage() {
       if (captchaToken) {
         payload["g-recaptcha-response"] = captchaToken;
       }
+
+      console.log("Sending to Web3Forms with payload:", payload);
 
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -137,11 +136,11 @@ export default function ContactPage() {
         console.error("Web3Forms error:", data);
         throw new Error(data.message || "Submission failed");
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Form submission error:", error);
       toast({
         title: "Failed to Send Message",
-        description:
-          "Something went wrong. Please try again or contact us directly via email.",
+        description: error.message || "Something went wrong. Please try again or contact us directly via email.",
         variant: "destructive",
       });
     } finally {
