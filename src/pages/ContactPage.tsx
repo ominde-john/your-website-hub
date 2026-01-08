@@ -96,7 +96,6 @@ export default function ContactPage() {
     try {
       const payload: Record<string, string> = {
         access_key: WEB3FORMS_KEY,
-        to: "ominde@jonzjohn.com",
         subject: "New Contact Form Message",
         name: form.name,
         email: form.email,
