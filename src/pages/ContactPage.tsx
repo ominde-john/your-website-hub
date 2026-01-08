@@ -102,9 +102,8 @@ export default function ContactPage() {
         message: form.message,
       };
 
-      if (captchaToken) {
-        payload["g-recaptcha-response"] = captchaToken;
-      }
+      // Note: Google reCAPTCHA token is used for client-side verification only.
+      // Web3Forms doesn't validate Google reCAPTCHA tokens, so we don't include it in the payload.
 
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
