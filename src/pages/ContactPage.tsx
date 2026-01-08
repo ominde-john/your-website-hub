@@ -18,7 +18,8 @@ import { useToast } from "@/hooks/use-toast";
 import PageHeader from "@/components/PageHeader";
 
 const SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+// Web3Forms access key is public and safe to use in client-side code
+const WEB3FORMS_KEY = "cfeb2c00-e884-4f54-8496-315cf9f85c42";
 
 export default function ContactPage() {
   const { toast } = useToast();
