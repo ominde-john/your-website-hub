@@ -311,114 +311,136 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* MOBILE MENU */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden bg-white px-4 py-3 shadow-lg space-y-2 border-t">
-          {navItems.map((item) =>
-            item.dropdown ? (
-              <div key={item.name}>
-                <button
-                  onClick={() => {
-                    setMobileProjectsOpen(item.name === "Projects" ? !mobileProjectsOpen : false);
-                    setMobileAboutOpen(item.name === "About" ? !mobileAboutOpen : false);
-                    setMobileMediaOpen(item.name === "Media" ? !mobileMediaOpen : false);
-                  }}
-                  className="w-full flex justify-between text-sm py-2 text-gray-700"
-                >
-                  {item.name} <ChevronDown />
-                </button>
+{/* MOBILE MENU */}
+{mobileMenuOpen && (
+  <div className="lg:hidden fixed inset-0 z-50 bg-techgold text-black overflow-y-auto">
+    
+    {/* HEADER */}
+    <div className="flex items-center justify-between px-4 py-4 border-b border-black/10">
+      <span className="text-lg font-semibold">Menu</span>
+      <button onClick={() => setMobileMenuOpen(false)}>
+        <X className="w-7 h-7" />
+      </button>
+    </div>
 
-                {((item.name === "Projects" && mobileProjectsOpen) ||
+    {/* NAV ITEMS */}
+    <div className="px-4 py-4 space-y-4">
+      {navItems.map((item) =>
+        item.dropdown ? (
+          <div key={item.name} className="border-b border-black/10 pb-2">
+            <button
+              onClick={() => {
+                setMobileProjectsOpen(item.name === "Projects" ? !mobileProjectsOpen : false);
+                setMobileAboutOpen(item.name === "About" ? !mobileAboutOpen : false);
+                setMobileMediaOpen(item.name === "Media" ? !mobileMediaOpen : false);
+              }}
+              className="w-full flex justify-between items-center py-3 text-base font-medium"
+            >
+              {item.name}
+              <ChevronDown
+                className={`w-5 h-5 transition-transform ${
+                  (item.name === "Projects" && mobileProjectsOpen) ||
                   (item.name === "About" && mobileAboutOpen) ||
-                  (item.name === "Media" && mobileMediaOpen)) && (
-                  <div className="pl-4 space-y-1">
-                    {(item.name === "Projects"
-                      ? projectLinks
-                      : item.name === "About"
-                      ? aboutLinks
-                      : mediaLinks
-                    ).map((sub) => (
-                      <Link
-                        key={sub.name}
-                        to={sub.path}
-                        className="block text-xs py-1 hover:text-techgold transition-colors"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {sub.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Link
-                key={item.name}
-                to={item.path}
-                className="block text-sm py-2 text-gray-700 hover:text-techgold"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item.name}
-              </Link>
-            )
-          )}
+                  (item.name === "Media" && mobileMediaOpen)
+                    ? "rotate-180"
+                    : ""
+                }`}
+              />
+            </button>
 
-          {user ? (
-            <div className="space-y-2 mt-3">
-              <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 py-2">
-                <Avatar className="h-10 w-10 border-2 border-techgold">
-                  <AvatarImage src={profile?.avatar_url || ""} alt="Profile" />
-                  <AvatarFallback className="bg-techblue text-white font-medium">
-                    {profile?.first_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-sm font-medium text-gray-700">
-                  {profile?.first_name ? `${profile.first_name} ${profile.last_name}` : "My Profile"}
-                </span>
-              </Link>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="sm:max-w-md">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle className="flex items-center gap-2">
-                      <LogOut className="w-5 h-5 text-red-500" />
-                      Confirm Sign Out
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to sign out of your account?
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter className="gap-2 sm:gap-0">
-                    <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
-                      onClick={() => {
-                        handleLogout();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="bg-red-600 hover:bg-red-700 text-white"
+            {/* SUB ITEMS */}
+            {((item.name === "Projects" && mobileProjectsOpen) ||
+              (item.name === "About" && mobileAboutOpen) ||
+              (item.name === "Media" && mobileMediaOpen)) && (
+              <div className="mt-2 ml-3 space-y-2">
+                {(item.name === "Projects"
+                  ? projectLinks
+                  : item.name === "About"
+                  ? aboutLinks
+                  : mediaLinks
+                ).map((sub) => {
+                  const active = location.pathname === sub.path;
+
+                  return (
+                    <Link
+                      key={sub.name}
+                      to={sub.path}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`block rounded-lg px-4 py-3 text-sm transition-all
+                        ${
+                          active
+                            ? "bg-black/10 border-l-4 border-black font-semibold"
+                            : "hover:bg-black/5"
+                        }
+                      `}
                     >
-                      Yes, Sign Out
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
-          ) : (
-            <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-              <Button className="w-full mt-3 bg-techblue hover:bg-techblue-dark text-white">
-                Member Login
-              </Button>
-            </Link>
-          )}
-        </div>
+                      {sub.name}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          <Link
+            key={item.name}
+            to={item.path}
+            onClick={() => setMobileMenuOpen(false)}
+            className={`block py-3 text-base border-b border-black/10
+              ${
+                isActive(item.path)
+                  ? "font-semibold border-l-4 border-black pl-3"
+                  : ""
+              }
+            `}
+          >
+            {item.name}
+          </Link>
+        )
       )}
+
+      {/* AUTH SECTION */}
+      {user ? (
+        <div className="pt-4 border-t border-black/10">
+          <Link
+            to="/profile"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-3 py-3"
+          >
+            <Avatar className="h-10 w-10 border-2 border-black">
+              <AvatarImage src={profile?.avatar_url || ""} />
+              <AvatarFallback>
+                {profile?.first_name?.[0] || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <span className="font-medium">
+              {profile?.first_name} {profile?.last_name}
+            </span>
+          </Link>
+
+          <Button
+            variant="outline"
+            className="w-full mt-3 border-black text-black"
+            onClick={() => {
+              handleLogout();
+              setMobileMenuOpen(false);
+            }}
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Sign Out
+          </Button>
+        </div>
+      ) : (
+        <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
+          <Button className="w-full mt-6 bg-black text-white hover:bg-black/80">
+            Member Login
+          </Button>
+        </Link>
+      )}
+    </div>
+  </div>
+)}
+
     </nav>
   );
 };
