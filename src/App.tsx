@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
+import TeksoftNavigator from "./components/TeksoftNavigator";
 
 /* ======================
    MAIN PAGES
@@ -166,6 +167,7 @@ const App = () => {
 
               </Route>
             </Routes>
+            <TeksoftNavigator />
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
