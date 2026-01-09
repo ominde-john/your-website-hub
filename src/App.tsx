@@ -65,6 +65,15 @@ import NewsletterDetail from "./pages/Newsletter";
 import NewsletterDetailPage from "./pages/NewsletterDetailPage";
 
 /* ======================
+   MEDIA SUB-PAGES
+====================== */
+import PressReleasesPage from "./pages/media/PressReleasesPage";
+import GalleryPage from "./pages/media/GalleryPage";
+import VideosPage from "./pages/media/VideosPage";
+import PodcastsPage from "./pages/media/PodcastsPage";
+import MediaAppearancesPage from "./pages/media/MediaAppearancesPage";
+
+/* ======================
    QUERY CLIENT
 ====================== */
 const queryClient = new QueryClient();
@@ -134,6 +143,12 @@ const App = () => {
                 {/* Community */}
                 <Route path="media/news" element={<NewsletterDetail />}/>
                 <Route path="media/newsletter" element={<NewsletterDetailPage/>} />
+                <Route path="media/press" element={<PressReleasesPage />} />
+                <Route path="media/gallery" element={<GalleryPage />} />
+                <Route path="media/videos" element={<VideosPage />} />
+                <Route path="media/podcasts" element={<PodcastsPage />} />
+                <Route path="media/appearances" element={<MediaAppearancesPage />} />
+                
                 {/* Auth */}
                 <Route path="auth" element={<AuthPage />} />
                 <Route path="register" element={<RegisterPage />} />
