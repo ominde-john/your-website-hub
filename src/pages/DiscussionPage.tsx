@@ -10,6 +10,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useOnlinePresence } from "@/hooks/useOnlinePresence";
 import MemberCard from "@/components/members/MemberCard";
 import ChatWindow from "@/components/members/ChatWindow";
+import CreateTopicDialog from "@/components/discussions/CreateTopicDialog";
+import TopicCard from "@/components/discussions/TopicCard";
+import TopicChatWindow from "@/components/discussions/TopicChatWindow";
 
 interface MemberWithRole {
   id: string;
@@ -31,6 +34,15 @@ interface ChatPartner {
   last_seen?: string | null;
 }
 
+interface Topic {
+  id: string;
+  title: string;
+  description?: string;
+  category: string;
+  created_by: string;
+  created_at: string;
+}
+
 const DiscussionPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -39,6 +51,12 @@ const DiscussionPage = () => {
   const [memberSearchQuery, setMemberSearchQuery] = useState("");
   const [activeChatPartner, setActiveChatPartner] = useState<ChatPartner | null>(null);
   const { isUserOnline } = useOnlinePresence(user?.id);
+  
+  // Topics state
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [loadingTopics, setLoadingTopics] = useState(true);
+  const [activeTopic, setActiveTopic] = useState<Topic | null>(null);
+  const [topicSearchQuery, setTopicSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -60,13 +78,49 @@ const DiscussionPage = () => {
     fetchMembers();
   }, []);
 
+  // Fetch topics
+  const fetchTopics = async () => {
+    setLoadingTopics(true);
+    try {
+      const { data, error } = await supabase
+        .from("discussion_topics")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setTopics(data || []);
+    } catch (error) {
+      console.error("Error fetching topics:", error);
+    } finally {
+      setLoadingTopics(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTopics();
+  }, []);
+
   const handleStartChat = (memberId: string) => {
     if (!user) { navigate("/auth"); return; }
     const member = members.find((m) => m.user_id === memberId);
     if (member) setActiveChatPartner({ user_id: member.user_id, first_name: member.first_name, last_name: member.last_name, username: member.username, avatar_url: member.avatar_url, last_seen: member.last_seen });
   };
 
+  const handleJoinTopic = (topic: Topic) => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    setActiveTopic(topic);
+  };
+
   const filteredMembers = members.filter((m) => m.first_name?.toLowerCase().includes(memberSearchQuery.toLowerCase()) || m.last_name?.toLowerCase().includes(memberSearchQuery.toLowerCase()) || m.username?.toLowerCase().includes(memberSearchQuery.toLowerCase()));
+
+  const filteredTopics = topics.filter((t) => 
+    t.title.toLowerCase().includes(topicSearchQuery.toLowerCase()) ||
+    t.description?.toLowerCase().includes(topicSearchQuery.toLowerCase()) ||
+    t.category.toLowerCase().includes(topicSearchQuery.toLowerCase())
+  );
 
   const categories = [
     { id: "ai-ml", name: "Artificial Intelligence & Machine Learning", description: "Discuss the latest in AI research, machine learning models, and their applications.", icon: "🤖", topics: 156, posts: 2341 },
@@ -92,12 +146,49 @@ const DiscussionPage = () => {
 
       <section className="section-padding bg-gray-50">
         <div className="container-custom">
-          <Tabs defaultValue="members">
+          <Tabs defaultValue="topics">
             <TabsList className="mb-8">
+              <TabsTrigger value="topics"><MessageSquare className="w-4 h-4 mr-2" />Group Topics</TabsTrigger>
               <TabsTrigger value="members"><Users className="w-4 h-4 mr-2" />Members</TabsTrigger>
               <TabsTrigger value="categories">Categories</TabsTrigger>
-              <TabsTrigger value="recent">Recent Discussions</TabsTrigger>
+              <TabsTrigger value="recent">Recent</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="topics">
+              <div className="flex flex-col sm:flex-row gap-4 mb-8 items-start sm:items-center justify-between">
+                <div className="relative max-w-md w-full">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                  <Input 
+                    placeholder="Search topics..." 
+                    value={topicSearchQuery} 
+                    onChange={(e) => setTopicSearchQuery(e.target.value)} 
+                    className="pl-10" 
+                  />
+                </div>
+                {user && <CreateTopicDialog onTopicCreated={fetchTopics} />}
+              </div>
+
+              {loadingTopics ? (
+                <div className="flex justify-center py-12"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+              ) : filteredTopics.length === 0 ? (
+                <div className="text-center py-12 bg-card rounded-xl border border-border">
+                  <MessageSquare className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold text-foreground mb-2">No discussions yet</h3>
+                  <p className="text-muted-foreground mb-4">Be the first to start a group discussion!</p>
+                  {user ? (
+                    <CreateTopicDialog onTopicCreated={fetchTopics} />
+                  ) : (
+                    <Button onClick={() => navigate("/auth")}>Sign in to create a topic</Button>
+                  )}
+                </div>
+              ) : (
+                <div className="grid gap-4">
+                  {filteredTopics.map((topic) => (
+                    <TopicCard key={topic.id} topic={topic} onJoin={handleJoinTopic} />
+                  ))}
+                </div>
+              )}
+            </TabsContent>
 
             <TabsContent value="members">
               <div className="relative mb-8 max-w-md">
@@ -157,15 +248,23 @@ const DiscussionPage = () => {
             </TabsContent>
           </Tabs>
 
-          <div className="mt-12 text-center bg-techblue/5 rounded-xl p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Have a question or idea?</h3>
-            <p className="text-gray-600 mb-6">Start a new discussion and get insights from the community.</p>
-            <Button className="bg-techblue hover:bg-techblue-dark text-white">Start New Discussion</Button>
+          <div className="mt-12 text-center bg-primary/5 rounded-xl p-8">
+            <h3 className="text-2xl font-bold text-foreground mb-4">Have a question or idea?</h3>
+            <p className="text-muted-foreground mb-6">Start a new discussion and get insights from the community.</p>
+            {user ? (
+              <CreateTopicDialog onTopicCreated={fetchTopics} />
+            ) : (
+              <Button onClick={() => navigate("/auth")} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                Sign in to Start Discussion
+              </Button>
+            )}
           </div>
         </div>
       </section>
 
       {activeChatPartner && user && <ChatWindow currentUserId={user.id} partner={activeChatPartner} onClose={() => setActiveChatPartner(null)} isPartnerOnline={isUserOnline(activeChatPartner.user_id)} />}
+      
+      {activeTopic && user && <TopicChatWindow topic={activeTopic} currentUserId={user.id} onClose={() => setActiveTopic(null)} />}
     </div>
   );
 };
