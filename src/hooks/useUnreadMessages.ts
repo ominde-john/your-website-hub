@@ -61,9 +61,22 @@ export const useUnreadMessages = (currentUserId: string | undefined) => {
           table: 'messages',
           filter: `receiver_id=eq.${currentUserId}`,
         },
-        () => {
-          // Re-fetch counts when messages are updated (marked as read)
-          fetchUnreadCounts();
+        (payload) => {
+          const msg = payload.new as { sender_id: string; read: boolean };
+          const oldMsg = payload.old as { read: boolean };
+          // Only update if the read status changed from false to true
+          if (msg.read && !oldMsg.read) {
+            setUnreadCounts((prev) => {
+              const newCounts = new Map(prev);
+              const current = newCounts.get(msg.sender_id) || 0;
+              if (current > 1) {
+                newCounts.set(msg.sender_id, current - 1);
+              } else {
+                newCounts.delete(msg.sender_id);
+              }
+              return newCounts;
+            });
+          }
         }
       )
       .subscribe();

@@ -19,13 +19,7 @@ export const useTypingIndicator = (
 
   useEffect(() => {
     // Create and subscribe to the typing channel
-    const channel = supabase.channel(channelName, {
-      config: {
-        presence: {
-          key: currentUserId,
-        },
-      },
-    });
+    const channel = supabase.channel(channelName);
 
     channel
       .on('broadcast', { event: 'typing' }, (payload) => {
