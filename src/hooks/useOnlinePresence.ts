@@ -124,6 +124,12 @@ export const formatLastSeen = (lastSeen: string | null | undefined): string => {
   if (!lastSeen) return 'Never';
 
   const date = new Date(lastSeen);
+  
+  // Validate the date
+  if (isNaN(date.getTime())) {
+    return 'Unknown';
+  }
+  
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMinutes = Math.floor(diffMs / (1000 * 60));
