@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MessageCircle, Shield, User, Crown } from "lucide-react";
+import { formatLastSeen } from "@/hooks/useOnlinePresence";
 
 interface MemberCardProps {
   member: {
@@ -13,10 +14,12 @@ interface MemberCardProps {
     username: string;
     avatar_url?: string;
     role: 'admin' | 'moderator' | 'user';
+    last_seen?: string | null;
   };
   currentUserId: string;
   onStartChat: (memberId: string) => void;
   unreadCount?: number;
+  isOnline?: boolean;
 }
 
 const roleIcons = {
@@ -31,7 +34,7 @@ const roleColors = {
   user: "bg-muted text-muted-foreground",
 };
 
-const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0 }: MemberCardProps) => {
+const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0, isOnline = false }: MemberCardProps) => {
   const RoleIcon = roleIcons[member.role];
   const isCurrentUser = member.user_id === currentUserId;
   const initials = `${member.first_name?.[0] || ''}${member.last_name?.[0] || ''}`.toUpperCase() || 'U';
@@ -47,6 +50,13 @@ const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0 }: Mem
                 {initials}
               </AvatarFallback>
             </Avatar>
+            {/* Online indicator */}
+            <span 
+              className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-card ${
+                isOnline ? 'bg-green-500' : 'bg-gray-400'
+              }`}
+              title={isOnline ? 'Online' : `Last seen: ${formatLastSeen(member.last_seen)}`}
+            />
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
                 {unreadCount > 99 ? '99+' : unreadCount}
@@ -64,10 +74,15 @@ const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0 }: Mem
               )}
             </div>
             <p className="text-sm text-muted-foreground">@{member.username}</p>
-            <Badge className={`mt-2 text-xs ${roleColors[member.role]}`}>
-              <RoleIcon className="w-3 h-3 mr-1" />
-              {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
-            </Badge>
+            <div className="flex items-center gap-2 mt-2">
+              <Badge className={`text-xs ${roleColors[member.role]}`}>
+                <RoleIcon className="w-3 h-3 mr-1" />
+                {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
+              </Badge>
+              <span className={`text-xs ${isOnline ? 'text-green-500' : 'text-muted-foreground'}`}>
+                {isOnline ? 'Online' : formatLastSeen(member.last_seen)}
+              </span>
+            </div>
           </div>
           
           {!isCurrentUser && (
