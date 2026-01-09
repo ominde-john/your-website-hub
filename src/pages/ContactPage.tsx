@@ -151,25 +151,25 @@ export default function ContactPage() {
     {
       icon: <Mail className="h-6 w-6 text-techgold" />,
       title: "Email Us",
-      value: "info@teksoft.org",
-      link: "mailto:info@teksoft.org",
+      value: "contact@teksoft.co.ke",
+      link: "mailto:contact@teksoft.co.ke",
     },
     {
       icon: <Phone className="h-6 w-6 text-techgold" />,
       title: "Call Us",
-      value: "0115 000 514",
-      link: "tel:0115000514",
+      value: "+254 115 000 514/+254 111 276 271",
+      link: "tel:0111276271",
     },
     {
       icon: <MapPin className="h-6 w-6 text-techgold" />,
       title: "Visit Us",
-      value: "Nairobi CBD, Kenya",
+      value: "Nairobi, Kenya",
       link: null,
     },
     {
       icon: <Clock className="h-6 w-6 text-techgold" />,
       title: "Working Hours",
-      value: "Mon – Fri, 9am – 5pm",
+      value: "Mon – Sat, 9am – 5pm",
       link: null,
     },
   ];
