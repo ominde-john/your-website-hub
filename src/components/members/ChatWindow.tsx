@@ -4,10 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send } from "lucide-react";
+import { X, Send, Check, XIcon, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { useTypingIndicator } from "@/hooks/useTypingIndicator";
 import { formatLastSeen } from "@/hooks/useOnlinePresence";
+import { useMessageRequests, RequestStatus } from "@/hooks/useMessageRequests";
 
 interface Message {
   id: string;
@@ -41,11 +42,18 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
   const scrollRef = useRef<HTMLDivElement>(null);
   const initials = `${partner.first_name?.[0] || ''}${partner.last_name?.[0] || ''}`.toUpperCase();
   
+  // Message requests
+  const { getRequestStatus, sendRequest, acceptRequest, declineRequest } = useMessageRequests(currentUserId);
+  const { status: requestStatus, isReceiver } = getRequestStatus(partner.user_id);
+  
   // Typing indicator
   const { isPartnerTyping, handleTyping, stopTyping } = useTypingIndicator(
     currentUserId,
     partner.user_id
   );
+
+  // Can send messages only if request is accepted or we haven't started a conversation
+  const canSendMessages = requestStatus === 'accepted' || requestStatus === 'none';
 
   // Get online status text
   const getStatusText = () => {
@@ -127,8 +135,26 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
   const handleSend = async () => {
     if (!newMessage.trim() || sending) return;
 
+    // If no request exists, send a request first
+    if (requestStatus === 'none') {
+      setSending(true);
+      const success = await sendRequest(partner.user_id);
+      if (!success) {
+        toast.error('Failed to send message request');
+        setSending(false);
+        return;
+      }
+      // Now send the first message
+    }
+
+    // If request is pending and we're the sender, wait for acceptance
+    if (requestStatus === 'pending' && !isReceiver) {
+      toast.info('Waiting for the other user to accept your message request');
+      return;
+    }
+
     setSending(true);
-    stopTyping(); // Stop typing indicator when sending
+    stopTyping();
     const { error } = await supabase.from('messages').insert({
       sender_id: currentUserId,
       receiver_id: partner.user_id,
@@ -149,6 +175,70 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const handleAccept = async () => {
+    const success = await acceptRequest(partner.user_id);
+    if (success) {
+      toast.success('Message request accepted');
+    } else {
+      toast.error('Failed to accept request');
+    }
+  };
+
+  const handleDecline = async () => {
+    const success = await declineRequest(partner.user_id);
+    if (success) {
+      toast.info('Message request declined');
+      onClose();
+    } else {
+      toast.error('Failed to decline request');
+    }
+  };
+
+  // Render request status banner
+  const renderRequestBanner = () => {
+    if (requestStatus === 'pending') {
+      if (isReceiver) {
+        // Show accept/decline buttons
+        return (
+          <div className="p-4 bg-primary/10 border-b border-border flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm">
+              <Clock className="w-4 h-4 text-primary" />
+              <span>{partner.first_name} wants to message you</span>
+            </div>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={handleDecline} className="gap-1">
+                <XIcon className="w-3 h-3" />
+                Decline
+              </Button>
+              <Button size="sm" onClick={handleAccept} className="gap-1">
+                <Check className="w-3 h-3" />
+                Accept
+              </Button>
+            </div>
+          </div>
+        );
+      } else {
+        // Show waiting message
+        return (
+          <div className="p-4 bg-muted/50 border-b border-border flex items-center gap-2 text-sm text-muted-foreground">
+            <Clock className="w-4 h-4" />
+            <span>Waiting for {partner.first_name} to accept your message request...</span>
+          </div>
+        );
+      }
+    }
+
+    if (requestStatus === 'declined' && !isReceiver) {
+      return (
+        <div className="p-4 bg-destructive/10 border-b border-border text-sm text-destructive">
+          Your message request was declined.
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -178,12 +268,19 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
         </Button>
       </div>
 
+      {/* Request Banner */}
+      {renderRequestBanner()}
+
       {/* Messages */}
       <ScrollArea className="flex-1 p-4" ref={scrollRef}>
         <div className="space-y-3">
           {messages.length === 0 ? (
             <p className="text-center text-muted-foreground text-sm py-8">
-              No messages yet. Start the conversation!
+              {requestStatus === 'none' 
+                ? "Send a message to start chatting!"
+                : requestStatus === 'pending'
+                ? "Waiting for request acceptance..."
+                : "No messages yet. Start the conversation!"}
             </p>
           ) : (
             messages.map((msg) => {
@@ -214,23 +311,35 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
 
       {/* Input */}
       <div className="p-4 border-t border-border">
-        <div className="flex gap-2">
-          <Input
-            value={newMessage}
-            onChange={(e) => {
-              setNewMessage(e.target.value);
-              handleTyping();
-            }}
-            onKeyPress={handleKeyPress}
-            onBlur={stopTyping}
-            placeholder="Type a message..."
-            className="flex-1"
-            disabled={sending}
-          />
-          <Button onClick={handleSend} disabled={sending || !newMessage.trim()} size="icon">
-            <Send className="w-4 h-4" />
-          </Button>
-        </div>
+        {requestStatus === 'declined' && !isReceiver ? (
+          <p className="text-sm text-muted-foreground text-center">Cannot send messages</p>
+        ) : (
+          <div className="flex gap-2">
+            <Input
+              value={newMessage}
+              onChange={(e) => {
+                setNewMessage(e.target.value);
+                handleTyping();
+              }}
+              onKeyPress={handleKeyPress}
+              onBlur={stopTyping}
+              placeholder={
+                requestStatus === 'pending' && !isReceiver
+                  ? "Waiting for acceptance..."
+                  : "Type a message..."
+              }
+              className="flex-1"
+              disabled={sending || (requestStatus === 'pending' && !isReceiver)}
+            />
+            <Button 
+              onClick={handleSend} 
+              disabled={sending || !newMessage.trim() || (requestStatus === 'pending' && !isReceiver)} 
+              size="icon"
+            >
+              <Send className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

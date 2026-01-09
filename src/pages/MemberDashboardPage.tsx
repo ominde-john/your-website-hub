@@ -4,10 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 import { useOnlinePresence, formatLastSeen } from "@/hooks/useOnlinePresence";
+import { useMessageRequests } from "@/hooks/useMessageRequests";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, MessageCircle, Search, Loader2 } from "lucide-react";
+import { Users, MessageCircle, Search, Loader2, Bell } from "lucide-react";
 import MemberCard from "@/components/members/MemberCard";
 import ChatWindow from "@/components/members/ChatWindow";
 import PageHeader from "@/components/PageHeader";
@@ -41,6 +43,7 @@ const MemberDashboardPage = () => {
   const [activeChatPartner, setActiveChatPartner] = useState<ChatPartner | null>(null);
   const { getUnreadCount } = useUnreadMessages(user?.id);
   const { isUserOnline } = useOnlinePresence(user?.id);
+  const { pendingReceivedRequests, acceptRequest, declineRequest } = useMessageRequests(user?.id);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -142,6 +145,15 @@ const MemberDashboardPage = () => {
               <Users className="w-4 h-4" />
               Members
             </TabsTrigger>
+            <TabsTrigger value="requests" className="flex items-center gap-2 relative">
+              <Bell className="w-4 h-4" />
+              Requests
+              {pendingReceivedRequests.length > 0 && (
+                <Badge variant="destructive" className="ml-1 h-5 min-w-[20px] px-1">
+                  {pendingReceivedRequests.length}
+                </Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="messages" className="flex items-center gap-2">
               <MessageCircle className="w-4 h-4" />
               My Chats
@@ -185,6 +197,16 @@ const MemberDashboardPage = () => {
             )}
           </TabsContent>
 
+          <TabsContent value="requests">
+            <MessageRequestsSection 
+              pendingRequests={pendingReceivedRequests}
+              members={members}
+              onAccept={acceptRequest}
+              onDecline={declineRequest}
+              onOpenChat={handleStartChat}
+            />
+          </TabsContent>
+
           <TabsContent value="messages">
             <ChatHistorySection currentUserId={user.id} onOpenChat={handleStartChat} members={members} getUnreadCount={getUnreadCount} isUserOnline={isUserOnline} />
           </TabsContent>
@@ -200,6 +222,88 @@ const MemberDashboardPage = () => {
           isPartnerOnline={isUserOnline(activeChatPartner.user_id)}
         />
       )}
+    </div>
+  );
+};
+
+// Message requests section component
+interface MessageRequestsSectionProps {
+  pendingRequests: Array<{ id: string; sender_id: string; receiver_id: string; status: string; created_at: string }>;
+  members: MemberWithRole[];
+  onAccept: (senderId: string) => Promise<boolean>;
+  onDecline: (senderId: string) => Promise<boolean>;
+  onOpenChat: (memberId: string) => void;
+}
+
+const MessageRequestsSection = ({ pendingRequests, members, onAccept, onDecline, onOpenChat }: MessageRequestsSectionProps) => {
+  const [processing, setProcessing] = useState<string | null>(null);
+
+  const handleAccept = async (senderId: string) => {
+    setProcessing(senderId);
+    const success = await onAccept(senderId);
+    if (success) {
+      onOpenChat(senderId);
+    }
+    setProcessing(null);
+  };
+
+  const handleDecline = async (senderId: string) => {
+    setProcessing(senderId);
+    await onDecline(senderId);
+    setProcessing(null);
+  };
+
+  if (pendingRequests.length === 0) {
+    return (
+      <div className="text-center py-12 text-muted-foreground">
+        No pending message requests.
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {pendingRequests.map((request) => {
+        const sender = members.find((m) => m.user_id === request.sender_id);
+        if (!sender) return null;
+        const initials = `${sender.first_name?.[0] || ''}${sender.last_name?.[0] || ''}`.toUpperCase();
+
+        return (
+          <div
+            key={request.id}
+            className="flex items-center gap-4 p-4 bg-card/50 border border-primary/30 rounded-xl"
+          >
+            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">
+              {initials}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h4 className="font-semibold">{sender.first_name} {sender.last_name}</h4>
+              <p className="text-sm text-muted-foreground">@{sender.username}</p>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={() => handleDecline(request.sender_id)}
+                disabled={processing === request.sender_id}
+              >
+                Decline
+              </Button>
+              <Button 
+                size="sm" 
+                onClick={() => handleAccept(request.sender_id)}
+                disabled={processing === request.sender_id}
+              >
+                {processing === request.sender_id ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  'Accept'
+                )}
+              </Button>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };

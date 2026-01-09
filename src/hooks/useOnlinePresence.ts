@@ -12,7 +12,7 @@ export const useOnlinePresence = (currentUserId: string | undefined) => {
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
   const [lastSeenMap, setLastSeenMap] = useState<Map<string, string>>(new Map());
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
-  const updateIntervalRef = useRef<NodeJS.Timer | null>(null);
+  const updateIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Update current user's last_seen in the database
   const updateLastSeen = useCallback(async () => {
