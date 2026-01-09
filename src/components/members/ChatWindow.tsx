@@ -253,7 +253,7 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
   };
 
   return (
-    <div className="fixed inset-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-full md:h-[500px] bg-card border-0 md:border md:border-border md:rounded-2xl shadow-2xl flex flex-col z-50">
+    <div className="fixed inset-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-full md:h-[500px] bg-background border-0 md:border md:border-border md:rounded-2xl shadow-2xl flex flex-col z-[100]">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b border-border bg-muted/50 md:rounded-t-2xl">
         <div className="relative">
