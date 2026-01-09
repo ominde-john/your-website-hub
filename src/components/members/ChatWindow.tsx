@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useTypingIndicator } from "@/hooks/useTypingIndicator";
 import { formatLastSeen } from "@/hooks/useOnlinePresence";
 import { useMessageRequests } from "@/hooks/useMessageRequests";
+import { useNotificationSound } from "@/hooks/useNotificationSound";
 
 interface Message {
   id: string;
@@ -51,6 +52,9 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
     currentUserId,
     partner.user_id
   );
+  
+  // Notification sound
+  const { playNotification } = useNotificationSound();
 
   // Can send messages only if request is accepted or we haven't started a conversation
   const canSendMessages = requestStatus === 'accepted' || requestStatus === 'none';
@@ -113,6 +117,11 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
             (msg.sender_id === partner.user_id && msg.receiver_id === currentUserId)
           ) {
             setMessages(prev => [...prev, msg]);
+            
+            // Play notification sound for incoming messages (not own messages)
+            if (msg.sender_id === partner.user_id) {
+              playNotification();
+            }
           }
         }
       )
