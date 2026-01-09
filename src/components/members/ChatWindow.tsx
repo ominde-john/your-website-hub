@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { X, Send } from "lucide-react";
 import { toast } from "sonner";
+import { useTypingIndicator } from "@/hooks/useTypingIndicator";
 
 interface Message {
   id: string;
@@ -36,6 +37,12 @@ const ChatWindow = ({ currentUserId, partner, onClose }: ChatWindowProps) => {
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const initials = `${partner.first_name?.[0] || ''}${partner.last_name?.[0] || ''}`.toUpperCase();
+  
+  // Typing indicator
+  const { isPartnerTyping, handleTyping, stopTyping } = useTypingIndicator(
+    currentUserId,
+    partner.user_id
+  );
 
   // Fetch messages
   useEffect(() => {
@@ -107,6 +114,7 @@ const ChatWindow = ({ currentUserId, partner, onClose }: ChatWindowProps) => {
     if (!newMessage.trim() || sending) return;
 
     setSending(true);
+    stopTyping(); // Stop typing indicator when sending
     const { error } = await supabase.from('messages').insert({
       sender_id: currentUserId,
       receiver_id: partner.user_id,
@@ -141,7 +149,11 @@ const ChatWindow = ({ currentUserId, partner, onClose }: ChatWindowProps) => {
         </Avatar>
         <div className="flex-1">
           <h4 className="font-semibold text-sm">{partner.first_name} {partner.last_name}</h4>
-          <p className="text-xs text-muted-foreground">@{partner.username}</p>
+          {isPartnerTyping ? (
+            <p className="text-xs text-primary animate-pulse">typing...</p>
+          ) : (
+            <p className="text-xs text-muted-foreground">@{partner.username}</p>
+          )}
         </div>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="w-4 h-4" />
@@ -187,8 +199,12 @@ const ChatWindow = ({ currentUserId, partner, onClose }: ChatWindowProps) => {
         <div className="flex gap-2">
           <Input
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={(e) => {
+              setNewMessage(e.target.value);
+              handleTyping();
+            }}
             onKeyPress={handleKeyPress}
+            onBlur={stopTyping}
             placeholder="Type a message..."
             className="flex-1"
             disabled={sending}

@@ -16,6 +16,7 @@ interface MemberCardProps {
   };
   currentUserId: string;
   onStartChat: (memberId: string) => void;
+  unreadCount?: number;
 }
 
 const roleIcons = {
@@ -30,7 +31,7 @@ const roleColors = {
   user: "bg-muted text-muted-foreground",
 };
 
-const MemberCard = ({ member, currentUserId, onStartChat }: MemberCardProps) => {
+const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0 }: MemberCardProps) => {
   const RoleIcon = roleIcons[member.role];
   const isCurrentUser = member.user_id === currentUserId;
   const initials = `${member.first_name?.[0] || ''}${member.last_name?.[0] || ''}`.toUpperCase() || 'U';
@@ -39,12 +40,19 @@ const MemberCard = ({ member, currentUserId, onStartChat }: MemberCardProps) => 
     <Card className="bg-card/50 border-border/50 backdrop-blur-sm hover:border-primary/30 transition-all duration-300">
       <CardContent className="p-6">
         <div className="flex items-center gap-4">
-          <Avatar className="h-14 w-14 border-2 border-primary/20">
-            <AvatarImage src={member.avatar_url || undefined} alt={member.first_name} />
-            <AvatarFallback className="bg-primary/20 text-primary font-semibold">
-              {initials}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className="h-14 w-14 border-2 border-primary/20">
+              <AvatarImage src={member.avatar_url || undefined} alt={member.first_name} />
+              <AvatarFallback className="bg-primary/20 text-primary font-semibold">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </div>
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">

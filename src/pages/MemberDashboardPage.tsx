@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,6 +36,7 @@ const MemberDashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeChatPartner, setActiveChatPartner] = useState<ChatPartner | null>(null);
+  const { getUnreadCount } = useUnreadMessages(user?.id);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -170,6 +172,7 @@ const MemberDashboardPage = () => {
                     member={member}
                     currentUserId={user.id}
                     onStartChat={handleStartChat}
+                    unreadCount={getUnreadCount(member.user_id)}
                   />
                 ))}
               </div>
@@ -177,7 +180,7 @@ const MemberDashboardPage = () => {
           </TabsContent>
 
           <TabsContent value="messages">
-            <ChatHistorySection currentUserId={user.id} onOpenChat={handleStartChat} members={members} />
+            <ChatHistorySection currentUserId={user.id} onOpenChat={handleStartChat} members={members} getUnreadCount={getUnreadCount} />
           </TabsContent>
         </Tabs>
       </div>
@@ -199,9 +202,10 @@ interface ChatHistorySectionProps {
   currentUserId: string;
   onOpenChat: (memberId: string) => void;
   members: MemberWithRole[];
+  getUnreadCount: (senderId: string) => number;
 }
 
-const ChatHistorySection = ({ currentUserId, onOpenChat, members }: ChatHistorySectionProps) => {
+const ChatHistorySection = ({ currentUserId, onOpenChat, members, getUnreadCount }: ChatHistorySectionProps) => {
   const [conversations, setConversations] = useState<{ partnerId: string; lastMessage: string; timestamp: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -262,6 +266,7 @@ const ChatHistorySection = ({ currentUserId, onOpenChat, members }: ChatHistoryS
         const partner = members.find((m) => m.user_id === conv.partnerId);
         if (!partner) return null;
         const initials = `${partner.first_name?.[0] || ''}${partner.last_name?.[0] || ''}`.toUpperCase();
+        const unreadCount = getUnreadCount(conv.partnerId);
 
         return (
           <div
@@ -269,8 +274,15 @@ const ChatHistorySection = ({ currentUserId, onOpenChat, members }: ChatHistoryS
             onClick={() => onOpenChat(conv.partnerId)}
             className="flex items-center gap-4 p-4 bg-card/50 border border-border/50 rounded-xl cursor-pointer hover:border-primary/30 transition-all"
           >
-            <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">
-              {initials}
+            <div className="relative">
+              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">
+                {initials}
+              </div>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="font-semibold">{partner.first_name} {partner.last_name}</h4>
