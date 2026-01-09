@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { X, Send } from "lucide-react";
 import { toast } from "sonner";
 import { useTypingIndicator } from "@/hooks/useTypingIndicator";
+import { formatLastSeen } from "@/hooks/useOnlinePresence";
 
 interface Message {
   id: string;
@@ -23,15 +24,17 @@ interface ChatPartner {
   last_name: string;
   username: string;
   avatar_url?: string;
+  last_seen?: string | null;
 }
 
 interface ChatWindowProps {
   currentUserId: string;
   partner: ChatPartner;
   onClose: () => void;
+  isPartnerOnline?: boolean;
 }
 
-const ChatWindow = ({ currentUserId, partner, onClose }: ChatWindowProps) => {
+const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }: ChatWindowProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
@@ -43,6 +46,17 @@ const ChatWindow = ({ currentUserId, partner, onClose }: ChatWindowProps) => {
     currentUserId,
     partner.user_id
   );
+
+  // Get online status text
+  const getStatusText = () => {
+    if (isPartnerTyping) {
+      return <span className="text-xs text-primary animate-pulse">typing...</span>;
+    }
+    if (isPartnerOnline) {
+      return <span className="text-xs text-green-500">Online</span>;
+    }
+    return <span className="text-xs text-muted-foreground">{formatLastSeen(partner.last_seen)}</span>;
+  };
 
   // Fetch messages
   useEffect(() => {
@@ -141,19 +155,23 @@ const ChatWindow = ({ currentUserId, partner, onClose }: ChatWindowProps) => {
     <div className="fixed bottom-4 right-4 w-96 h-[500px] bg-card border border-border rounded-2xl shadow-2xl flex flex-col z-50">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b border-border bg-muted/50 rounded-t-2xl">
-        <Avatar className="h-10 w-10 border border-primary/20">
-          <AvatarImage src={partner.avatar_url || undefined} />
-          <AvatarFallback className="bg-primary/20 text-primary text-sm">
-            {initials}
-          </AvatarFallback>
-        </Avatar>
+        <div className="relative">
+          <Avatar className="h-10 w-10 border border-primary/20">
+            <AvatarImage src={partner.avatar_url || undefined} />
+            <AvatarFallback className="bg-primary/20 text-primary text-sm">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          {/* Online indicator */}
+          <span 
+            className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-card ${
+              isPartnerOnline ? 'bg-green-500' : 'bg-gray-400'
+            }`}
+          />
+        </div>
         <div className="flex-1">
           <h4 className="font-semibold text-sm">{partner.first_name} {partner.last_name}</h4>
-          {isPartnerTyping ? (
-            <p className="text-xs text-primary animate-pulse">typing...</p>
-          ) : (
-            <p className="text-xs text-muted-foreground">@{partner.username}</p>
-          )}
+          {getStatusText()}
         </div>
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="w-4 h-4" />

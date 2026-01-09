@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
+import { useOnlinePresence, formatLastSeen } from "@/hooks/useOnlinePresence";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,6 +19,7 @@ interface MemberWithRole {
   last_name: string;
   username: string;
   avatar_url?: string;
+  last_seen?: string | null;
   role: 'admin' | 'moderator' | 'user';
 }
 
@@ -27,6 +29,7 @@ interface ChatPartner {
   last_name: string;
   username: string;
   avatar_url?: string;
+  last_seen?: string | null;
 }
 
 const MemberDashboardPage = () => {
@@ -37,6 +40,7 @@ const MemberDashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeChatPartner, setActiveChatPartner] = useState<ChatPartner | null>(null);
   const { getUnreadCount } = useUnreadMessages(user?.id);
+  const { isUserOnline } = useOnlinePresence(user?.id);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -49,10 +53,10 @@ const MemberDashboardPage = () => {
       if (!user) return;
 
       try {
-        // Fetch profiles
+        // Fetch profiles with last_seen
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
-          .select("id, user_id, first_name, last_name, username, avatar_url");
+          .select("id, user_id, first_name, last_name, username, avatar_url, last_seen");
 
         if (profilesError) throw profilesError;
 
@@ -98,6 +102,7 @@ const MemberDashboardPage = () => {
         last_name: member.last_name,
         username: member.username,
         avatar_url: member.avatar_url,
+        last_seen: member.last_seen,
       });
     }
   };
@@ -173,6 +178,7 @@ const MemberDashboardPage = () => {
                     currentUserId={user.id}
                     onStartChat={handleStartChat}
                     unreadCount={getUnreadCount(member.user_id)}
+                    isOnline={isUserOnline(member.user_id)}
                   />
                 ))}
               </div>
@@ -180,7 +186,7 @@ const MemberDashboardPage = () => {
           </TabsContent>
 
           <TabsContent value="messages">
-            <ChatHistorySection currentUserId={user.id} onOpenChat={handleStartChat} members={members} getUnreadCount={getUnreadCount} />
+            <ChatHistorySection currentUserId={user.id} onOpenChat={handleStartChat} members={members} getUnreadCount={getUnreadCount} isUserOnline={isUserOnline} />
           </TabsContent>
         </Tabs>
       </div>
@@ -191,6 +197,7 @@ const MemberDashboardPage = () => {
           currentUserId={user.id}
           partner={activeChatPartner}
           onClose={() => setActiveChatPartner(null)}
+          isPartnerOnline={isUserOnline(activeChatPartner.user_id)}
         />
       )}
     </div>
@@ -203,9 +210,10 @@ interface ChatHistorySectionProps {
   onOpenChat: (memberId: string) => void;
   members: MemberWithRole[];
   getUnreadCount: (senderId: string) => number;
+  isUserOnline: (userId: string) => boolean;
 }
 
-const ChatHistorySection = ({ currentUserId, onOpenChat, members, getUnreadCount }: ChatHistorySectionProps) => {
+const ChatHistorySection = ({ currentUserId, onOpenChat, members, getUnreadCount, isUserOnline }: ChatHistorySectionProps) => {
   const [conversations, setConversations] = useState<{ partnerId: string; lastMessage: string; timestamp: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -267,6 +275,7 @@ const ChatHistorySection = ({ currentUserId, onOpenChat, members, getUnreadCount
         if (!partner) return null;
         const initials = `${partner.first_name?.[0] || ''}${partner.last_name?.[0] || ''}`.toUpperCase();
         const unreadCount = getUnreadCount(conv.partnerId);
+        const online = isUserOnline(conv.partnerId);
 
         return (
           <div
@@ -278,6 +287,12 @@ const ChatHistorySection = ({ currentUserId, onOpenChat, members, getUnreadCount
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">
                 {initials}
               </div>
+              {/* Online indicator */}
+              <span 
+                className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-card ${
+                  online ? 'bg-green-500' : 'bg-gray-400'
+                }`}
+              />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
                   {unreadCount > 99 ? '99+' : unreadCount}
@@ -285,7 +300,12 @@ const ChatHistorySection = ({ currentUserId, onOpenChat, members, getUnreadCount
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <h4 className="font-semibold">{partner.first_name} {partner.last_name}</h4>
+              <div className="flex items-center gap-2">
+                <h4 className="font-semibold">{partner.first_name} {partner.last_name}</h4>
+                <span className={`text-xs ${online ? 'text-green-500' : 'text-muted-foreground'}`}>
+                  {online ? 'Online' : formatLastSeen(partner.last_seen)}
+                </span>
+              </div>
               <p className="text-sm text-muted-foreground truncate">{conv.lastMessage}</p>
             </div>
             <span className="text-xs text-muted-foreground">

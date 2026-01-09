@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useOnlinePresence } from "@/hooks/useOnlinePresence";
 import MemberCard from "@/components/members/MemberCard";
 import ChatWindow from "@/components/members/ChatWindow";
 
@@ -17,6 +18,7 @@ interface MemberWithRole {
   last_name: string;
   username: string;
   avatar_url?: string;
+  last_seen?: string | null;
   role: 'admin' | 'moderator' | 'user';
 }
 
@@ -26,6 +28,7 @@ interface ChatPartner {
   last_name: string;
   username: string;
   avatar_url?: string;
+  last_seen?: string | null;
 }
 
 const DiscussionPage = () => {
@@ -35,11 +38,12 @@ const DiscussionPage = () => {
   const [loadingMembers, setLoadingMembers] = useState(true);
   const [memberSearchQuery, setMemberSearchQuery] = useState("");
   const [activeChatPartner, setActiveChatPartner] = useState<ChatPartner | null>(null);
+  const { isUserOnline } = useOnlinePresence(user?.id);
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const { data: profiles } = await supabase.from("profiles").select("id, user_id, first_name, last_name, username, avatar_url");
+        const { data: profiles } = await supabase.from("profiles").select("id, user_id, first_name, last_name, username, avatar_url, last_seen");
         const { data: roles } = await supabase.from("user_roles").select("user_id, role");
         const membersWithRoles: MemberWithRole[] = (profiles || []).map((profile) => {
           const userRole = roles?.find((r) => r.user_id === profile.user_id);
@@ -59,7 +63,7 @@ const DiscussionPage = () => {
   const handleStartChat = (memberId: string) => {
     if (!user) { navigate("/auth"); return; }
     const member = members.find((m) => m.user_id === memberId);
-    if (member) setActiveChatPartner({ user_id: member.user_id, first_name: member.first_name, last_name: member.last_name, username: member.username, avatar_url: member.avatar_url });
+    if (member) setActiveChatPartner({ user_id: member.user_id, first_name: member.first_name, last_name: member.last_name, username: member.username, avatar_url: member.avatar_url, last_seen: member.last_seen });
   };
 
   const filteredMembers = members.filter((m) => m.first_name?.toLowerCase().includes(memberSearchQuery.toLowerCase()) || m.last_name?.toLowerCase().includes(memberSearchQuery.toLowerCase()) || m.username?.toLowerCase().includes(memberSearchQuery.toLowerCase()));
@@ -105,7 +109,7 @@ const DiscussionPage = () => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredMembers.map((member) => (
-                    <MemberCard key={member.id} member={member} currentUserId={user?.id || ''} onStartChat={handleStartChat} />
+                    <MemberCard key={member.id} member={member} currentUserId={user?.id || ''} onStartChat={handleStartChat} isOnline={isUserOnline(member.user_id)} />
                   ))}
                 </div>
               )}
@@ -161,7 +165,7 @@ const DiscussionPage = () => {
         </div>
       </section>
 
-      {activeChatPartner && user && <ChatWindow currentUserId={user.id} partner={activeChatPartner} onClose={() => setActiveChatPartner(null)} />}
+      {activeChatPartner && user && <ChatWindow currentUserId={user.id} partner={activeChatPartner} onClose={() => setActiveChatPartner(null)} isPartnerOnline={isUserOnline(activeChatPartner.user_id)} />}
     </div>
   );
 };
