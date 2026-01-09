@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 import TeksoftNavigator from "./components/TeksoftNavigator";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 /* ======================
    MAIN PAGES
@@ -134,7 +135,7 @@ const App = () => {
 
                 {/* Community */}
                 <Route path="discussion" element={<DiscussionPage />} />
-                <Route path="dashboard" element={<MemberDashboardPage />} />
+                <Route path="dashboard" element={<ProtectedRoute><MemberDashboardPage /></ProtectedRoute>} />
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="showcase" element={<ShowcasePage />} />
                 <Route path="careers" element={<CareersPage />} />
