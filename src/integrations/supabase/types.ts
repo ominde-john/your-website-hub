@@ -76,7 +76,6 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
-          last_seen: string | null
           phone_number: string | null
           updated_at: string
           user_id: string
@@ -89,7 +88,6 @@ export type Database = {
           first_name: string
           id?: string
           last_name: string
-          last_seen?: string | null
           phone_number?: string | null
           updated_at?: string
           user_id: string
@@ -102,7 +100,6 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
-          last_seen?: string | null
           phone_number?: string | null
           updated_at?: string
           user_id?: string
