@@ -11,7 +11,7 @@ export const useTypingIndicator = (
   partnerId: string
 ) => {
   const [isPartnerTyping, setIsPartnerTyping] = useState(false);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   // Create a unique channel name for this conversation (sorted to be consistent)
