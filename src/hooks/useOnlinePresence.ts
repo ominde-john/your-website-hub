@@ -121,7 +121,7 @@ export const useOnlinePresence = (currentUserId: string | undefined) => {
 
 // Helper function to format last seen time
 export const formatLastSeen = (lastSeen: string | null | undefined): string => {
-  if (!lastSeen) return 'Never';
+  if (!lastSeen) return 'Not seen yet';
 
   const date = new Date(lastSeen);
   
@@ -145,6 +145,6 @@ export const formatLastSeen = (lastSeen: string | null | undefined): string => {
   } else if (diffDays < 7) {
     return `${diffDays}d ago`;
   } else {
-    return date.toLocaleDateString();
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   }
 };

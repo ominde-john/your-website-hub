@@ -55,6 +55,17 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
   // Can send messages only if request is accepted or we haven't started a conversation
   const canSendMessages = requestStatus === 'accepted' || requestStatus === 'none';
 
+  // Lock body scroll on mobile when chat is open
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = '';
+      };
+    }
+  }, []);
+
   // Get online status text
   const getStatusText = () => {
     if (isPartnerTyping) {
@@ -242,9 +253,9 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
   };
 
   return (
-    <div className="fixed bottom-4 right-4 w-96 h-[500px] bg-card border border-border rounded-2xl shadow-2xl flex flex-col z-50">
+    <div className="fixed inset-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-full md:h-[500px] bg-card border-0 md:border md:border-border md:rounded-2xl shadow-2xl flex flex-col z-50">
       {/* Header */}
-      <div className="flex items-center gap-3 p-4 border-b border-border bg-muted/50 rounded-t-2xl">
+      <div className="flex items-center gap-3 p-4 border-b border-border bg-muted/50 md:rounded-t-2xl">
         <div className="relative">
           <Avatar className="h-10 w-10 border border-primary/20">
             <AvatarImage src={partner.avatar_url || undefined} />
