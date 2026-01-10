@@ -176,10 +176,10 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
         onClick={onClose}
       />
       
-      {/* Chat window - 3/4 height on mobile, positioned at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-[450px] h-[75vh] md:h-[600px] bg-background border-t md:border border-border rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col z-[100]">
+      {/* Chat window - 3/4 height on mobile, positioned at bottom - SOLID WHITE BACKGROUND */}
+      <div className="fixed bottom-0 left-0 right-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-[450px] h-[75vh] md:h-[600px] border-t md:border border-border rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col z-[100]" style={{ backgroundColor: 'white' }}>
         {/* Header */}
-        <div className="flex items-center gap-3 p-4 border-b border-border bg-muted rounded-t-2xl relative">
+        <div className="flex items-center gap-3 p-4 border-b border-border rounded-t-2xl relative" style={{ backgroundColor: '#f1f5f9' }}>
           {/* Drag handle indicator for mobile */}
           <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-1 bg-muted-foreground/30 rounded-full md:hidden" />
           
@@ -203,7 +203,7 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
         </div>
 
         {/* Messages */}
-        <ScrollArea className="flex-1 p-4 bg-background" ref={scrollRef}>
+        <ScrollArea className="flex-1 p-4" style={{ backgroundColor: 'white' }} ref={scrollRef}>
           {loading ? (
             <div className="flex justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
@@ -257,7 +257,7 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
         </ScrollArea>
 
         {/* Input */}
-        <form onSubmit={handleSend} className="p-4 border-t border-border bg-background rounded-b-2xl">
+        <form onSubmit={handleSend} className="p-4 border-t border-border rounded-b-2xl" style={{ backgroundColor: 'white' }}>
           <div className="flex gap-2">
             <Input
               placeholder="Type your message..."
