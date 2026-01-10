@@ -61,16 +61,7 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
   // Can send messages only if request is accepted or we haven't started a conversation
   const canSendMessages = requestStatus === 'accepted' || requestStatus === 'none';
 
-  // Lock body scroll on mobile when chat is open
-  useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) {
-      document.body.style.overflow = 'hidden';
-      return () => {
-        document.body.style.overflow = '';
-      };
-    }
-  }, []);
+  // No need to lock body scroll anymore since chat is a partial overlay
 
   // Get online status text
   const getStatusText = () => {
@@ -265,16 +256,19 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
 
   return (
     <>
-      {/* Full-screen opaque backdrop on mobile */}
-      <div className="fixed inset-0 bg-background md:hidden z-[99]" />
+      {/* Semi-transparent backdrop on mobile for dismissing */}
+      <div 
+        className="fixed inset-0 bg-black/50 md:hidden z-[99]" 
+        onClick={onClose}
+      />
       
-      <div className="fixed inset-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-full md:h-[500px] bg-background border-0 md:border md:border-border md:rounded-2xl shadow-2xl flex flex-col z-[100]">
+      {/* Chat window - 3/4 height on mobile, positioned at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-[75vh] md:h-[500px] bg-background border-t md:border border-border rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col z-[100]">
         {/* Header */}
-        <div className="flex items-center gap-3 p-4 border-b border-border bg-muted md:rounded-t-2xl">
-          {/* Close button for mobile - visible on left */}
-          <Button variant="ghost" size="icon" onClick={onClose} className="md:hidden">
-            <X className="w-5 h-5" />
-          </Button>
+        <div className="flex items-center gap-3 p-4 border-b border-border bg-muted rounded-t-2xl">
+          {/* Drag handle indicator for mobile */}
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-1 bg-muted-foreground/30 rounded-full md:hidden" />
+          
           <div className="relative">
             <Avatar className="h-10 w-10 border border-primary/20">
               <AvatarImage src={partner.avatar_url || undefined} />
@@ -284,7 +278,7 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
             </Avatar>
             {/* Online indicator */}
             <span 
-              className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-background ${
+              className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-muted ${
                 isPartnerOnline ? 'bg-green-500' : 'bg-gray-400'
               }`}
             />
@@ -297,8 +291,8 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
           <Button variant="ghost" size="icon" onClick={() => setShowVideoCall(true)} title="Video call">
             <Video className="w-4 h-4" />
           </Button>
-          {/* Close button for desktop */}
-          <Button variant="ghost" size="icon" onClick={onClose} className="hidden md:flex">
+          {/* Close button - visible on all screens */}
+          <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="w-4 h-4" />
           </Button>
         </div>
@@ -345,7 +339,7 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
         </ScrollArea>
 
         {/* Input */}
-        <div className="p-4 border-t border-border bg-background">
+        <div className="p-4 border-t border-border bg-background rounded-b-2xl md:rounded-b-2xl">
           {requestStatus === 'declined' && !isReceiver ? (
             <p className="text-sm text-muted-foreground text-center">Cannot send messages</p>
           ) : (

@@ -170,17 +170,20 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
 
   return (
     <>
-      {/* Full-screen opaque backdrop on mobile */}
-      <div className="fixed inset-0 bg-background md:hidden z-[99]" />
+      {/* Semi-transparent backdrop on mobile for dismissing */}
+      <div 
+        className="fixed inset-0 bg-black/50 md:hidden z-[99]" 
+        onClick={onClose}
+      />
       
-      <div className="fixed inset-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-[450px] h-full md:h-[600px] bg-background border-0 md:border md:border-border md:rounded-2xl shadow-2xl flex flex-col z-[100]">
+      {/* Chat window - 3/4 height on mobile, positioned at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-[450px] h-[75vh] md:h-[600px] bg-background border-t md:border border-border rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col z-[100]">
         {/* Header */}
-        <div className="flex items-center gap-3 p-4 border-b border-border bg-muted md:rounded-t-2xl">
-          <Button variant="ghost" size="icon" onClick={onClose} className="md:hidden">
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
+        <div className="flex items-center gap-3 p-4 border-b border-border bg-muted rounded-t-2xl relative">
+          {/* Drag handle indicator for mobile */}
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-1 bg-muted-foreground/30 rounded-full md:hidden" />
           
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 pt-2 md:pt-0">
             <h3 className="font-semibold text-foreground truncate">{topic.title}</h3>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="bg-primary/10 text-primary px-2 py-0.5 rounded">
@@ -193,7 +196,8 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
             </div>
           </div>
           
-          <Button variant="ghost" size="icon" onClick={onClose} className="hidden md:flex">
+          {/* Close button - visible on all screens */}
+          <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="w-4 h-4" />
           </Button>
         </div>
@@ -253,7 +257,7 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
         </ScrollArea>
 
         {/* Input */}
-        <form onSubmit={handleSend} className="p-4 border-t border-border bg-background md:rounded-b-2xl">
+        <form onSubmit={handleSend} className="p-4 border-t border-border bg-background rounded-b-2xl">
           <div className="flex gap-2">
             <Input
               placeholder="Type your message..."

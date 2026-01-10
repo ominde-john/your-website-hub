@@ -70,16 +70,16 @@ const TopicCard = ({ topic, onJoin }: TopicCardProps) => {
   const categoryInfo = getCategoryInfo(topic.category);
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-all group">
-      <div className="flex items-start gap-4">
-        <div className="text-3xl">{categoryInfo.icon}</div>
+    <div className="bg-card border border-border rounded-xl p-4 sm:p-5 hover:shadow-lg transition-all group">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+        <div className="text-2xl sm:text-3xl hidden sm:block">{categoryInfo.icon}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
             <span className={`text-xs px-2 py-0.5 rounded-full ${categoryInfo.color}`}>
               {categoryInfo.label}
             </span>
           </div>
-          <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
+          <h3 className="font-semibold text-base sm:text-lg text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
             {topic.title}
           </h3>
           {topic.description && (
@@ -88,8 +88,8 @@ const TopicCard = ({ topic, onJoin }: TopicCardProps) => {
             </p>
           )}
           
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Avatar className="h-5 w-5">
                   <AvatarImage src={creator?.avatar_url || undefined} />
@@ -115,7 +115,7 @@ const TopicCard = ({ topic, onJoin }: TopicCardProps) => {
             <Button
               size="sm"
               onClick={() => onJoin(topic)}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto"
             >
               Join Discussion
             </Button>
