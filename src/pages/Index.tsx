@@ -6,6 +6,7 @@ import TestimonialsSection from "../components/home/TestimonialsSection";
 import QuickLinksSection from "../components/home/QuickLinksSection";
 import JoinCTASection from "../components/home/JoinCTASection";
 import StatsSection from "@/components/home/StatsSection";
+import MobileAppSection from "@/components/home/MobileAppSection";
 const HomePage = () => {
   return (
     <>
@@ -48,6 +49,7 @@ const HomePage = () => {
         <HighlightsSection />
         <TestimonialsSection />
         <StatsSection/>
+        <MobileAppSection />
         <QuickLinksSection />
         <JoinCTASection />
       </main>
