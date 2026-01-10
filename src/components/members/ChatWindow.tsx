@@ -4,12 +4,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Send, Check, XIcon, Clock } from "lucide-react";
+import { X, Send, Check, XIcon, Clock, Video } from "lucide-react";
 import { toast } from "sonner";
 import { useTypingIndicator } from "@/hooks/useTypingIndicator";
 import { formatLastSeen } from "@/hooks/useOnlinePresence";
 import { useMessageRequests } from "@/hooks/useMessageRequests";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
+import VideoCallModal from "./VideoCallModal";
 
 interface Message {
   id: string;
@@ -41,6 +42,7 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [showVideoCall, setShowVideoCall] = useState(false);
   const initials = `${partner.first_name?.[0] || ''}${partner.last_name?.[0] || ''}`.toUpperCase();
   
   // Message requests
@@ -291,6 +293,10 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
             <h4 className="font-semibold text-sm">{partner.first_name} {partner.last_name}</h4>
             {getStatusText()}
           </div>
+          {/* Video call button */}
+          <Button variant="ghost" size="icon" onClick={() => setShowVideoCall(true)} title="Video call">
+            <Video className="w-4 h-4" />
+          </Button>
           {/* Close button for desktop */}
           <Button variant="ghost" size="icon" onClick={onClose} className="hidden md:flex">
             <X className="w-4 h-4" />
@@ -370,6 +376,15 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
             </div>
           )}
         </div>
+
+        {/* Video Call Modal */}
+        <VideoCallModal
+          isOpen={showVideoCall}
+          onClose={() => setShowVideoCall(false)}
+          currentUserId={currentUserId}
+          partnerId={partner.user_id}
+          partnerName={`${partner.first_name} ${partner.last_name}`}
+        />
       </div>
     </>
   );

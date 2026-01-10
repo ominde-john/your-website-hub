@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 import { useOnlinePresence, formatLastSeen } from "@/hooks/useOnlinePresence";
 import { useMessageRequests } from "@/hooks/useMessageRequests";
+import { useIncomingCall } from "@/hooks/useIncomingCall";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, MessageCircle, Search, Loader2, Bell } from "lucide-react";
 import MemberCard from "@/components/members/MemberCard";
 import ChatWindow from "@/components/members/ChatWindow";
+import IncomingCallDialog from "@/components/members/IncomingCallDialog";
+import VideoCallModal from "@/components/members/VideoCallModal";
 import PageHeader from "@/components/PageHeader";
 
 interface MemberWithRole {
@@ -41,9 +44,11 @@ const MemberDashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeChatPartner, setActiveChatPartner] = useState<ChatPartner | null>(null);
+  const [activeVideoCall, setActiveVideoCall] = useState<{ partnerId: string; partnerName: string; isIncoming: boolean } | null>(null);
   const { getUnreadCount } = useUnreadMessages(user?.id);
   const { isUserOnline } = useOnlinePresence(user?.id);
   const { pendingReceivedRequests, acceptRequest, declineRequest } = useMessageRequests(user?.id);
+  const { incomingCall, dismissIncomingCall } = useIncomingCall(user?.id || null);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -107,6 +112,29 @@ const MemberDashboardPage = () => {
         avatar_url: member.avatar_url,
         last_seen: member.last_seen,
       });
+    }
+  };
+
+  const handleAcceptIncomingCall = () => {
+    if (incomingCall) {
+      setActiveVideoCall({
+        partnerId: incomingCall.callerId,
+        partnerName: incomingCall.callerName,
+        isIncoming: true,
+      });
+      dismissIncomingCall();
+    }
+  };
+
+  const handleDeclineIncomingCall = async () => {
+    if (incomingCall && user) {
+      await supabase.from("video_call_signals").insert([{
+        caller_id: user.id,
+        receiver_id: incomingCall.callerId,
+        signal_type: "decline",
+        signal_data: {},
+      }]);
+      dismissIncomingCall();
     }
   };
 
@@ -220,6 +248,28 @@ const MemberDashboardPage = () => {
           partner={activeChatPartner}
           onClose={() => setActiveChatPartner(null)}
           isPartnerOnline={isUserOnline(activeChatPartner.user_id)}
+        />
+      )}
+
+      {/* Incoming Call Dialog */}
+      {incomingCall && (
+        <IncomingCallDialog
+          isOpen={true}
+          callerName={incomingCall.callerName}
+          onAccept={handleAcceptIncomingCall}
+          onDecline={handleDeclineIncomingCall}
+        />
+      )}
+
+      {/* Active Video Call */}
+      {activeVideoCall && user && (
+        <VideoCallModal
+          isOpen={true}
+          onClose={() => setActiveVideoCall(null)}
+          currentUserId={user.id}
+          partnerId={activeVideoCall.partnerId}
+          partnerName={activeVideoCall.partnerName}
+          isIncoming={activeVideoCall.isIncoming}
         />
       )}
     </div>

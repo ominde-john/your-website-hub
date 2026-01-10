@@ -220,6 +220,33 @@ export type Database = {
         }
         Relationships: []
       }
+      video_call_signals: {
+        Row: {
+          caller_id: string
+          created_at: string
+          id: string
+          receiver_id: string
+          signal_data: Json
+          signal_type: string
+        }
+        Insert: {
+          caller_id: string
+          created_at?: string
+          id?: string
+          receiver_id: string
+          signal_data: Json
+          signal_type: string
+        }
+        Update: {
+          caller_id?: string
+          created_at?: string
+          id?: string
+          receiver_id?: string
+          signal_data?: Json
+          signal_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
