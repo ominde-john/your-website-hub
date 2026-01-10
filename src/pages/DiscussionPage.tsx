@@ -147,11 +147,11 @@ const DiscussionPage = () => {
       <section className="section-padding bg-gray-50">
         <div className="container-custom">
           <Tabs defaultValue="topics">
-            <TabsList className="mb-8">
-              <TabsTrigger value="topics"><MessageSquare className="w-4 h-4 mr-2" />Group Topics</TabsTrigger>
-              <TabsTrigger value="members"><Users className="w-4 h-4 mr-2" />Members</TabsTrigger>
-              <TabsTrigger value="categories">Categories</TabsTrigger>
-              <TabsTrigger value="recent">Recent</TabsTrigger>
+            <TabsList className="mb-8 flex-wrap h-auto gap-1">
+              <TabsTrigger value="topics" className="text-xs sm:text-sm"><MessageSquare className="w-4 h-4 mr-1 sm:mr-2" />Group Topics</TabsTrigger>
+              <TabsTrigger value="members" className="text-xs sm:text-sm"><Users className="w-4 h-4 mr-1 sm:mr-2" />Members</TabsTrigger>
+              <TabsTrigger value="categories" className="text-xs sm:text-sm">Categories</TabsTrigger>
+              <TabsTrigger value="recent" className="text-xs sm:text-sm">Recent</TabsTrigger>
             </TabsList>
 
             <TabsContent value="topics">
