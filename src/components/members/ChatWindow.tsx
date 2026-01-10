@@ -262,10 +262,10 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
         onClick={onClose}
       />
       
-      {/* Chat window - 3/4 height on mobile, positioned at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-[75vh] md:h-[500px] bg-background border-t md:border border-border rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col z-[100]">
+      {/* Chat window - 3/4 height on mobile, positioned at bottom - SOLID WHITE BACKGROUND */}
+      <div className="fixed bottom-0 left-0 right-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-[75vh] md:h-[500px] border-t md:border border-border rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col z-[100]" style={{ backgroundColor: 'white' }}>
         {/* Header */}
-        <div className="flex items-center gap-3 p-4 border-b border-border bg-muted rounded-t-2xl">
+        <div className="flex items-center gap-3 p-4 border-b border-border rounded-t-2xl relative" style={{ backgroundColor: '#f1f5f9' }}>
           {/* Drag handle indicator for mobile */}
           <div className="absolute top-2 left-1/2 -translate-x-1/2 w-12 h-1 bg-muted-foreground/30 rounded-full md:hidden" />
           
@@ -301,7 +301,7 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
         {renderRequestBanner()}
 
         {/* Messages */}
-        <ScrollArea className="flex-1 p-4 bg-background" ref={scrollRef}>
+        <ScrollArea className="flex-1 p-4" style={{ backgroundColor: 'white' }} ref={scrollRef}>
           <div className="space-y-3">
             {messages.length === 0 ? (
               <p className="text-center text-muted-foreground text-sm py-8">
@@ -339,7 +339,7 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
         </ScrollArea>
 
         {/* Input */}
-        <div className="p-4 border-t border-border bg-background rounded-b-2xl md:rounded-b-2xl">
+        <div className="p-4 border-t border-border rounded-b-2xl" style={{ backgroundColor: 'white' }}>
           {requestStatus === 'declined' && !isReceiver ? (
             <p className="text-sm text-muted-foreground text-center">Cannot send messages</p>
           ) : (
