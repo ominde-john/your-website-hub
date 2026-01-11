@@ -151,7 +151,7 @@ const Footer = () => {
                   </li>
                   <li className="flex items-center">
                     <Phone className="h-5 w-5 text-techgold flex-shrink-0 mr-3" />
-                    <span className="text-gray-400">0115 000 514</span>
+                    <span className="text-gray-400">+254 115 000 514</span>
                   </li>
                   <li className="flex items-center">
                     <Mail className="h-5 w-5 text-techgold flex-shrink-0 mr-3" />
@@ -159,7 +159,7 @@ const Footer = () => {
                       href="mailto:info@teksoft.org"
                       className="text-gray-400 hover:text-white transition duration-200"
                     >
-                      info@teksoft.org
+                      contact@teksoft.co.ke
                     </a>
                   </li>
                 </ul>
