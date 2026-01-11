@@ -47,13 +47,13 @@ export default async function handler(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Teksoft Community <teksoft@jonzjohn.com>",
+        from: "Teksoft Community <no-reply@teksoft.co.ke>",
         to: [user.email],
         subject: "Welcome to Teksoft Community 🎉",
         html: `
           <h1>Welcome ${firstName}!</h1>
           <p>Your account is now active.</p>
-          <a href="https://teksoftllc.jonzjohn.com/dashboard">
+          <a href="https://www.teksoft.co.ke/dashboard">
             Go to Dashboard
           </a>
         `,
