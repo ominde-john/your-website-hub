@@ -47,13 +47,12 @@ enforce its rights to the fullest extent permitted by law.
 
 For partnerships, licensing, or official authorization, contact:
 
-**Email:** contact@teksoftllc.jonzjohn.com
-**Website:** https://teksoftllc.jonzjohn.com
+**Email:** contact@teksoft.co.ke/ info@teksoft.co.ke
+**Website:** https://www.teksoft.co.ke
 
 ---
 
 © 2026 Teksoft Community — All Rights Reserved.
-Pair Extraordinaire achievement test
 
 
 
