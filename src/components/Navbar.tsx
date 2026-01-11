@@ -45,6 +45,7 @@ import {
   Youtube,
 } from "lucide-react";
 import teksoftLogo from "@/assets/teksoft-logo.png";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Profile {
   first_name: string;
@@ -171,7 +172,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow-md">
+    <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md">
       {/* TOP BAR - UPDATED TO MATCH IMAGE EXACTLY */}
       <div className="hidden md:block bg-[#0a0a0a] text-white text-[13px] border-b border-white/5">
         <div className="container-custom flex justify-between items-center py-2.5 px-4">
@@ -193,6 +194,7 @@ const Navbar = () => {
             <Linkedin className="w-4 h-4 cursor-pointer hover:text-techgold transition-colors" />
             <Phone className="w-4 h-4 cursor-pointer hover:text-techgold transition-colors" /> {/* Used as WhatsApp Placeholder */}
             <Youtube className="w-4 h-4 cursor-pointer hover:text-techgold transition-colors" />
+            <ThemeToggle />
           </div>
         </div>
       </div>
@@ -203,7 +205,7 @@ const Navbar = () => {
           <div className="h-10 w-10 rounded-full bg-[#000000] flex items-center justify-center p-0.5 shrink-0">
             <img src={teksoftLogo} alt="Teksoft Community" className="h-full w-full object-contain rounded-full" />
           </div>
-          <span className="text-xl font-bold text-gray-900">Teksoft Community</span>
+          <span className="text-xl font-bold text-gray-900 dark:text-white">Teksoft Community</span>
         </Link>
 
         {/* DESKTOP NAV */}
@@ -221,7 +223,7 @@ const Navbar = () => {
                     setAboutDropdown(item.name === "About" ? !aboutDropdown : false);
                     setMediaDropdown(item.name === "Media" ? !mediaDropdown : false);
                   }}
-                  className="flex items-center gap-1 px-3 py-2 text-[14px] font-semibold text-gray-700 hover:text-techgold transition-colors"
+                  className="flex items-center gap-1 px-3 py-2 text-[14px] font-semibold text-gray-700 dark:text-gray-200 hover:text-techgold transition-colors"
                 >
                   {item.name} <ChevronDown className="w-4 h-4" />
                 </button>
@@ -229,7 +231,7 @@ const Navbar = () => {
                 {((item.name === "Projects" && projectsDropdown) ||
                   (item.name === "About" && aboutDropdown) ||
                   (item.name === "Media" && mediaDropdown)) && (
-                  <div className="absolute left-0 mt-3 w-[540px] grid grid-cols-2 gap-2 rounded-xl bg-white p-4 border shadow-xl animate-fade-in z-50">
+                  <div className="absolute left-0 mt-3 w-[540px] grid grid-cols-2 gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 border dark:border-gray-700 shadow-xl animate-fade-in z-50">
                     {(item.name === "Projects"
                       ? projectLinks
                       : item.name === "About"
@@ -244,7 +246,7 @@ const Navbar = () => {
                           setAboutDropdown(false);
                           setMediaDropdown(false);
                         }}
-                        className="flex items-center gap-3 px-3 py-2 text-[13px] rounded-md hover:bg-gray-50 hover:text-techgold transition-colors"
+                        className="flex items-center gap-3 px-3 py-2 text-[13px] rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-techgold transition-colors"
                       >
                         {link.icon} {link.name}
                       </Link>
@@ -259,7 +261,7 @@ const Navbar = () => {
                 className={`px-3 py-2 text-[14px] font-semibold rounded-md transition-colors ${
                   isActive(item.path)
                     ? "text-techgold"
-                    : "text-gray-700 hover:text-techgold"
+                    : "text-gray-700 dark:text-gray-200 hover:text-techgold"
                 }`}
               >
                 {item.name}
@@ -306,9 +308,12 @@ const Navbar = () => {
         </div>
 
         {/* MOBILE TOGGLE */}
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden p-2 text-gray-700">
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="lg:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-gray-700 dark:text-gray-200">
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* MOBILE MENU (KEEPING YOUR GOLD STRUCTURE) */}

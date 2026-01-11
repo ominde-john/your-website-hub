@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/theme-provider";
 
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
@@ -87,15 +88,16 @@ const App = () => {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          {/* Global SEO fallback */}
-          <Helmet>
-            <title>Teksoft Community | Empowering Technology Everywhere</title>
-            <meta
-              name="description"
-              content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts."
-            />
-          </Helmet>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <TooltipProvider>
+            {/* Global SEO fallback */}
+            <Helmet>
+              <title>Teksoft Community | Empowering Technology Everywhere</title>
+              <meta
+                name="description"
+                content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts."
+              />
+            </Helmet>
 
           <Toaster />
           <Sonner />
@@ -171,6 +173,7 @@ const App = () => {
             <TeksoftNavigator />
           </BrowserRouter>
         </TooltipProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </HelmetProvider>
   );
