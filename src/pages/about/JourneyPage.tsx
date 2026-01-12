@@ -33,10 +33,10 @@ const JourneyPage = () => {
   ];
 
   const achievements = [
-    { number: "500+", label: "Members Trained" },
+    { number: "45+", label: "Members Trained" },
     { number: "50+", label: "Events Hosted" },
-    { number: "200+", label: "Jobs Secured" },
-    { number: "10+", label: "Countries Reached" },
+    { number: "30+", label: "Jobs Secured" },
+    { number: "3+", label: "Countries Reached" },
   ];
 
   return (
