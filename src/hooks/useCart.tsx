@@ -1,4 +1,6 @@
 import * as React from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 export interface Product {
   id: number;
@@ -20,6 +22,7 @@ export interface CartItem {
 interface CartState {
   items: CartItem[];
   isOpen: boolean;
+  showAuthDialog: boolean;
 }
 
 interface CartContextType extends CartState {
@@ -30,8 +33,11 @@ interface CartContextType extends CartState {
   openCart: () => void;
   closeCart: () => void;
   toggleCart: () => void;
+  closeAuthDialog: () => void;
   totalItems: number;
   totalPrice: number;
+  user: User | null;
+  isAuthenticated: boolean;
 }
 
 const CartContext = React.createContext<CartContextType | undefined>(undefined);
@@ -59,6 +65,26 @@ function saveCartToStorage(items: CartItem[]) {
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = React.useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
+  const [showAuthDialog, setShowAuthDialog] = React.useState(false);
+  const [user, setUser] = React.useState<User | null>(null);
+  const [authLoading, setAuthLoading] = React.useState(true);
+
+  // Initialize auth state
+  React.useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setAuthLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Load cart from localStorage on mount
   React.useEffect(() => {
@@ -71,6 +97,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addToCart = React.useCallback((product: Product, quantity: number = 1) => {
+    // Check if user is authenticated before adding to cart
+    if (!user) {
+      setShowAuthDialog(true);
+      return;
+    }
+
     setItems((currentItems) => {
       const existingItem = currentItems.find(
         (item) => item.product.id === product.id
@@ -87,7 +119,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [...currentItems, { product, quantity }];
     });
     setIsOpen(true);
-  }, []);
+  }, [user]);
 
   const removeFromCart = React.useCallback((productId: number) => {
     setItems((currentItems) =>
@@ -118,6 +150,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const openCart = React.useCallback(() => setIsOpen(true), []);
   const closeCart = React.useCallback(() => setIsOpen(false), []);
   const toggleCart = React.useCallback(() => setIsOpen((prev) => !prev), []);
+  const closeAuthDialog = React.useCallback(() => setShowAuthDialog(false), []);
 
   const totalItems = React.useMemo(
     () => items.reduce((sum, item) => sum + item.quantity, 0),
@@ -130,10 +163,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [items]
   );
 
+  const isAuthenticated = !!user;
+
   const value = React.useMemo(
     () => ({
       items,
       isOpen,
+      showAuthDialog,
       addToCart,
       removeFromCart,
       updateQuantity,
@@ -141,12 +177,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       openCart,
       closeCart,
       toggleCart,
+      closeAuthDialog,
       totalItems,
       totalPrice,
+      user,
+      isAuthenticated,
     }),
     [
       items,
       isOpen,
+      showAuthDialog,
       addToCart,
       removeFromCart,
       updateQuantity,
@@ -154,8 +194,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       openCart,
       closeCart,
       toggleCart,
+      closeAuthDialog,
       totalItems,
       totalPrice,
+      user,
+      isAuthenticated,
     ]
   );
 

@@ -1,4 +1,4 @@
-import { ShoppingCart, Plus, Minus, Trash2, X } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2, X, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/useCart";
 import { Link } from "react-router-dom";
 import { getWhatsAppOrderUrl } from "@/lib/utils";
+import AuthRequiredDialog from "@/components/AuthRequiredDialog";
 
 const Cart = () => {
   const {
@@ -23,6 +24,8 @@ const Cart = () => {
     clearCart,
     totalItems,
     totalPrice,
+    showAuthDialog,
+    closeAuthDialog,
   } = useCart();
 
   return (
@@ -160,6 +163,16 @@ const Cart = () => {
               {/* Actions */}
               <div className="space-y-2">
                 <Button
+                  className="w-full bg-[#635bff] hover:bg-[#5146e8] text-white"
+                  asChild
+                >
+                  <Link to="/checkout" onClick={closeCart}>
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Pay with Stripe
+                  </Link>
+                </Button>
+
+                <Button
                   className="w-full bg-green-600 hover:bg-green-700 text-white"
                   onClick={() => {
                     const message = items
@@ -191,6 +204,9 @@ const Cart = () => {
           </>
         )}
       </SheetContent>
+      
+      {/* Auth Required Dialog */}
+      <AuthRequiredDialog isOpen={showAuthDialog} onClose={closeAuthDialog} />
     </Sheet>
   );
 };

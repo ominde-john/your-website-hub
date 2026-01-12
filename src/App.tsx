@@ -30,6 +30,9 @@ import ShowcasePage from "./pages/ShowcasePage";
 import CareersPage from "./pages/CareersPage";
 import MarketplacePage from "./pages/MarketplacePage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import CheckoutSuccessPage from "./pages/CheckoutSuccessPage";
+import CheckoutCancelPage from "./pages/CheckoutCancelPage";
 import AuthPage from "./pages/AuthPage";
 import RegisterPage from "./pages/RegisterPage";
 import VerifyEmailPage from "./pages/VerifyEmailPage";
@@ -149,6 +152,9 @@ const App = () => {
                 <Route path="careers" element={<CareersPage />} />
                 <Route path="marketplace" element={<MarketplacePage />} />
                 <Route path="marketplace/product/:slug" element={<ProductDetailsPage />} />
+                <Route path="checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+                <Route path="checkout/success" element={<CheckoutSuccessPage />} />
+                <Route path="checkout/cancel" element={<CheckoutCancelPage />} />
 
                 {/* Community */}
                 <Route path="media/news" element={<NewsletterDetail />}/>
