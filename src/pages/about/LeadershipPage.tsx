@@ -7,6 +7,7 @@ import Jeremy from "@/assets/team/WhatsApp_Image_2026-01-08_at_11.37.34_PM-remov
 import JohnOminde from "@/assets/team/john-ominde.jpg";
 import EvansChuchu from "@/assets/team/evanschuchu.jpg";
 import john from "@/assets/team/john-ominde-removebg-preview.png";
+import isaac from "@/assets/team/isaac.png";
 
 interface Leader {
   name: string;
@@ -36,12 +37,12 @@ const LeadershipPage = () => {
       linkedin: "https://www.linkedin.com/in/john-ominde",
     },
     {  
-      name: "John Ominde",
-      role: "Chief Technology Officer",
+      name: "Isaac Prinsze",
+      role: "Community Manager",
       department: "Technology",
-      image: JohnOminde,
-      bio: "Full-stack Data Engineer with expertise in Python, SQL, React, Node.js, and cloud technologies. John leads all technical initiatives and platform development.",
-      linkedin: "https://www.linkedin.com/in/john-ominde",
+      image: isaac,
+      bio: "Passionate about connecting people and fostering meaningful relationships within the organisation",
+      linkedin: "https://www.linkedin.com/in/isaac-prinsze",
     },
     {
       name: "Evans Richard",
