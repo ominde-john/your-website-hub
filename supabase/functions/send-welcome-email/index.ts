@@ -37,7 +37,7 @@ serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Teksoft Community <no-reply@teksoft.co.ke>",
+        from: "Teksoft Community <teksoft@jonzjohn>",
         to: [user.email],
         subject: "Welcome to Teksoft Community! 🎉",
         html: `
