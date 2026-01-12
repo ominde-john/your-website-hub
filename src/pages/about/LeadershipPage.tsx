@@ -25,7 +25,7 @@ const LeadershipPage = () => {
       department: "Executive",
       image: JeremyBravoge,
       bio: "Visionary leader with over 5 years of experience in technology and community building. Jeremy founded Teksoft with the mission of empowering developers across Africa.",
-      linkedin: "#",
+      linkedin: "https://www.linkedin.com/in/jeremy-bravoge",
     },
     {
       name: "John Ominde",
@@ -33,7 +33,15 @@ const LeadershipPage = () => {
       department: "Technology",
       image: JohnOminde,
       bio: "Full-stack Data Engineer with expertise in Python, SQL, React, Node.js, and cloud technologies. John leads all technical initiatives and platform development.",
-      linkedin: "https://www.linkedin.com/in/johnominde",
+      linkedin: "https://www.linkedin.com/in/john-ominde",
+    },
+      
+      name: "John Ominde",
+      role: "Chief Technology Officer",
+      department: "Technology",
+      image: JohnOminde,
+      bio: "Full-stack Data Engineer with expertise in Python, SQL, React, Node.js, and cloud technologies. John leads all technical initiatives and platform development.",
+      linkedin: "https://www.linkedin.com/in/john-ominde",
     },
     {
       name: "Evans Richard",
