@@ -6,50 +6,49 @@ import { Users, Globe, MessageSquare, Calendar, ArrowRight, MapPin } from "lucid
 
 const CommunityPage = () => {
   const stats = [
-    { value: "500+", label: "Active Members", icon: <Users className="h-6 w-6" /> },
-    { value: "10+", label: "Countries", icon: <Globe className="h-6 w-6" /> },
+    { value: "50+", label: "Active Members", icon: <Users className="h-6 w-6" /> },
+    { value: "3+", label: "Countries", icon: <Globe className="h-6 w-6" /> },
     { value: "50+", label: "Events Hosted", icon: <Calendar className="h-6 w-6" /> },
-    { value: "1000+", label: "Discussions", icon: <MessageSquare className="h-6 w-6" /> },
+    { value: "100+", label: "Discussions", icon: <MessageSquare className="h-6 w-6" /> },
   ];
 
   const chapters = [
     { city: "Nairobi", country: "Kenya", members: 200 },
-    { city: "Lagos", country: "Nigeria", members: 120 },
     { city: "Kampala", country: "Uganda", members: 80 },
     { city: "Dar es Salaam", country: "Tanzania", members: 60 },
-    { city: "Accra", country: "Ghana", members: 40 },
+    { city: "New Delhi", country: "India", members: 40 },
   ];
 
   const communityGroups = [
     {
       name: "Web Developers",
       description: "Frontend, backend, and full-stack developers sharing knowledge and building projects together.",
-      members: 150,
+      members: 15,
     },
     {
       name: "Data Science & AI",
       description: "Data scientists, ML engineers, and AI enthusiasts exploring the world of data.",
-      members: 80,
+      members: 10,
     },
     {
       name: "Mobile Developers",
       description: "iOS, Android, and cross-platform developers creating amazing mobile experiences.",
-      members: 70,
+      members: 5,
     },
     {
       name: "Cybersecurity",
       description: "Security professionals and enthusiasts keeping our digital world safe.",
-      members: 50,
+      members: 12,
     },
     {
       name: "DevOps & Cloud",
       description: "Infrastructure engineers and cloud architects building scalable systems.",
-      members: 60,
+      members: 16,
     },
     {
       name: "UI/UX Design",
       description: "Designers creating beautiful and intuitive user experiences.",
-      members: 45,
+      members: 5,
     },
   ];
 
