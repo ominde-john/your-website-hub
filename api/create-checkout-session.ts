@@ -12,6 +12,29 @@ interface CartItem {
   quantity: number;
 }
 
+interface LineItem {
+  currency: string;
+  productName: string;
+  unitAmount: number;
+  quantity: number;
+}
+
+/**
+ * Converts line items to Stripe's URL-encoded format
+ */
+function buildLineItemsParams(lineItems: LineItem[]): Record<string, string> {
+  const params: Record<string, string> = {};
+  
+  lineItems.forEach((item, index) => {
+    params[`line_items[${index}][price_data][currency]`] = item.currency;
+    params[`line_items[${index}][price_data][product_data][name]`] = item.productName;
+    params[`line_items[${index}][price_data][unit_amount]`] = item.unitAmount.toString();
+    params[`line_items[${index}][quantity]`] = item.quantity.toString();
+  });
+  
+  return params;
+}
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
@@ -45,20 +68,16 @@ export default async function handler(
       return res.status(400).json({ error: "No items provided" });
     }
 
-    // Create line items for Stripe Checkout
-    const lineItems = items.map((item) => ({
-      price_data: {
-        currency: "kes", // Kenyan Shilling
-        product_data: {
-          name: item.product.name,
-          images: item.product.image.startsWith("http") 
-            ? [item.product.image] 
-            : [], // Only include absolute URLs
-        },
-        unit_amount: item.product.price * 100, // Stripe expects amount in cents
-      },
+    // Convert cart items to line items format
+    const lineItems: LineItem[] = items.map((item) => ({
+      currency: "kes", // Kenyan Shilling
+      productName: item.product.name,
+      unitAmount: item.product.price * 100, // Stripe expects amount in cents
       quantity: item.quantity,
     }));
+
+    // Build URL params for Stripe API
+    const lineItemsParams = buildLineItemsParams(lineItems);
 
     // Create Stripe Checkout session using REST API
     const stripeResponse = await fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -68,16 +87,10 @@ export default async function handler(
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
-        "mode": "payment",
-        "success_url": successUrl || `${req.headers.origin}/checkout/success`,
-        "cancel_url": cancelUrl || `${req.headers.origin}/checkout/cancel`,
-        ...lineItems.reduce((acc, item, index) => ({
-          ...acc,
-          [`line_items[${index}][price_data][currency]`]: item.price_data.currency,
-          [`line_items[${index}][price_data][product_data][name]`]: item.price_data.product_data.name,
-          [`line_items[${index}][price_data][unit_amount]`]: item.price_data.unit_amount.toString(),
-          [`line_items[${index}][quantity]`]: item.quantity.toString(),
-        }), {}),
+        mode: "payment",
+        success_url: successUrl || `${req.headers.origin}/checkout/success`,
+        cancel_url: cancelUrl || `${req.headers.origin}/checkout/cancel`,
+        ...lineItemsParams,
       }).toString(),
     });
 

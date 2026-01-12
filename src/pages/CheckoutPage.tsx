@@ -27,12 +27,12 @@ const CheckoutPage = () => {
     }
   }, [isAuthenticated, navigate, toast]);
 
-  // Redirect if cart is empty
+  // Redirect if cart is empty (only when authenticated)
   useEffect(() => {
     if (items.length === 0 && isAuthenticated) {
       navigate("/marketplace");
     }
-  }, [items, navigate, isAuthenticated]);
+  }, [items, navigate]); // isAuthenticated check is inside the condition
 
   const handleStripeCheckout = async () => {
     setIsLoading(true);

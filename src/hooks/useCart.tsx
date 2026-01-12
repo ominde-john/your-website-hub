@@ -97,9 +97,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addToCart = React.useCallback((product: Product, quantity: number = 1) => {
-    // Check if user is authenticated before adding to cart
-    if (!user) {
+    // Wait for auth loading to complete before checking authentication
+    // and don't show auth dialog while loading
+    if (!authLoading && !user) {
       setShowAuthDialog(true);
+      return;
+    }
+
+    // If still loading auth, don't add to cart yet
+    if (authLoading) {
       return;
     }
 
@@ -119,7 +125,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return [...currentItems, { product, quantity }];
     });
     setIsOpen(true);
-  }, [user]);
+  }, [user, authLoading]);
 
   const removeFromCart = React.useCallback((productId: number) => {
     setItems((currentItems) =>
