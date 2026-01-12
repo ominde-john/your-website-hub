@@ -7,40 +7,28 @@ import { Rocket, Users, Award, Globe, Calendar, ArrowRight } from "lucide-react"
 const JourneyPage = () => {
   const milestones = [
     {
-      year: "2020",
+      year: "2023",
       title: "The Beginning",
       description: "Teksoft Community was founded by Jeremy Bravoge with a vision to create a supportive tech community in Kenya.",
       icon: <Rocket className="h-5 w-5" />,
     },
     {
-      year: "2021",
-      title: "First 100 Members",
-      description: "We reached our first 100 members and hosted our inaugural tech meetup in Nairobi.",
+      year: "2024",
+      title: "First 25 Members",
+      description: "We reached our first 25 members and hosted our inaugural tech meetup in Nairobi.",
       icon: <Users className="h-5 w-5" />,
     },
     {
-      year: "2022",
+      year: "2025",
       title: "Programs Launch",
-      description: "Launched our flagship bootcamp programs, training over 50 developers in web and mobile development.",
+      description: "Launched our flagship bootcamp programs, training and partnering with over 50 developers in web and mobile development.",
       icon: <Calendar className="h-5 w-5" />,
     },
     {
-      year: "2023",
+      year: "2026",
       title: "Regional Expansion",
-      description: "Expanded to 5 African countries with local chapters and partnerships with international organizations.",
+      description: "Vision to expand to over 3 East African countries with local chapters and partnerships with international organizations.",
       icon: <Globe className="h-5 w-5" />,
-    },
-    {
-      year: "2024",
-      title: "Recognition",
-      description: "Received recognition as one of the top tech communities in East Africa. Crossed 500 active members.",
-      icon: <Award className="h-5 w-5" />,
-    },
-    {
-      year: "2025",
-      title: "Platform Launch",
-      description: "Launched our new digital platform to better serve our growing community with resources and opportunities.",
-      icon: <Rocket className="h-5 w-5" />,
     },
   ];
 
