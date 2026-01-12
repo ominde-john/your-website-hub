@@ -209,8 +209,7 @@ const PrivacyPolicyPage = () => {
                 exercise your rights, please contact us at{" "}
                 <span className="text-yellow-400 font-medium">
                   support@teksoftllc.jonzjohn.com
-                </span>
-                . We will respond to your inquiry within a reasonable timeframe.
+                </span>. We will respond to your inquiry within a reasonable timeframe.
               </p>
             </div>
 
