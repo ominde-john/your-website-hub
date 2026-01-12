@@ -2,103 +2,134 @@ import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Play, Clock, Eye, ThumbsUp, Youtube, Calendar, Filter } from "lucide-react";
+import { Play, Eye, ThumbsUp, Youtube, Calendar, Filter, X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+
+interface Video {
+  id: number | string;
+  title: string;
+  thumbnail: string;
+  youtubeId: string;
+  duration: string;
+  views: string;
+  likes: string;
+  date: string;
+  description?: string;
+  category: string;
+}
 
 const VideosPage = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
-  const categories = ["All", "Tutorials", "Tech Talks", "Event Highlights", "Interviews", "Demos", "Webinars"];
+  const categories = ["All", "Tutorials", "Tech Talks", "For Kids", "Interviews", "Demos", "Webinars"];
 
-  const featuredVideo = {
+  // Featured video - animated explainer about coding
+  const featuredVideo: Video = {
     id: "featured",
-    title: "TeksoftCon 2025 - Keynote: The Future of African Tech",
-    thumbnail: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80",
-    duration: "45:32",
-    views: "15.2K",
-    likes: "1.2K",
+    title: "What is Coding? - Animated Explainer for Everyone",
+    thumbnail: `https://img.youtube.com/vi/QvyTEx1wyOY/hqdefault.jpg`,
+    youtubeId: "QvyTEx1wyOY",
+    duration: "5:40",
+    views: "3.2M",
+    likes: "45K",
     date: "March 15, 2025",
-    description: "Watch the inspiring keynote address from TeksoftCon 2025, where industry leaders discuss the future of technology in Africa and the role of communities in driving innovation.",
-    category: "Event Highlights",
+    description: "Learn what coding is and why it's important in this fun, animated video that makes programming concepts easy to understand for beginners of all ages.",
+    category: "For Kids",
   };
 
-  const videos = [
+  // Curated videos with cartoon characters explaining tech concepts
+  const videos: Video[] = [
     {
       id: 1,
-      title: "Getting Started with React - Complete Beginner's Guide",
-      thumbnail: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&w=800&q=80",
-      duration: "28:15",
-      views: "8.5K",
-      likes: "620",
+      title: "What is an Algorithm? - Fun Animated Explainer",
+      thumbnail: `https://img.youtube.com/vi/6hfOvs8pY1k/hqdefault.jpg`,
+      youtubeId: "6hfOvs8pY1k",
+      duration: "6:25",
+      views: "1.8M",
+      likes: "32K",
       date: "January 20, 2025",
-      category: "Tutorials",
+      category: "For Kids",
     },
     {
       id: 2,
-      title: "Tech Talk: Building Scalable APIs with Node.js",
-      thumbnail: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
-      duration: "52:40",
-      views: "5.3K",
-      likes: "340",
+      title: "How Do Computers Work? - Animated Guide",
+      thumbnail: `https://img.youtube.com/vi/mCq8-xTH7jA/hqdefault.jpg`,
+      youtubeId: "mCq8-xTH7jA",
+      duration: "8:30",
+      views: "5.3M",
+      likes: "98K",
       date: "January 15, 2025",
-      category: "Tech Talks",
+      category: "Tutorials",
     },
     {
       id: 3,
-      title: "Hackathon 2024 Finals - Top 5 Projects Showcase",
-      thumbnail: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80",
-      duration: "1:15:22",
-      views: "12.1K",
-      likes: "890",
+      title: "Introduction to AI - Simple Animated Explanation",
+      thumbnail: `https://img.youtube.com/vi/mJeNghZXtMo/hqdefault.jpg`,
+      youtubeId: "mJeNghZXtMo",
+      duration: "10:15",
+      views: "2.1M",
+      likes: "56K",
       date: "December 28, 2024",
-      category: "Event Highlights",
+      category: "Tech Talks",
     },
     {
       id: 4,
-      title: "Interview: From Bootcamp to Tech Lead in 2 Years",
-      thumbnail: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
-      duration: "35:18",
-      views: "7.8K",
-      likes: "520",
+      title: "What is the Internet? - Animated Documentary",
+      thumbnail: `https://img.youtube.com/vi/Dxcc6ycZ73M/hqdefault.jpg`,
+      youtubeId: "Dxcc6ycZ73M",
+      duration: "9:22",
+      views: "8.5M",
+      likes: "120K",
       date: "December 10, 2024",
-      category: "Interviews",
+      category: "For Kids",
     },
     {
       id: 5,
-      title: "Live Demo: Building a Full-Stack App with Next.js",
-      thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80",
-      duration: "1:45:30",
-      views: "9.2K",
-      likes: "710",
+      title: "How Does Wi-Fi Work? - Animation Explained",
+      thumbnail: `https://img.youtube.com/vi/hePLDVbULZc/hqdefault.jpg`,
+      youtubeId: "hePLDVbULZc",
+      duration: "5:45",
+      views: "4.2M",
+      likes: "78K",
       date: "November 25, 2024",
-      category: "Demos",
+      category: "Tutorials",
     },
     {
       id: 6,
-      title: "Webinar: Cybersecurity Best Practices for Developers",
-      thumbnail: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
-      duration: "58:45",
-      views: "6.4K",
-      likes: "480",
+      title: "Cybersecurity Basics - Animated for Beginners",
+      thumbnail: `https://img.youtube.com/vi/inWWhr5tnEA/hqdefault.jpg`,
+      youtubeId: "inWWhr5tnEA",
+      duration: "7:30",
+      views: "1.5M",
+      likes: "42K",
       date: "November 10, 2024",
       category: "Webinars",
     },
     {
       id: 7,
-      title: "Python for Data Science - Tutorial Series Pt.1",
-      thumbnail: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
-      duration: "42:18",
-      views: "11.5K",
-      likes: "950",
+      title: "Python Programming for Kids - Animated Tutorial",
+      thumbnail: `https://img.youtube.com/vi/kqtD5dpn9C8/hqdefault.jpg`,
+      youtubeId: "kqtD5dpn9C8",
+      duration: "12:18",
+      views: "6.8M",
+      likes: "150K",
       date: "October 20, 2024",
       category: "Tutorials",
     },
     {
       id: 8,
-      title: "Tech Talk: Machine Learning in Production",
-      thumbnail: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
-      duration: "48:22",
-      views: "4.8K",
-      likes: "320",
+      title: "How Robots Learn - AI and Machine Learning Explained",
+      thumbnail: `https://img.youtube.com/vi/R9OHn5ZF4Uo/hqdefault.jpg`,
+      youtubeId: "R9OHn5ZF4Uo",
+      duration: "11:22",
+      views: "3.8M",
+      likes: "89K",
       date: "October 5, 2024",
       category: "Tech Talks",
     },
@@ -127,7 +158,10 @@ const VideosPage = () => {
       <section className="section-padding bg-gray-900">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div className="relative group cursor-pointer animate-fade-up">
+            <div 
+              className="relative group cursor-pointer animate-fade-up"
+              onClick={() => setSelectedVideo(featuredVideo)}
+            >
               <img
                 src={featuredVideo.thumbnail}
                 alt={featuredVideo.title}
@@ -159,7 +193,13 @@ const VideosPage = () => {
                   <Calendar className="h-4 w-4" /> {featuredVideo.date}
                 </span>
               </div>
-              <Button className="bg-techgold hover:bg-techgold-dark text-gray-900 font-bold">
+              <Button 
+                className="bg-techgold hover:bg-techgold-dark text-gray-900 font-bold"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedVideo(featuredVideo);
+                }}
+              >
                 <Play className="h-5 w-5 mr-2" fill="currentColor" /> Watch Now
               </Button>
             </div>
@@ -202,6 +242,7 @@ const VideosPage = () => {
                 key={video.id}
                 className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer animate-fade-up"
                 style={{ animationDelay: `${index * 0.05}s` }}
+                onClick={() => setSelectedVideo(video)}
               >
                 <div className="relative">
                   <img
@@ -269,6 +310,54 @@ const VideosPage = () => {
           </Button>
         </div>
       </section>
+
+      {/* Video Player Modal */}
+      <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
+        <DialogContent className="max-w-4xl w-[95vw] p-0 bg-black border-none">
+          <DialogTitle className="sr-only">
+            {selectedVideo?.title || "Video Player"}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Watch {selectedVideo?.title || "video"} - embedded YouTube player
+          </DialogDescription>
+          <div className="relative">
+            <button
+              onClick={() => setSelectedVideo(null)}
+              className="absolute -top-10 right-0 z-50 text-white hover:text-techgold transition-colors"
+              aria-label="Close video"
+            >
+              <X className="h-8 w-8" />
+            </button>
+            <div className="aspect-video w-full">
+              {selectedVideo && (
+                <iframe
+                  src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?rel=0`}
+                  title={selectedVideo.title}
+                  className="w-full h-full"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              )}
+            </div>
+            <div className="p-4 bg-gray-900">
+              <h3 className="text-white font-semibold text-lg mb-2">
+                {selectedVideo?.title}
+              </h3>
+              <div className="flex flex-wrap items-center gap-4 text-gray-400 text-sm">
+                <span className="flex items-center gap-1">
+                  <Eye className="h-4 w-4" /> {selectedVideo?.views} views
+                </span>
+                <span className="flex items-center gap-1">
+                  <ThumbsUp className="h-4 w-4" /> {selectedVideo?.likes}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" /> {selectedVideo?.date}
+                </span>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
