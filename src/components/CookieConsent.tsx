@@ -53,8 +53,8 @@ export const CookieConsent = () => {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-gray-900/95 backdrop-blur-sm border-t border-gray-700 shadow-lg animate-in slide-in-from-bottom-5 duration-300">
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div className="fixed bottom-4 left-4 right-24 z-50 p-4 bg-gray-900/95 backdrop-blur-sm border border-gray-700 rounded-lg shadow-lg animate-in slide-in-from-bottom-5 duration-300 max-w-3xl">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-start gap-3 text-gray-200">
           <Cookie className="h-6 w-6 text-yellow-400 flex-shrink-0 mt-0.5" />
           <div className="text-sm">
