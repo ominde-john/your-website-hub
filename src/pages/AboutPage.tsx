@@ -56,7 +56,7 @@ const AboutPage = () => {
       name: "Jeremy Bravoge",
       role: "Founder & CEO",      
       image: JeremyBravoge,
-      portfolio: "jeremy.teksoft.co.ke",
+      portfolio: "https://jeremy.teksoft.co.ke",
       bio: "Visionary leader with a passion for technology and community building. Leading Tech Team to empower developers across Africa.",
     },
     {
@@ -77,6 +77,7 @@ const AboutPage = () => {
       name: "Evans Richard",
       role: "Technical Lead",
       image: EvansChuchu,
+      portfolio: "https://evans.teksoft.co.ke",
       bio: "Expert in software architecture and mentoring junior developers. Committed to technical excellence.",
     },
   ];
