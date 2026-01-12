@@ -6,8 +6,9 @@ import JeremyBravoge from "@/assets/team/jeremy-bravoge.jpg";
 import Jeremy from "@/assets/team/WhatsApp_Image_2026-01-08_at_11.37.34_PM-removebg-preview.png";
 import JohnOminde from "@/assets/team/john-ominde.jpg";
 import EvansChuchu from "@/assets/team/evanschuchu.jpg";
+import Isaac from "@/assets/team/isaac.png";
 import john from "@/assets/team/john-ominde-removebg-preview.png";
-import isaac from "@/assets/team/isaac.png";
+
 
 interface Leader {
   name: string;
@@ -40,7 +41,7 @@ const LeadershipPage = () => {
       name: "Isaac Prinsze",
       role: "Community Manager",
       department: "Technology",
-      image: isaac,
+      image: Isaac,
       bio: "Passionate about connecting people and fostering meaningful relationships within the organisation",
       linkedin: "https://www.linkedin.com/in/isaac-prinsze",
     },
