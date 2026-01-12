@@ -2,10 +2,13 @@ import { useParams } from "react-router-dom";
 import { products } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
+import { useCart } from "@/hooks/useCart";
+import { getWhatsAppOrderUrl } from "@/lib/utils";
 
 const ProductDetailsPage = () => {
   const { slug } = useParams();
   const product = products.find(p => p.slug === slug);
+  const { addToCart } = useCart();
 
   if (!product) {
     return (
@@ -14,6 +17,16 @@ const ProductDetailsPage = () => {
       </div>
     );
   }
+
+  const handleAddToCart = () => {
+    addToCart(product);
+  };
+
+  const handleWhatsAppOrder = () => {
+    const message = `Hi, I'd like to order:\n\n1x ${product.name} @ Ksh ${product.price.toLocaleString()}\n\nTotal: Ksh ${product.price.toLocaleString()}`;
+    const whatsappUrl = getWhatsAppOrderUrl(message);
+    window.open(whatsappUrl, "_blank");
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -49,11 +62,17 @@ const ProductDetailsPage = () => {
           </div>
 
           <div className="flex gap-4">
-            <Button className="bg-green-600 hover:bg-green-700">
+            <Button 
+              className="bg-green-600 hover:bg-green-700"
+              onClick={handleWhatsAppOrder}
+            >
               Order via WhatsApp
             </Button>
 
-            <Button className="bg-techblue hover:bg-techblue-dark">
+            <Button 
+              className="bg-techblue hover:bg-techblue-dark"
+              onClick={handleAddToCart}
+            >
               <ShoppingCart className="w-4 h-4 mr-2" />
               Add to Cart
             </Button>
