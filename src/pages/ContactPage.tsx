@@ -192,19 +192,6 @@ useEffect(() => {
       });
   }
 }, []);
-
-// Update the contactInfo array to include location info:
-const contactInfo = [
-  // ... existing items ...
-  {
-    icon: <MapPin className="h-6 w-6 text-techgold" />,
-    title: "Visit Us",
-    value: "Nairobi, Kenya",
-    description: userLocation || "Serving clients in Nairobi and worldwide",
-    link: null,
-  },
-  // ... rest of items ...
-];
   return (
     <div>
       <PageHeader
