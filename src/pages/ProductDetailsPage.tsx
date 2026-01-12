@@ -3,6 +3,7 @@ import { products } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { getWhatsAppOrderUrl } from "@/lib/utils";
 
 const ProductDetailsPage = () => {
   const { slug } = useParams();
@@ -23,7 +24,7 @@ const ProductDetailsPage = () => {
 
   const handleWhatsAppOrder = () => {
     const message = `Hi, I'd like to order:\n\n1x ${product.name} @ Ksh ${product.price.toLocaleString()}\n\nTotal: Ksh ${product.price.toLocaleString()}`;
-    const whatsappUrl = `https://wa.me/254115000514?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = getWhatsAppOrderUrl(message);
     window.open(whatsappUrl, "_blank");
   };
 

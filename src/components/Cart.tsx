@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/useCart";
 import { Link } from "react-router-dom";
+import { getWhatsAppOrderUrl } from "@/lib/utils";
 
 const Cart = () => {
   const {
@@ -168,9 +169,9 @@ const Cart = () => {
                       )
                       .join("\n");
                     const totalMsg = `\n\nTotal: Ksh ${totalPrice.toLocaleString()}`;
-                    const whatsappUrl = `https://wa.me/254115000514?text=${encodeURIComponent(
+                    const whatsappUrl = getWhatsAppOrderUrl(
                       `Hi, I'd like to order:\n\n${message}${totalMsg}`
-                    )}`;
+                    );
                     window.open(whatsappUrl, "_blank");
                   }}
                 >
