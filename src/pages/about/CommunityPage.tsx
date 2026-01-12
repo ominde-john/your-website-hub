@@ -13,10 +13,10 @@ const CommunityPage = () => {
   ];
 
   const chapters = [
-    { city: "Nairobi", country: "Kenya", members: 200 },
-    { city: "Kampala", country: "Uganda", members: 80 },
-    { city: "Dar es Salaam", country: "Tanzania", members: 60 },
-    { city: "New Delhi", country: "India", members: 40 },
+    { city: "Nairobi", country: "Kenya", members: 35 },
+    { city: "Kampala", country: "Uganda", members: 5 },
+    { city: "Dar es Salaam", country: "Tanzania", members: 7 },
+    { city: "New Delhi", country: "India", members: 4 },
   ];
 
   const communityGroups = [
