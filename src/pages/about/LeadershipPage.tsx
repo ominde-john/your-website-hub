@@ -51,6 +51,7 @@ const LeadershipPage = () => {
       department: "Engineering",
       image: EvansChuchu,
       bio: "Expert in software architecture and mentoring. Evans oversees code quality, architectural decisions, and the technical mentorship program.",
+      linkedin: "https://www.linkedin.com/in/Evans-Richard",
     },
   ];
 
