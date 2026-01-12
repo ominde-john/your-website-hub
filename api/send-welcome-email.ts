@@ -47,7 +47,7 @@ export default async function handler(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Teksoft Community <no-reply@teksoft.co.ke>",
+        from: "Teksoft Community <teksoft@jonzjohn.com>",
         to: [user.email],
         subject: "Welcome to Teksoft Community 🎉",
         html: `
