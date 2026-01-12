@@ -13,6 +13,7 @@ import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 import TeksoftNavigator from "./components/TeksoftNavigator";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { CookieConsent } from "./components/CookieConsent";
 
 /* ======================
    MAIN PAGES
@@ -112,6 +113,7 @@ const App = () => {
             <BrowserRouter>
               <Cart />
               <ScrollToTop />
+              <CookieConsent />
               <Routes>
                 <Route path="/" element={<Layout />}>
 
