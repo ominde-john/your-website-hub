@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+import { CartProvider } from "@/hooks/useCart";
+import Cart from "@/components/Cart";
 
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
@@ -90,23 +92,25 @@ const App = () => {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TooltipProvider>
-            {/* Global SEO fallback */}
-            <Helmet>
-              <title>Teksoft Community | Empowering Technology Everywhere</title>
-              <meta
-                name="description"
-                content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts."
-              />
-            </Helmet>
+          <CartProvider>
+            <TooltipProvider>
+              {/* Global SEO fallback */}
+              <Helmet>
+                <title>Teksoft Community | Empowering Technology Everywhere</title>
+                <meta
+                  name="description"
+                  content="Teksoft Community is a global technology community for developers, innovators, and tech enthusiasts."
+                />
+              </Helmet>
 
-          <Toaster />
-          <Sonner />
+            <Toaster />
+            <Sonner />
 
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Layout />}>
+            <BrowserRouter>
+              <Cart />
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<Layout />}>
 
                 {/* Home */}
                 <Route index element={<HomePage />} />
@@ -175,6 +179,7 @@ const App = () => {
             <TeksoftNavigator />
           </BrowserRouter>
         </TooltipProvider>
+        </CartProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </HelmetProvider>

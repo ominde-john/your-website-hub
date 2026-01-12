@@ -43,9 +43,11 @@ import {
   Instagram,
   Linkedin,
   Youtube,
+  ShoppingCart,
 } from "lucide-react";
 import teksoftLogo from "@/assets/teksoft-logo.png";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useCart } from "@/hooks/useCart";
 
 interface Profile {
   first_name: string;
@@ -63,6 +65,8 @@ const Navbar = () => {
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+
+  const { openCart, totalItems } = useCart();
 
   const aboutRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
@@ -270,6 +274,22 @@ const Navbar = () => {
             )
           )}
 
+          {/* Cart Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative ml-2"
+            onClick={openCart}
+            aria-label="Open cart"
+          >
+            <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-techblue text-white text-xs font-bold flex items-center justify-center">
+                {totalItems > 99 ? "99+" : totalItems}
+              </span>
+            )}
+          </Button>
+
           {user ? (
             <div className="flex items-center gap-2 ml-3">
               <Link to="/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -310,6 +330,20 @@ const Navbar = () => {
 
         {/* MOBILE TOGGLE */}
         <div className="lg:hidden flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            onClick={openCart}
+            aria-label="Open cart"
+          >
+            <ShoppingCart className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-techblue text-white text-xs font-bold flex items-center justify-center">
+                {totalItems > 99 ? "99+" : totalItems}
+              </span>
+            )}
+          </Button>
           <ThemeToggle />
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-gray-700 dark:text-gray-200">
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

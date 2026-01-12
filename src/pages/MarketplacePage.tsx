@@ -1,11 +1,14 @@
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Star, ShoppingCart } from "lucide-react";
+import { Star, ShoppingCart, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { products } from "@/data/products";
+import { useCart } from "@/hooks/useCart";
 
 const MarketplacePage = () => {
+  const { addToCart } = useCart();
+
   return (
     <div className="min-h-screen bg-[#0b0f19] text-white">
       <PageHeader
@@ -21,19 +24,23 @@ const MarketplacePage = () => {
               className="bg-[#111827] border border-gray-800 hover:border-techblue transition"
             >
               {/* IMAGE */}
-              <div className="h-56 bg-black flex items-center justify-center overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-full w-full object-cover"
-                />
-              </div>
+              <Link to={`/marketplace/product/${product.slug}`}>
+                <div className="h-56 bg-black flex items-center justify-center overflow-hidden">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </Link>
 
               {/* CONTENT */}
               <CardContent className="p-5">
-                <h3 className="text-lg font-semibold mb-2">
-                  {product.name}
-                </h3>
+                <Link to={`/marketplace/product/${product.slug}`}>
+                  <h3 className="text-lg font-semibold mb-2 hover:text-techblue transition-colors">
+                    {product.name}
+                  </h3>
+                </Link>
 
                 <div className="flex items-center gap-2 mb-3">
                   <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
@@ -48,16 +55,26 @@ const MarketplacePage = () => {
               </CardContent>
 
               {/* ACTION */}
-              <CardFooter className="p-5 pt-0">
+              <CardFooter className="p-5 pt-0 flex gap-2">
                 <Link
                   to={`/marketplace/product/${product.slug}`}
-                  className="w-full"
+                  className="flex-1"
                 >
-                  <Button className="w-full bg-techblue hover:bg-techblue-dark text-white gap-2">
-                    <ShoppingCart className="w-4 h-4" />
-                    View Product
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-gray-600 text-white hover:bg-gray-800 gap-2"
+                  >
+                    <Eye className="w-4 h-4" />
+                    View
                   </Button>
                 </Link>
+                <Button 
+                  className="flex-1 bg-techblue hover:bg-techblue-dark text-white gap-2"
+                  onClick={() => addToCart(product)}
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  Add to Cart
+                </Button>
               </CardFooter>
             </Card>
           ))}
