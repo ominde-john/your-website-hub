@@ -22,6 +22,7 @@ import EventsPage from "./pages/EventsPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import DiscussionPage from "./pages/DiscussionPage";
 import MemberDashboardPage from "./pages/MemberDashboardPage";
+import MembersDashboard from "./components/Member Dashboard/MemberDashboard";
 import ContactPage from "./pages/ContactPage";
 import ShowcasePage from "./pages/ShowcasePage";
 import CareersPage from "./pages/CareersPage";
@@ -138,6 +139,7 @@ const App = () => {
                 {/* Community */}
                 <Route path="discussion" element={<DiscussionPage />} />
                 <Route path="dashboard" element={<ProtectedRoute><MemberDashboardPage /></ProtectedRoute>} />
+                <Route path="member/dashboard" element={<MembersDashboard />} />
                 <Route path="contact" element={<ContactPage />} />
                 <Route path="showcase" element={<ShowcasePage />} />
                 <Route path="careers" element={<CareersPage />} />

@@ -173,7 +173,38 @@ export default function ContactPage() {
       link: null,
     },
   ];
+// Add this to your component (outside the return)
+const [userLocation, setUserLocation] = useState<string>("");
 
+useEffect(() => {
+  // Get user's approximate location (city level)
+  if (navigator.geolocation && typeof window !== 'undefined') {
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        if (data.city) {
+          setUserLocation(`Based in ${data.city}, ${data.country_name}`);
+        }
+      })
+      .catch(() => {
+        // Fallback to static location
+        setUserLocation("Serving clients in Nairobi and worldwide");
+      });
+  }
+}, []);
+
+// Update the contactInfo array to include location info:
+const contactInfo = [
+  // ... existing items ...
+  {
+    icon: <MapPin className="h-6 w-6 text-techgold" />,
+    title: "Visit Us",
+    value: "Nairobi, Kenya",
+    description: userLocation || "Serving clients in Nairobi and worldwide",
+    link: null,
+  },
+  // ... rest of items ...
+];
   return (
     <div>
       <PageHeader
@@ -258,29 +289,55 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            {/* Contact Info */}
-            <div className="space-y-6">
-              {contactInfo.map((item, index) => (
-                <Card key={index}>
-                  <CardContent className="p-5">
-                    <div className="flex gap-4">
-                      {item.icon}
-                      <div>
-                        <h3>{item.title}</h3>
-                        {item.link ? (
-                          <a href={item.link}>{item.value}</a>
-                        ) : (
-                          <p>{item.value}</p>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+      {/* Contact Info */}
+      <div className="space-y-6">
+        {contactInfo.map((item, index) => (
+          <Card key={index}>
+            <CardContent className="p-5">
+              <div className="flex gap-4">
+                {item.icon}
+                <div>
+                  <h3>{item.title}</h3>
+                  {item.link ? (
+                    <a href={item.link}>{item.value}</a>
+                  ) : (
+                    <p>{item.value}</p>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+
+        <Card>
+          <CardContent className="p-5">
+            <div className="flex gap-4 mb-4">
+              <MapPin className="h-6 w-6 text-techgold" />
+              <div>
+                <h3 className="font-semibold">Our Location</h3>
+                <p>Nairobi, Kenya</p>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+            
+            {/* Google Maps Embed */}
+            <div className="w-full h-64 rounded-lg overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63820.96345552068!2d36.74963509999999!3d-1.30320935!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1a6bf7445dc1%3A0x940b62a3c8efde4c!2sNairobi!5e0!3m2!1sen!2ske!4v1690289860127!5m2!1sen!2ske"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Our Location in Nairobi"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </div>
+</section>
     </div>
   );
 }

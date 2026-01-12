@@ -155,7 +155,7 @@ const Navbar = () => {
     { name: "Our Journey", path: "/about/journey", icon: <Rocket className="w-4 h-4 text-techgold" /> },
     { name: "Tech Programs", path: "/about/programs", icon: <School className="w-4 h-4 text-techgold" /> },
     { name: "Meet the Team", path: "/about/team", icon: <Users className="w-4 h-4 text-techgold" /> },
-    { name: "Partnerships", path: "/about/partnerships", icon: <Handshake className="w-4 h-4 text-techgold" /> },
+    { name: "Partnerships", path: "/member/dashboard", icon: <Handshake className="w-4 h-4 text-techgold" /> },
     { name: "Awards", path: "/about/awards", icon: <Trophy className="w-4 h-4 text-techgold" /> },
   ];
 
