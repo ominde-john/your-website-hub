@@ -33,7 +33,7 @@ const VideosPage = () => {
   const featuredVideo: Video = {
     id: "featured",
     title: "What is Coding? - Animated Explainer for Everyone",
-    thumbnail: `https://img.youtube.com/vi/QvyTEx1wyOY/maxresdefault.jpg`,
+    thumbnail: `https://img.youtube.com/vi/QvyTEx1wyOY/hqdefault.jpg`,
     youtubeId: "QvyTEx1wyOY",
     duration: "5:40",
     views: "3.2M",
@@ -48,7 +48,7 @@ const VideosPage = () => {
     {
       id: 1,
       title: "What is an Algorithm? - Fun Animated Explainer",
-      thumbnail: `https://img.youtube.com/vi/6hfOvs8pY1k/maxresdefault.jpg`,
+      thumbnail: `https://img.youtube.com/vi/6hfOvs8pY1k/hqdefault.jpg`,
       youtubeId: "6hfOvs8pY1k",
       duration: "6:25",
       views: "1.8M",
@@ -59,7 +59,7 @@ const VideosPage = () => {
     {
       id: 2,
       title: "How Do Computers Work? - Animated Guide",
-      thumbnail: `https://img.youtube.com/vi/mCq8-xTH7jA/maxresdefault.jpg`,
+      thumbnail: `https://img.youtube.com/vi/mCq8-xTH7jA/hqdefault.jpg`,
       youtubeId: "mCq8-xTH7jA",
       duration: "8:30",
       views: "5.3M",
@@ -70,7 +70,7 @@ const VideosPage = () => {
     {
       id: 3,
       title: "Introduction to AI - Simple Animated Explanation",
-      thumbnail: `https://img.youtube.com/vi/mJeNghZXtMo/maxresdefault.jpg`,
+      thumbnail: `https://img.youtube.com/vi/mJeNghZXtMo/hqdefault.jpg`,
       youtubeId: "mJeNghZXtMo",
       duration: "10:15",
       views: "2.1M",
@@ -81,7 +81,7 @@ const VideosPage = () => {
     {
       id: 4,
       title: "What is the Internet? - Animated Documentary",
-      thumbnail: `https://img.youtube.com/vi/Dxcc6ycZ73M/maxresdefault.jpg`,
+      thumbnail: `https://img.youtube.com/vi/Dxcc6ycZ73M/hqdefault.jpg`,
       youtubeId: "Dxcc6ycZ73M",
       duration: "9:22",
       views: "8.5M",
@@ -92,7 +92,7 @@ const VideosPage = () => {
     {
       id: 5,
       title: "How Does Wi-Fi Work? - Animation Explained",
-      thumbnail: `https://img.youtube.com/vi/hePLDVbULZc/maxresdefault.jpg`,
+      thumbnail: `https://img.youtube.com/vi/hePLDVbULZc/hqdefault.jpg`,
       youtubeId: "hePLDVbULZc",
       duration: "5:45",
       views: "4.2M",
@@ -103,7 +103,7 @@ const VideosPage = () => {
     {
       id: 6,
       title: "Cybersecurity Basics - Animated for Beginners",
-      thumbnail: `https://img.youtube.com/vi/inWWhr5tnEA/maxresdefault.jpg`,
+      thumbnail: `https://img.youtube.com/vi/inWWhr5tnEA/hqdefault.jpg`,
       youtubeId: "inWWhr5tnEA",
       duration: "7:30",
       views: "1.5M",
@@ -114,7 +114,7 @@ const VideosPage = () => {
     {
       id: 7,
       title: "Python Programming for Kids - Animated Tutorial",
-      thumbnail: `https://img.youtube.com/vi/kqtD5dpn9C8/maxresdefault.jpg`,
+      thumbnail: `https://img.youtube.com/vi/kqtD5dpn9C8/hqdefault.jpg`,
       youtubeId: "kqtD5dpn9C8",
       duration: "12:18",
       views: "6.8M",
@@ -125,7 +125,7 @@ const VideosPage = () => {
     {
       id: 8,
       title: "How Robots Learn - AI and Machine Learning Explained",
-      thumbnail: `https://img.youtube.com/vi/R9OHn5ZF4Uo/maxresdefault.jpg`,
+      thumbnail: `https://img.youtube.com/vi/R9OHn5ZF4Uo/hqdefault.jpg`,
       youtubeId: "R9OHn5ZF4Uo",
       duration: "11:22",
       views: "3.8M",
@@ -195,7 +195,10 @@ const VideosPage = () => {
               </div>
               <Button 
                 className="bg-techgold hover:bg-techgold-dark text-gray-900 font-bold"
-                onClick={() => setSelectedVideo(featuredVideo)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedVideo(featuredVideo);
+                }}
               >
                 <Play className="h-5 w-5 mr-2" fill="currentColor" /> Watch Now
               </Button>
@@ -328,10 +331,10 @@ const VideosPage = () => {
             <div className="aspect-video w-full">
               {selectedVideo && (
                 <iframe
-                  src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?autoplay=1&rel=0`}
+                  src={`https://www.youtube.com/embed/${selectedVideo.youtubeId}?rel=0`}
                   title={selectedVideo.title}
                   className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
               )}
