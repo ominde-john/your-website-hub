@@ -8,6 +8,7 @@ import { Lightbulb, GraduationCap, UsersRound, History, ArrowRight } from "lucid
 import EvansChuchu from "../assets/team/evanschuchu.jpg";
 import JohnOminde from "../assets/team/john-ominde.jpg";
 import JeremyBravoge from "../assets/team/jeremy-bravoge.jpg";
+import Isaac from "../assets/team/isaac.jpg";
 
 interface TeamMember {
   name: string;
@@ -55,7 +56,7 @@ const AboutPage = () => {
       name: "Jeremy Bravoge",
       role: "Founder & CEO",      
       image: JeremyBravoge,
-      portfolio: "#",
+      portfolio: "jeremy.teksoft.co.ke",
       bio: "Visionary leader with a passion for technology and community building. Leading Tech Team to empower developers across Africa.",
     },
     {
@@ -66,9 +67,10 @@ const AboutPage = () => {
       bio: "Full-stack Data Engineer with expertise in Python, SQL, React, Node.js, and cloud technologies. Building the future of tech education.",
     },
     {
-      name: "Sarah Mwangi",
+      name: "Isaac Prinsze",
       role: "Community Manager",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=ccrop&w=400&q=80",
+      image: Isaac,
+      portfolio: "https://isaac.teksoft.co.ke",
       bio: "Passionate about connecting people and fostering meaningful relationships within the tech community.",
     },
     {
