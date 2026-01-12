@@ -35,7 +35,7 @@ const LeadershipPage = () => {
       bio: "Full-stack Data Engineer with expertise in Python, SQL, React, Node.js, and cloud technologies. John leads all technical initiatives and platform development.",
       linkedin: "https://www.linkedin.com/in/john-ominde",
     },
-      
+    {  
       name: "John Ominde",
       role: "Chief Technology Officer",
       department: "Technology",
