@@ -52,13 +52,14 @@ const VerifyEmailPage = () => {
     setLoading(true);
 
     try {
-      // 🔐 Verify code via Edge Function
+      // 🔐 Verify code via Edge Function (also sends welcome email on success)
       const { data, error } = await supabase.functions.invoke(
         "verify-code",
         {
           body: {
             email: email.toLowerCase(),
             code: otp,
+            firstName, // Pass firstName for welcome email
           },
         }
       );
@@ -84,14 +85,6 @@ const VerifyEmailPage = () => {
       if (signUpError) {
         throw signUpError;
       }
-
-      // Send welcome email
-      await supabase.functions.invoke("send-welcome-email", {
-        body: {
-          email,
-          firstName,
-        },
-      });
 
       toast({
         title: "Email verified",
