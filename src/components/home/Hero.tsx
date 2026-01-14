@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { WHATSAPP_GROUP_URL } from "@/lib/utils";
 
 const Hero = () => {
   return (
@@ -48,7 +49,7 @@ const Hero = () => {
           {/* WHATSAPP GROUP BUTTON */}
           <div className="mt-6 flex justify-center lg:justify-start">
             <a
-              href="https://chat.whatsapp.com/BTfXoN3jeeW8HcJQvw9Htg"
+              href={WHATSAPP_GROUP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe57] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
