@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Send, X, Users, ArrowLeft } from "lucide-react";
+import { Loader2, Send, X, Users, ArrowLeft, Trash2 } from "lucide-react";
 import { useNotificationSound } from "@/hooks/useNotificationSound";
 import { formatDistanceToNow } from "date-fns";
 
@@ -119,6 +119,19 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
           }
         }
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "DELETE",
+          schema: "public",
+          table: "topic_messages",
+          filter: `topic_id=eq.${topic.id}`,
+        },
+        (payload) => {
+          const deletedMsg = payload.old as TopicMessage;
+          setMessages((prev) => prev.filter((m) => m.id !== deletedMsg.id));
+        }
+      )
       .subscribe();
 
     return () => {
@@ -152,6 +165,24 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
       toast.error("Failed to send message");
     } finally {
       setSending(false);
+    }
+  };
+
+  const handleDeleteMessage = async (messageId: string) => {
+    try {
+      const { error } = await supabase
+        .from("topic_messages")
+        .delete()
+        .eq("id", messageId);
+
+      if (error) throw error;
+      
+      // Remove message from local state
+      setMessages((prev) => prev.filter((m) => m.id !== messageId));
+      toast.success("Message deleted");
+    } catch (error: any) {
+      console.error("Error deleting message:", error);
+      toast.error("Failed to delete message");
     }
   };
 
@@ -232,7 +263,7 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
                 return (
                   <div
                     key={msg.id}
-                    className={`flex gap-2 ${isOwn ? "flex-row-reverse" : "flex-row"}`}
+                    className={`flex gap-2 ${isOwn ? "flex-row-reverse" : "flex-row"} group`}
                   >
                     <Avatar className="h-8 w-8 flex-shrink-0">
                       <AvatarImage src={msg.sender?.avatar_url || undefined} />
@@ -247,16 +278,28 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
                           {msg.sender?.first_name} {msg.sender?.last_name}
                         </p>
                       )}
-                      <div
-                        className={`px-3 py-2 rounded-2xl ${
-                          isOwn
-                            ? "bg-primary text-white rounded-br-md"
-                            : "bg-gray-100 text-gray-900 rounded-bl-md"
-                        }`}
-                      >
-                        <p className="text-sm whitespace-pre-wrap break-words">
-                          {msg.content}
-                        </p>
+                      <div className={`flex items-center gap-1 ${isOwn ? "flex-row-reverse" : ""}`}>
+                        <div
+                          className={`px-3 py-2 rounded-2xl ${
+                            isOwn
+                              ? "bg-primary text-white rounded-br-md"
+                              : "bg-gray-100 text-gray-900 rounded-bl-md"
+                          }`}
+                        >
+                          <p className="text-sm whitespace-pre-wrap break-words">
+                            {msg.content}
+                          </p>
+                        </div>
+                        {isOwn && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500"
+                            onClick={() => handleDeleteMessage(msg.id)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        )}
                       </div>
                       <p className={`text-xs text-gray-500 mt-1 ${isOwn ? "text-right" : ""}`}>
                         {formatDistanceToNow(new Date(msg.created_at), { addSuffix: true })}

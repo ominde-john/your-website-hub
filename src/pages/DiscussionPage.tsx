@@ -184,7 +184,13 @@ const DiscussionPage = () => {
               ) : (
                 <div className="grid gap-4">
                   {filteredTopics.map((topic) => (
-                    <TopicCard key={topic.id} topic={topic} onJoin={handleJoinTopic} />
+                    <TopicCard 
+                      key={topic.id} 
+                      topic={topic} 
+                      onJoin={handleJoinTopic} 
+                      currentUserId={user?.id}
+                      onDelete={fetchTopics}
+                    />
                   ))}
                 </div>
               )}
