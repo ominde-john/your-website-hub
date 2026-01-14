@@ -177,7 +177,8 @@ const TopicChatWindow = ({ topic, currentUserId, onClose }: TopicChatWindowProps
 
       if (error) throw error;
       
-      // Remove message from local state
+      // Optimistic UI update - remove immediately for better UX
+      // Real-time subscription will also trigger but filter handles duplicates gracefully
       setMessages((prev) => prev.filter((m) => m.id !== messageId));
       toast.success("Message deleted");
     } catch (error: any) {
