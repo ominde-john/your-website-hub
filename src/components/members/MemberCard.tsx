@@ -38,7 +38,7 @@ const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0, isOnl
   const RoleIcon = roleIcons[member.role];
   const isCurrentUser = member.user_id === currentUserId;
   const initials = `${member.first_name?.[0] || ''}${member.last_name?.[0] || ''}`.toUpperCase() || 'U';
-  const isVerified = member.username === 'johnominde';
+  const isVerified = member.username === 'johnominde' || member.username === 'SYS_DEVE';
 
   return (
     <Card className="bg-card/50 border-border/50 backdrop-blur-sm hover:border-primary/30 transition-all duration-300">
