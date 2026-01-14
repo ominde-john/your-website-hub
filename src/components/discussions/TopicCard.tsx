@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MessageSquare, Users, Clock } from "lucide-react";
+import { MessageSquare, Users, Clock, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
+import { toast } from "sonner";
 
 interface Topic {
   id: string;
@@ -17,6 +18,8 @@ interface Topic {
 interface TopicCardProps {
   topic: Topic;
   onJoin: (topic: Topic) => void;
+  currentUserId?: string;
+  onDelete?: () => void;
 }
 
 const getCategoryInfo = (category: string) => {
@@ -32,7 +35,7 @@ const getCategoryInfo = (category: string) => {
   return categories[category] || categories.general;
 };
 
-const TopicCard = ({ topic, onJoin }: TopicCardProps) => {
+const TopicCard = ({ topic, onJoin, currentUserId, onDelete }: TopicCardProps) => {
   const [creator, setCreator] = useState<{
     first_name: string;
     last_name: string;
@@ -40,6 +43,9 @@ const TopicCard = ({ topic, onJoin }: TopicCardProps) => {
   } | null>(null);
   const [messageCount, setMessageCount] = useState(0);
   const [participantCount, setParticipantCount] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const isCreator = currentUserId === topic.created_by;
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -66,6 +72,32 @@ const TopicCard = ({ topic, onJoin }: TopicCardProps) => {
 
     fetchDetails();
   }, [topic.id, topic.created_by]);
+
+  const handleDelete = async () => {
+    if (!isCreator || isDeleting) return;
+    
+    if (!window.confirm("Are you sure you want to delete this discussion? This action cannot be undone.")) {
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const { error } = await supabase
+        .from("discussion_topics")
+        .delete()
+        .eq("id", topic.id);
+
+      if (error) throw error;
+      
+      toast.success("Discussion deleted");
+      onDelete?.();
+    } catch (error: any) {
+      console.error("Error deleting topic:", error);
+      toast.error("Failed to delete discussion");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const categoryInfo = getCategoryInfo(topic.category);
 
@@ -112,13 +144,27 @@ const TopicCard = ({ topic, onJoin }: TopicCardProps) => {
                 {formatDistanceToNow(new Date(topic.created_at), { addSuffix: true })}
               </span>
             </div>
-            <Button
-              size="sm"
-              onClick={() => onJoin(topic)}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto"
-            >
-              Join Discussion
-            </Button>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              {isCreator && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                  className="text-red-500 hover:text-red-600 hover:bg-red-50 border-red-200"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  {isDeleting ? "Deleting..." : "Delete"}
+                </Button>
+              )}
+              <Button
+                size="sm"
+                onClick={() => onJoin(topic)}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground flex-1 sm:flex-none"
+              >
+                Join Discussion
+              </Button>
+            </div>
           </div>
         </div>
       </div>
