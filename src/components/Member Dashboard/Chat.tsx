@@ -61,16 +61,16 @@ const Messages = () => {
     const fetchUsers = async () => {
       const { data } = await supabase
         .from("profiles")
-        .select("id, full_name, avatar_url, is_online, last_seen")
-        .neq("id", currentUserId);
+        .select("user_id, first_name, last_name, avatar_url, last_seen")
+        .neq("user_id", currentUserId);
 
       if (!data) return;
 
       const mapped: User[] = data.map((u) => ({
-        id: u.id,
-        name: u.full_name,
+        id: u.user_id,
+        name: `${u.first_name} ${u.last_name}`.trim() || "Unknown User",
         avatar: u.avatar_url || "https://i.pravatar.cc/44",
-        online: u.is_online,
+        online: u.last_seen ? new Date(u.last_seen) > new Date(Date.now() - 5 * 60 * 1000) : false,
         lastActive: u.last_seen
           ? new Date(u.last_seen).toLocaleTimeString()
           : "Offline",
