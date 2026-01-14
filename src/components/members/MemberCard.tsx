@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { MessageCircle, Shield, User, Crown } from "lucide-react";
+import { MessageCircle, Shield, User, Crown, BadgeCheck } from "lucide-react";
 import { formatLastSeen } from "@/hooks/useOnlinePresence";
 
 interface MemberCardProps {
@@ -38,6 +38,7 @@ const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0, isOnl
   const RoleIcon = roleIcons[member.role];
   const isCurrentUser = member.user_id === currentUserId;
   const initials = `${member.first_name?.[0] || ''}${member.last_name?.[0] || ''}`.toUpperCase() || 'U';
+  const isVerified = member.username === 'johnominde';
 
   return (
     <Card className="bg-card/50 border-border/50 backdrop-blur-sm hover:border-primary/30 transition-all duration-300">
@@ -69,12 +70,20 @@ const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0, isOnl
               <h3 className="font-semibold text-foreground truncate">
                 {member.first_name} {member.last_name}
               </h3>
+              {isVerified && (
+                <BadgeCheck className="w-5 h-5 text-[#1D9BF0] flex-shrink-0" title="Verified" />
+              )}
               {isCurrentUser && (
                 <Badge variant="outline" className="text-xs">You</Badge>
               )}
             </div>
             <p className="text-sm text-muted-foreground">@{member.username}</p>
             <div className="flex items-center gap-2 mt-2">
+              {isVerified && (
+                <Badge className="text-xs bg-[#1D9BF0] text-white hover:bg-[#1D9BF0]/90">
+                  Developer
+                </Badge>
+              )}
               <Badge className={`text-xs ${roleColors[member.role]}`}>
                 <RoleIcon className="w-3 h-3 mr-1" />
                 {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
