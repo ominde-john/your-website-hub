@@ -15,6 +15,7 @@ import MemberCard from "@/components/members/MemberCard";
 import ChatWindow from "@/components/members/ChatWindow";
 import IncomingCallDialog from "@/components/members/IncomingCallDialog";
 import VideoCallModal from "@/components/members/VideoCallModal";
+import ManageMemberDialog from "@/components/members/ManageMemberDialog";
 import PageHeader from "@/components/PageHeader";
 
 interface MemberWithRole {
@@ -26,6 +27,8 @@ interface MemberWithRole {
   avatar_url?: string;
   last_seen?: string | null;
   role: 'admin' | 'moderator' | 'user';
+  is_verified?: boolean;
+  member_label?: string | null;
 }
 
 interface ChatPartner {
@@ -45,6 +48,9 @@ const MemberDashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeChatPartner, setActiveChatPartner] = useState<ChatPartner | null>(null);
   const [activeVideoCall, setActiveVideoCall] = useState<{ partnerId: string; partnerName: string; isIncoming: boolean } | null>(null);
+  const [manageMemberDialogOpen, setManageMemberDialogOpen] = useState(false);
+  const [selectedMemberForManage, setSelectedMemberForManage] = useState<MemberWithRole | null>(null);
+  const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(false);
   const { getUnreadCount } = useUnreadMessages(user?.id);
   const { isUserOnline } = useOnlinePresence(user?.id);
   const { pendingReceivedRequests, acceptRequest, declineRequest } = useMessageRequests(user?.id);
@@ -61,10 +67,10 @@ const MemberDashboardPage = () => {
       if (!user) return;
 
       try {
-        // Fetch profiles with last_seen
+        // Fetch profiles with last_seen, is_verified, and member_label
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
-          .select("id, user_id, first_name, last_name, username, avatar_url, last_seen");
+          .select("id, user_id, first_name, last_name, username, avatar_url, last_seen, is_verified, member_label");
 
         if (profilesError) throw profilesError;
 
@@ -83,6 +89,10 @@ const MemberDashboardPage = () => {
             role: (userRole?.role as 'admin' | 'moderator' | 'user') || 'user',
           };
         });
+
+        // Check if current user is admin
+        const currentUserRole = roles?.find((r) => r.user_id === user.id);
+        setIsCurrentUserAdmin(currentUserRole?.role === 'admin');
 
         // Sort: admins first, then moderators, then users
         const roleOrder = { admin: 0, moderator: 1, user: 2 };
@@ -135,6 +145,35 @@ const MemberDashboardPage = () => {
         signal_data: {},
       }]);
       dismissIncomingCall();
+    }
+  };
+
+  const handleManageMember = (member: MemberWithRole) => {
+    setSelectedMemberForManage(member);
+    setManageMemberDialogOpen(true);
+  };
+
+  const handleManageSuccess = async () => {
+    // Refetch members to get updated data
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, user_id, first_name, last_name, username, avatar_url, last_seen, is_verified, member_label");
+    
+    const { data: roles } = await supabase
+      .from("user_roles")
+      .select("user_id, role");
+    
+    if (profiles && roles) {
+      const membersWithRoles: MemberWithRole[] = profiles.map((profile) => {
+        const userRole = roles.find((r) => r.user_id === profile.user_id);
+        return {
+          ...profile,
+          role: (userRole?.role as 'admin' | 'moderator' | 'user') || 'user',
+        };
+      });
+      const roleOrder = { admin: 0, moderator: 1, user: 2 };
+      membersWithRoles.sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
+      setMembers(membersWithRoles);
     }
   };
 
@@ -219,6 +258,8 @@ const MemberDashboardPage = () => {
                     onStartChat={handleStartChat}
                     unreadCount={getUnreadCount(member.user_id)}
                     isOnline={isUserOnline(member.user_id)}
+                    isAdmin={isCurrentUserAdmin}
+                    onManageMember={handleManageMember}
                   />
                 ))}
               </div>
@@ -272,6 +313,14 @@ const MemberDashboardPage = () => {
           isIncoming={activeVideoCall.isIncoming}
         />
       )}
+
+      {/* Manage Member Dialog */}
+      <ManageMemberDialog
+        open={manageMemberDialogOpen}
+        onOpenChange={setManageMemberDialogOpen}
+        member={selectedMemberForManage}
+        onSuccess={handleManageSuccess}
+      />
     </div>
   );
 };

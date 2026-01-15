@@ -132,8 +132,10 @@ export type Database = {
           email: string
           first_name: string
           id: string
+          is_verified: boolean | null
           last_name: string
           last_seen: string | null
+          member_label: string | null
           phone_number: string | null
           updated_at: string
           user_id: string
@@ -145,8 +147,10 @@ export type Database = {
           email: string
           first_name: string
           id?: string
+          is_verified?: boolean | null
           last_name: string
           last_seen?: string | null
+          member_label?: string | null
           phone_number?: string | null
           updated_at?: string
           user_id: string
@@ -158,8 +162,10 @@ export type Database = {
           email?: string
           first_name?: string
           id?: string
+          is_verified?: boolean | null
           last_name?: string
           last_seen?: string | null
+          member_label?: string | null
           phone_number?: string | null
           updated_at?: string
           user_id?: string
