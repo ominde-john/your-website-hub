@@ -45,12 +45,18 @@ const MemberDashboardPage = () => {
   const navigate = useNavigate();
   const [members, setMembers] = useState<MemberWithRole[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const PAGE_SIZE = 50;
   const [searchQuery, setSearchQuery] = useState("");
   const [activeChatPartner, setActiveChatPartner] = useState<ChatPartner | null>(null);
   const [activeVideoCall, setActiveVideoCall] = useState<{ partnerId: string; partnerName: string; isIncoming: boolean } | null>(null);
   const [manageMemberDialogOpen, setManageMemberDialogOpen] = useState(false);
   const [selectedMemberForManage, setSelectedMemberForManage] = useState<MemberWithRole | null>(null);
   const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(false);
+  const [allRoles, setAllRoles] = useState<{ user_id: string; role: string }[]>([]);
   const { getUnreadCount } = useUnreadMessages(user?.id);
   const { isUserOnline } = useOnlinePresence(user?.id);
   const { pendingReceivedRequests, acceptRequest, declineRequest } = useMessageRequests(user?.id);
@@ -62,54 +68,96 @@ const MemberDashboardPage = () => {
     }
   }, [user, authLoading, navigate]);
 
+  // Fetch roles once on mount
   useEffect(() => {
-    const fetchMembers = async () => {
-      if (!user) return;
-
-      try {
-        // Fetch profiles with last_seen, is_verified, and member_label
-        const { data: profiles, error: profilesError } = await supabase
-          .from("profiles")
-          .select("id, user_id, first_name, last_name, username, avatar_url, last_seen, is_verified, member_label");
-
-        if (profilesError) throw profilesError;
-
-        // Fetch roles
-        const { data: roles, error: rolesError } = await supabase
-          .from("user_roles")
-          .select("user_id, role");
-
-        if (rolesError) throw rolesError;
-
-        // Merge profiles with roles
-        const membersWithRoles: MemberWithRole[] = (profiles || []).map((profile) => {
-          const userRole = roles?.find((r) => r.user_id === profile.user_id);
-          return {
-            ...profile,
-            role: (userRole?.role as 'admin' | 'moderator' | 'user') || 'user',
-          };
-        });
-
-        // Check if current user is admin
-        const currentUserRole = roles?.find((r) => r.user_id === user.id);
+    const fetchRoles = async () => {
+      const { data: roles } = await supabase
+        .from("user_roles")
+        .select("user_id, role");
+      
+      if (roles) {
+        setAllRoles(roles);
+        const currentUserRole = roles.find((r) => r.user_id === user?.id);
         setIsCurrentUserAdmin(currentUserRole?.role === 'admin');
-
-        // Sort: admins first, then moderators, then users
-        const roleOrder = { admin: 0, moderator: 1, user: 2 };
-        membersWithRoles.sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
-
-        setMembers(membersWithRoles);
-      } catch (error) {
-        console.error("Error fetching members:", error);
-      } finally {
-        setLoading(false);
       }
     };
-
+    
     if (user) {
-      fetchMembers();
+      fetchRoles();
     }
   }, [user]);
+
+  // Fetch members with pagination
+  const fetchMembers = async (pageNum: number, append: boolean = false) => {
+    if (!user) return;
+
+    try {
+      if (append) {
+        setLoadingMore(true);
+      } else {
+        setLoading(true);
+      }
+
+      const from = pageNum * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
+
+      // Get total count first (only on initial load)
+      if (!append) {
+        const { count } = await supabase
+          .from("profiles")
+          .select("*", { count: 'exact', head: true });
+        setTotalCount(count || 0);
+      }
+
+      // Fetch profiles with pagination
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, user_id, first_name, last_name, username, avatar_url, last_seen, is_verified, member_label")
+        .range(from, to)
+        .order('created_at', { ascending: true });
+
+      if (profilesError) throw profilesError;
+
+      // Merge profiles with roles
+      const membersWithRoles: MemberWithRole[] = (profiles || []).map((profile) => {
+        const userRole = allRoles.find((r) => r.user_id === profile.user_id);
+        return {
+          ...profile,
+          role: (userRole?.role as 'admin' | 'moderator' | 'user') || 'user',
+        };
+      });
+
+      // Sort: admins first, then moderators, then users
+      const roleOrder = { admin: 0, moderator: 1, user: 2 };
+      membersWithRoles.sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
+
+      if (append) {
+        setMembers(prev => [...prev, ...membersWithRoles]);
+      } else {
+        setMembers(membersWithRoles);
+      }
+
+      setHasMore((profiles?.length || 0) === PAGE_SIZE);
+      setPage(pageNum);
+    } catch (error) {
+      console.error("Error fetching members:", error);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user && allRoles.length > 0) {
+      fetchMembers(0);
+    }
+  }, [user, allRoles]);
+
+  const loadMore = () => {
+    if (!loadingMore && hasMore) {
+      fetchMembers(page + 1, true);
+    }
+  };
 
   const handleStartChat = (memberId: string) => {
     const member = members.find((m) => m.user_id === memberId);
@@ -154,27 +202,10 @@ const MemberDashboardPage = () => {
   };
 
   const handleManageSuccess = async () => {
-    // Refetch members to get updated data
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("id, user_id, first_name, last_name, username, avatar_url, last_seen, is_verified, member_label");
-    
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("user_id, role");
-    
-    if (profiles && roles) {
-      const membersWithRoles: MemberWithRole[] = profiles.map((profile) => {
-        const userRole = roles.find((r) => r.user_id === profile.user_id);
-        return {
-          ...profile,
-          role: (userRole?.role as 'admin' | 'moderator' | 'user') || 'user',
-        };
-      });
-      const roleOrder = { admin: 0, moderator: 1, user: 2 };
-      membersWithRoles.sort((a, b) => roleOrder[a.role] - roleOrder[b.role]);
-      setMembers(membersWithRoles);
-    }
+    // Just refetch the current page to get updated data
+    setPage(0);
+    setMembers([]);
+    fetchMembers(0);
   };
 
   const filteredMembers = members.filter((member) => {
@@ -228,15 +259,20 @@ const MemberDashboardPage = () => {
           </TabsList>
 
           <TabsContent value="members">
-            {/* Search */}
-            <div className="relative mb-8 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-              <Input
-                placeholder="Search members..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
+            {/* Member count and Search */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+              <div className="relative max-w-md flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+                <Input
+                  placeholder="Search members..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Showing {members.length} of {totalCount} members
+              </p>
             </div>
 
             {/* Members Grid */}
@@ -249,20 +285,43 @@ const MemberDashboardPage = () => {
                 {searchQuery ? "No members found matching your search." : "No members yet."}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredMembers.map((member) => (
-                  <MemberCard
-                    key={member.id}
-                    member={member}
-                    currentUserId={user.id}
-                    onStartChat={handleStartChat}
-                    unreadCount={getUnreadCount(member.user_id)}
-                    isOnline={isUserOnline(member.user_id)}
-                    isAdmin={isCurrentUserAdmin}
-                    onManageMember={handleManageMember}
-                  />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredMembers.map((member) => (
+                    <MemberCard
+                      key={member.id}
+                      member={member}
+                      currentUserId={user.id}
+                      onStartChat={handleStartChat}
+                      unreadCount={getUnreadCount(member.user_id)}
+                      isOnline={isUserOnline(member.user_id)}
+                      isAdmin={isCurrentUserAdmin}
+                      onManageMember={handleManageMember}
+                    />
+                  ))}
+                </div>
+                
+                {/* Load More Button */}
+                {hasMore && !searchQuery && (
+                  <div className="flex justify-center mt-8">
+                    <Button
+                      variant="outline"
+                      onClick={loadMore}
+                      disabled={loadingMore}
+                      className="min-w-[200px]"
+                    >
+                      {loadingMore ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Loading...
+                        </>
+                      ) : (
+                        `Load More Members`
+                      )}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </TabsContent>
 
