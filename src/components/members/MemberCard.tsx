@@ -15,11 +15,15 @@ interface MemberCardProps {
     avatar_url?: string;
     role: 'admin' | 'moderator' | 'user';
     last_seen?: string | null;
+    is_verified?: boolean;
+    member_label?: string | null;
   };
   currentUserId: string;
   onStartChat: (memberId: string) => void;
   unreadCount?: number;
   isOnline?: boolean;
+  isAdmin?: boolean;
+  onManageMember?: (member: MemberCardProps['member']) => void;
 }
 
 const roleIcons = {
@@ -34,11 +38,19 @@ const roleColors = {
   user: "bg-muted text-muted-foreground",
 };
 
-const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0, isOnline = false }: MemberCardProps) => {
+const labelColors: Record<string, string> = {
+  "Developer": "bg-[#1D9BF0] text-white",
+  "Community Manager": "bg-purple-500 text-white",
+  "Member": "bg-muted text-muted-foreground",
+  "Events Organizer": "bg-orange-500 text-white",
+  "Executive Admin": "bg-techgold text-background",
+};
+
+const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0, isOnline = false, isAdmin = false, onManageMember }: MemberCardProps) => {
   const RoleIcon = roleIcons[member.role];
   const isCurrentUser = member.user_id === currentUserId;
   const initials = `${member.first_name?.[0] || ''}${member.last_name?.[0] || ''}`.toUpperCase() || 'U';
-  const isVerified = member.username === 'johnominde' || member.username === 'SYS_DEVE';
+  const isVerified = member.is_verified || false;
 
   return (
     <Card className="bg-card/50 border-border/50 backdrop-blur-sm hover:border-primary/30 transition-all duration-300">
@@ -71,17 +83,19 @@ const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0, isOnl
                 {member.first_name} {member.last_name}
               </h3>
               {isVerified && (
-                <BadgeCheck className="w-5 h-5 text-[#1D9BF0] flex-shrink-0" title="Verified" />
+                <span title="Verified">
+                  <BadgeCheck className="w-5 h-5 text-[#1D9BF0] flex-shrink-0" />
+                </span>
               )}
               {isCurrentUser && (
                 <Badge variant="outline" className="text-xs">You</Badge>
               )}
             </div>
             <p className="text-sm text-muted-foreground">@{member.username}</p>
-            <div className="flex items-center gap-2 mt-2">
-              {isVerified && (
-                <Badge className="text-xs bg-[#1D9BF0] text-white hover:bg-[#1D9BF0]/90">
-                  Developer
+            <div className="flex items-center gap-2 mt-2 flex-wrap">
+              {member.member_label && (
+                <Badge className={`text-xs ${labelColors[member.member_label] || 'bg-muted text-muted-foreground'}`}>
+                  {member.member_label}
                 </Badge>
               )}
               <Badge className={`text-xs ${roleColors[member.role]}`}>
@@ -94,16 +108,27 @@ const MemberCard = ({ member, currentUserId, onStartChat, unreadCount = 0, isOnl
             </div>
           </div>
           
-          {!isCurrentUser && (
-            <Button 
-              size="sm" 
-              onClick={() => onStartChat(member.user_id)}
-              className="bg-primary hover:bg-primary/90"
-            >
-              <MessageCircle className="w-4 h-4 mr-1" />
-              Chat
-            </Button>
-          )}
+          <div className="flex flex-col gap-2">
+            {!isCurrentUser && (
+              <Button 
+                size="sm" 
+                onClick={() => onStartChat(member.user_id)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                <MessageCircle className="w-4 h-4 mr-1" />
+                Chat
+              </Button>
+            )}
+            {isAdmin && !isCurrentUser && onManageMember && (
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => onManageMember(member)}
+              >
+                Manage
+              </Button>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
