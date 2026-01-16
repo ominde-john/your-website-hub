@@ -27,9 +27,9 @@ const Chat: React.FC<ChatProps> = ({
   }, [messages]);
 
   return (
-    <main className="flex-1 flex flex-col bg-slate-50">
+    <main className="flex-1 flex flex-col bg-slate-50 min-h-0">
       {/* Chat Header */}
-      <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between">
+      <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-bold text-slate-800">{conversationName}</h2>
         </div>
@@ -39,7 +39,7 @@ const Chat: React.FC<ChatProps> = ({
       </header>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
+      <div className="flex-1 min-h-0 overflow-y-auto px-6 py-6">
         <div className="max-w-4xl mx-auto space-y-4">
           {messages.map((msg) => {
             const isMine = msg.senderId === currentUserId;
@@ -56,11 +56,13 @@ const Chat: React.FC<ChatProps> = ({
       </div>
 
       {/* Message Input */}
-      <MessageInput
-        messageText={messageText}
-        onMessageChange={onMessageChange}
-        onSendMessage={onSendMessage}
-      />
+      <div className="shrink-0">
+        <MessageInput
+          messageText={messageText}
+          onMessageChange={onMessageChange}
+          onSendMessage={onSendMessage}
+        />
+      </div>
     </main>
   );
 };

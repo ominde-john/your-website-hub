@@ -187,7 +187,7 @@ const Navbar = () => {
               <Phone className="w-3.5 h-3.5 fill-white text-white" /> 0115000514
             </a>
             <a href="mailto:info@teksoft.org" className="flex items-center gap-2 hover:text-techgold transition-colors">
-              <Mail className="w-3.5 h-3.5 fill-white text-white" /> info@teksoft.org
+              <Mail className="w-3.5 h-3.5 fill-white text-white" /> contact@teksoft.co.ke
             </a>
           </div>
           

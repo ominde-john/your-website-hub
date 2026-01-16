@@ -156,7 +156,7 @@ const Footer = () => {
                   <li className="flex items-center">
                     <Mail className="h-5 w-5 text-techgold flex-shrink-0 mr-3" />
                     <a
-                      href="mailto:info@teksoft.org"
+                      href="mailto:contact@teksoft.co.ke"
                       className="text-gray-400 hover:text-white transition duration-200"
                     >
                       contact@teksoft.co.ke
