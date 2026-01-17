@@ -136,7 +136,13 @@ export const TeksoftNavigator = () => {
 
       {/* Chat window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-[350px] sm:w-[400px] h-[500px] bg-background border border-border rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5">
+        <div 
+          className="fixed bottom-24 right-6 z-[100] w-[350px] sm:w-[400px] h-[500px] border border-border rounded-xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5"
+          style={{ 
+            backgroundColor: '#ffffff',
+            boxShadow: '0 -4px 30px rgba(0,0,0,0.3)'
+          }}
+        >
           {/* Header */}
           <div className="bg-primary px-4 py-3 flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
@@ -149,7 +155,7 @@ export const TeksoftNavigator = () => {
           </div>
 
           {/* Messages */}
-          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+          <ScrollArea className="flex-1 p-4" ref={scrollRef} style={{ backgroundColor: '#ffffff' }}>
             <div className="space-y-4">
               {messages.map((message, index) => (
                 <div
@@ -182,7 +188,7 @@ export const TeksoftNavigator = () => {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-4 border-t border-border">
+          <div className="p-4 border-t border-border" style={{ backgroundColor: '#ffffff' }}>
             <div className="flex gap-2">
               <Input
                 value={input}
