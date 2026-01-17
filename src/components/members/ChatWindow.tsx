@@ -262,12 +262,14 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
         onClick={onClose}
       />
       
-      {/* Chat window container - COMPLETELY OPAQUE */}
+      {/* Chat window container - COMPLETELY OPAQUE with backdrop-filter disabled */}
       <div 
-        className="fixed bottom-0 left-0 right-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-[75vh] md:h-[500px] rounded-t-2xl md:rounded-2xl shadow-2xl flex flex-col z-[100] overflow-hidden"
+        className="fixed bottom-0 left-0 right-0 md:inset-auto md:bottom-4 md:right-4 w-full md:w-96 h-[75vh] md:h-[500px] rounded-t-2xl md:rounded-2xl flex flex-col z-[100] overflow-hidden"
         style={{ 
           backgroundColor: '#ffffff',
-          boxShadow: '0 -4px 30px rgba(0,0,0,0.3)'
+          boxShadow: '0 -4px 30px rgba(0,0,0,0.5)',
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none'
         }}
       >
         {/* Header - OPAQUE */}
@@ -309,15 +311,23 @@ const ChatWindow = ({ currentUserId, partner, onClose, isPartnerOnline = false }
         {/* Request Banner */}
         {renderRequestBanner()}
 
-        {/* Messages area - OPAQUE WHITE */}
+        {/* Messages area - FULLY OPAQUE WHITE with no transparency */}
         <div 
-          className="flex-1 overflow-y-auto p-4"
-          style={{ backgroundColor: '#ffffff' }}
+          className="flex-1 overflow-y-auto p-4 relative"
           ref={scrollRef}
+          style={{ 
+            backgroundColor: '#ffffff',
+            isolation: 'isolate'
+          }}
         >
-          <div className="space-y-3">
+          {/* Solid background layer to ensure complete opacity */}
+          <div 
+            className="absolute inset-0" 
+            style={{ backgroundColor: '#ffffff', zIndex: -1 }} 
+          />
+          <div className="space-y-3 relative" style={{ backgroundColor: '#ffffff' }}>
             {messages.length === 0 ? (
-              <p className="text-center text-gray-500 text-sm py-8">
+              <p className="text-center text-gray-500 text-sm py-8" style={{ backgroundColor: '#ffffff' }}>
                 {requestStatus === 'none' 
                   ? "Send a message to start chatting!"
                   : requestStatus === 'pending'
