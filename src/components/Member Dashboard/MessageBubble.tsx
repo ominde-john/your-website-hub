@@ -137,7 +137,13 @@ const MessageBubble = ({ message, isMine }) => {
 };
 
 // Helper Sub-component
-const ActionButton = ({ icon, onClick, active, activeClass, danger }) => (
+const ActionButton = ({ icon, onClick, active = false, activeClass = "", danger = false }: { 
+  icon: React.ReactNode; 
+  onClick?: () => void; 
+  active?: boolean; 
+  activeClass?: string; 
+  danger?: boolean; 
+}) => (
   <button 
     onClick={onClick}
     className={`p-2 rounded-xl transition-all duration-200 ${
