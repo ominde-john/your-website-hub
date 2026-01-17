@@ -17,6 +17,9 @@ import { z } from "zod";
 
 const emailSchema = z.string().email("Please enter a valid email address");
 
+// Timeout duration for email change request (in milliseconds)
+const EMAIL_CHANGE_TIMEOUT_MS = 30000;
+
 interface ChangeEmailDialogProps {
   currentEmail: string;
   onEmailChangeInitiated?: () => void;
@@ -54,9 +57,20 @@ export const ChangeEmailDialog = ({ currentEmail, onEmailChangeInitiated }: Chan
     setLoading(true);
 
     try {
-      const { error: updateError } = await supabase.auth.updateUser({
-        email: newEmail,
+      // Create a timeout promise to prevent indefinite hanging
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error("Request timed out. Please check your internet connection and try again."));
+        }, EMAIL_CHANGE_TIMEOUT_MS);
       });
+
+      // Race between the actual request and the timeout
+      const { error: updateError } = await Promise.race([
+        supabase.auth.updateUser({
+          email: newEmail,
+        }),
+        timeoutPromise,
+      ]) as Awaited<ReturnType<typeof supabase.auth.updateUser>>;
 
       if (updateError) {
         throw updateError;
@@ -75,6 +89,10 @@ export const ChangeEmailDialog = ({ currentEmail, onEmailChangeInitiated }: Chan
       console.error("Error changing email:", err);
       if (err.message?.includes("already registered")) {
         setError("This email is already registered to another account");
+      } else if (err.message?.includes("timed out")) {
+        setError("Request timed out. Please check your internet connection and try again.");
+      } else if (err.message?.includes("rate limit")) {
+        setError("Too many requests. Please wait a few minutes and try again.");
       } else {
         setError(err.message || "Failed to change email. Please try again.");
       }
