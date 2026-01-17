@@ -67,26 +67,7 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
       {/* Conversations Scroll Area */}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         {/* Team Messages Section */}
-        <div className="mt-4 px-3">
-          <div className="flex items-center justify-between px-3 mb-2">
-            <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-              Team Channels
-            </h3>
-            <Plus className="w-3.5 h-3.5 text-slate-400 cursor-pointer hover:text-teal-600" />
-          </div>
-          
-          <div className="space-y-0.5">
-            {filteredConversations.filter(c => c.isGroup).map((conv) => (
-              <ConversationItem
-                key={conv.id}
-                conv={conv}
-                isActive={selectedConversationId === conv.id}
-                onClick={() => onConversationSelect(conv.id)}
-                icon={<Users className="w-4 h-4" />}
-              />
-            ))}
-          </div>
-        </div>
+
 
         {/* Private Messages Section */}
         <div className="mt-6 px-3 pb-4">
