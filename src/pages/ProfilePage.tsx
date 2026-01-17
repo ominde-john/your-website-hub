@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { User, Camera, Loader2 } from "lucide-react";
+import { ChangeEmailDialog } from "@/components/profile/ChangeEmailDialog";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -56,9 +57,23 @@ const ProfilePage = () => {
 
     checkAuthAndLoadProfile();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!session) {
         navigate("/auth");
+        return;
+      }
+      
+      // When email is updated, sync it to the profiles table
+      if (event === 'USER_UPDATED' && session.user.email) {
+        const { error } = await supabase
+          .from("profiles")
+          .update({ email: session.user.email })
+          .eq("user_id", session.user.id);
+        
+        if (!error) {
+          setProfile(prev => ({ ...prev, email: session.user.email || prev.email }));
+          toast.success("Email updated successfully!");
+        }
       }
     });
 
@@ -233,7 +248,15 @@ const ProfilePage = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="email">Email</Label>
+                <ChangeEmailDialog 
+                  currentEmail={profile.email}
+                  onEmailChangeInitiated={() => {
+                    toast.info("Check your email to complete the change");
+                  }}
+                />
+              </div>
               <Input
                 id="email"
                 type="email"
@@ -242,7 +265,7 @@ const ProfilePage = () => {
                 className="bg-muted"
               />
               <p className="text-xs text-muted-foreground">
-                Email cannot be changed
+                Click "Change Email" to update your email address
               </p>
             </div>
 
