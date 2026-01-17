@@ -66,10 +66,6 @@ export interface Profile {
 }
 
 
-// ============================================
-// FILE: mockData.ts
-// ============================================
-import { User, Booking, StatCard, Message, Conversation } from './types';
 
 export const mockCurrentUser: User = {
   id: "user-1",

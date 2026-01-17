@@ -78,7 +78,7 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
           </div>
           
           <div className="space-y-0.5">
-            {filteredConversations.filter(c => !c.isGroup).map((conv) => (
+            {filteredConversations.map((conv) => (
               <ConversationItem
                 key={conv.id}
                 conv={conv}
