@@ -40,6 +40,7 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
+import SubscribersPage from "./pages/admin/SubscribersPage";
 import NotFound from "./pages/NotFound";
 
 
@@ -174,6 +175,9 @@ const App = () => {
                 <Route path="forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="reset-password" element={<ResetPasswordPage />} />
                 <Route path="profile" element={<ProfilePage />} />
+
+                {/* Admin */}
+                <Route path="admin/subscribers" element={<ProtectedRoute><SubscribersPage /></ProtectedRoute>} />
 
                 {/* Legal */}
                 <Route path="terms" element={<TermsOfUsePage />} />

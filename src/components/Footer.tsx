@@ -4,6 +4,7 @@ import { Mail, MapPin, Phone, ArrowUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 import teksoftLogo from "@/assets/teksoft-logo.png";
+import NewsletterForm from "@/components/NewsletterForm";
 
 const Footer = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -173,19 +174,7 @@ const Footer = () => {
                 <p className="text-gray-400 text-sm mb-4">
                   Subscribe to get the latest tech news, updates, and events directly in your inbox.
                 </p>
-                <form className="flex flex-col space-y-3">
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="p-3 rounded-lg border border-gray-700 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-techgold"
-                  />
-                  <button
-                    type="submit"
-                    className="p-3 rounded-lg bg-techgold text-gray-900 font-semibold hover:bg-techgold-dark transition duration-300"
-                  >
-                    Subscribe
-                  </button>
-                </form>
+                <NewsletterForm variant="footer" />
               </div>
             </div>
           </div>
