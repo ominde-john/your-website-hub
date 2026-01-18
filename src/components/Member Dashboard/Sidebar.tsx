@@ -118,7 +118,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeNav, onNavChange }) => {
   const techTeamNavItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "projects", label: "Projects", icon: Home },
-    { id: "team", label: "Team", icon: Users },
+    { id: "profile", label: "profile", icon: Users },
     { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "calendar", label: "Calendar", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: FileText },
@@ -129,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeNav, onNavChange }) => {
   const mobileBottomNavItems = [
     { id: "dashboard", label: "Home", icon: LayoutDashboard },
     { id: "messages", label: "Chats", icon: MessageSquare },
-    { id: "team", label: "Team", icon: Users },
+    { id: "profile", label: "Profile", icon: Users },
     { id: "tasks", label: "Tasks", icon: FileText },
   ];
 
@@ -137,7 +137,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeNav, onNavChange }) => {
   const mobileMenuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "projects", label: "Projects", icon: Home },
-    { id: "team", label: "Team", icon: Users },
+    { id: "profile", label: "Profile", icon: Users },
     { id: "messages", label: "Messages", icon: MessageSquare },
     { id: "calendar", label: "Calendar", icon: Calendar },
     { id: "tasks", label: "Tasks", icon: FileText },
