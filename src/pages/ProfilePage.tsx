@@ -253,7 +253,10 @@ const ProfilePage = () => {
                 <ChangeEmailDialog 
                   currentEmail={profile.email}
                   onEmailChangeInitiated={() => {
-                    toast.info("Check your email to complete the change");
+                    toast.info("Check your new email for the verification code");
+                  }}
+                  onEmailChanged={(newEmail) => {
+                    setProfile(prev => ({ ...prev, email: newEmail }));
                   }}
                 />
               </div>

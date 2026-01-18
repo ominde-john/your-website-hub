@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.send-welcome-email]
 verify_jwt = false
+
+[functions.send-email-change-verification]
+verify_jwt = false
+
+[functions.verify-email-change]
+verify_jwt = false
