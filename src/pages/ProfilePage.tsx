@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { User, Camera, Loader2 } from "lucide-react";
 import { ChangeEmailDialog } from "@/components/profile/ChangeEmailDialog";
+import DeleteAccountDialog from "@/components/profile/DeleteAccountDialog";
+import { Separator } from "@/components/ui/separator";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -299,6 +301,18 @@ const ProfilePage = () => {
                 "Save Changes"
               )}
             </Button>
+
+            {/* Danger Zone */}
+            <Separator className="my-6" />
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-destructive">Danger Zone</h3>
+                <p className="text-sm text-muted-foreground">
+                  Once you delete your account, there is no going back. Please be certain.
+                </p>
+              </div>
+              <DeleteAccountDialog userEmail={profile.email} />
+            </div>
           </CardContent>
         </Card>
       </div>
