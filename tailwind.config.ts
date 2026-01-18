@@ -3,6 +3,7 @@ import type { Config } from "tailwindcss";
 export default {
   darkMode: ["class"],
   content: [
+    "./index.html", // Added for Vite support
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
@@ -10,6 +11,15 @@ export default {
   ],
   prefix: "",
   theme: {
+    // Added responsive breakpoints
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',    // Mobile/tablet breakpoint
+      'lg': '1024px',   // Desktop breakpoint
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -100,6 +110,15 @@ export default {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(-33.33%)" },
         },
+        // Added for mobile sidebar animations
+        "slide-in-left": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "slide-out-left": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -107,6 +126,9 @@ export default {
         "fade-in": "fade-in 0.5s ease-out",
         "fade-up": "fade-up 0.5s ease-out forwards",
         "slide-bg": "slide-bg 15s linear infinite",
+        // Added for mobile sidebar
+        "slide-in-left": "slide-in-left 0.3s ease-out",
+        "slide-out-left": "slide-out-left 0.3s ease-in",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
@@ -114,6 +136,24 @@ export default {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "hero-pattern": "linear-gradient(90deg, #1e88e5 0%, #0d47a1 100%)",
+      },
+      // Added responsive spacing utilities
+      spacing: {
+        'sidebar-sm': '5rem',   // 80px - collapsed sidebar
+        'sidebar-md': '16rem',  // 256px - expanded sidebar
+        'sidebar-lg': '18rem',  // 288px - mobile sidebar
+      },
+      // Added responsive width utilities
+      width: {
+        'sidebar-sm': '5rem',
+        'sidebar-md': '16rem',
+        'sidebar-lg': '18rem',
+      },
+      // Added responsive z-index utilities
+      zIndex: {
+        'sidebar': '40',
+        'sidebar-overlay': '30',
+        'sidebar-toggle': '50',
       },
     },
   },
