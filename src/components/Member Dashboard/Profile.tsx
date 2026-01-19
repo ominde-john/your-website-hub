@@ -37,8 +37,28 @@ import {
   Grid3x3
 } from "lucide-react";
 
-const Profile = () => {
+interface ResumeFile {
+  name: string;
+  size?: string;
+  uploadedDate: string;
+  url?: string;
+}
+
+interface ProfileProps {
+  profile?: {
+    fullName?: string;
+    email?: string;
+    phone?: string;
+    linkedinUrl?: string;
+    hasLinkedIn?: boolean;
+    resumeFile?: ResumeFile | null;
+  };
+  onUpdate?: (updatedProfile: any) => void;
+}
+
+const Profile = ({ profile, onUpdate }: ProfileProps) => {
   const [activeTab, setActiveTab] = useState("resume");
+<<<<<<< HEAD
   const [formData, setFormData] = useState({
     fullName: "Jeremy Bravoge",
     email: "jeremy.bravoge@company.com",
@@ -87,11 +107,27 @@ const Profile = () => {
       legallyAuthorized: false,
       agreeToNotify: false
     }
+=======
+  const [formData, setFormData] = useState<{
+    fullName: string;
+    email: string;
+    phone: string;
+    hasLinkedIn: boolean;
+    linkedinUrl: string;
+    resumeFile: ResumeFile | null;
+  }>({
+    fullName: profile?.fullName || "Jeremy Bravoge",
+    email: profile?.email || "jeremy.bravoge@company.com",
+    phone: profile?.phone || "700 000 000",
+    hasLinkedIn: profile?.hasLinkedIn ?? true,
+    linkedinUrl: profile?.linkedinUrl || "linkedin.com/in/jeremybravoge",
+    resumeFile: profile?.resumeFile || null
+>>>>>>> a306a1252555678119ea131bb2ccc2b6959a7b81
   });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const tabs = [
     { id: "resume", label: "Resume & Contact", icon: <FileText className="w-4 h-4" />, color: "indigo" },
@@ -160,7 +196,7 @@ const Profile = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: Record<string, string> = {};
     if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = "Invalid email format";
