@@ -208,7 +208,7 @@ const PrivacyPolicyPage = () => {
                 If you have any questions about this Privacy Policy or wish to
                 exercise your rights, please contact us at{" "}
                 <span className="text-yellow-400 font-medium">
-                  support@teksoftllc.jonzjohn.com
+                  support@teksoft.co.ke
                 </span>. We will respond to your inquiry within a reasonable timeframe.
               </p>
             </div>
