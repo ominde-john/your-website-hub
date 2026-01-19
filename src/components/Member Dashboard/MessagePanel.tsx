@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Users, Settings, Plus } from "lucide-react";
+import { Search, Settings } from "lucide-react";
 import { Conversation } from "./types";
 
 interface MessagePanelProps {
@@ -7,6 +7,7 @@ interface MessagePanelProps {
   selectedConversationId: string;
   onConversationSelect: (id: string) => void;
   currentUser: {
+    id?: string;
     name: string;
     role: string;
     avatar: string;
@@ -36,6 +37,9 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
                 src={currentUser.avatar}
                 alt={currentUser.name}
                 className="w-10 h-10 rounded-xl object-cover ring-2 ring-transparent group-hover:ring-teal-500 transition-all"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/initials/svg?seed=${currentUser.name}`;
+                }}
               />
               <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
@@ -66,27 +70,33 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
 
       {/* Conversations Scroll Area */}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
-        {/* Team Messages Section */}
-
-
         {/* Private Messages Section */}
-        <div className="mt-6 px-3 pb-4">
+        <div className="mt-4 px-3 pb-4">
           <div className="flex items-center justify-between px-3 mb-2">
             <h3 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
               Direct Messages
             </h3>
+            <span className="text-[10px] font-semibold text-slate-400">
+              {filteredConversations.length}
+            </span>
           </div>
           
-          <div className="space-y-0.5">
-            {filteredConversations.map((conv) => (
-              <ConversationItem
-                key={conv.id}
-                conv={conv}
-                isActive={selectedConversationId === conv.id}
-                onClick={() => onConversationSelect(conv.id)}
-              />
-            ))}
-          </div>
+          {filteredConversations.length === 0 ? (
+            <div className="text-center py-8 text-slate-500 text-sm">
+              {searchQuery ? "No conversations found" : "No conversations yet. Start chatting with members!"}
+            </div>
+          ) : (
+            <div className="space-y-0.5">
+              {filteredConversations.map((conv) => (
+                <ConversationItem
+                  key={conv.id}
+                  conv={conv}
+                  isActive={selectedConversationId === conv.id}
+                  onClick={() => onConversationSelect(conv.id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </aside>
@@ -94,7 +104,13 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
 };
 
 /* Sub-component for Cleaner Code */
-const ConversationItem = ({ conv, isActive, onClick, icon }: any) => (
+interface ConversationItemProps {
+  conv: Conversation;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+const ConversationItem = ({ conv, isActive, onClick }: ConversationItemProps) => (
   <button
     onClick={onClick}
     className={`w-full group flex items-center gap-3 px-3 py-3 rounded-xl transition-all relative ${
@@ -109,34 +125,28 @@ const ConversationItem = ({ conv, isActive, onClick, icon }: any) => (
     )}
 
     <div className="relative flex-shrink-0">
-      {icon ? (
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-          isActive ? "bg-teal-50 text-teal-600" : "bg-slate-200 text-slate-500"
-        }`}>
-          {icon}
-        </div>
-      ) : (
-        <img
-          src={conv.avatar}
-          alt={conv.name}
-          className="w-10 h-10 rounded-xl object-cover shadow-sm"
-        />
-      )}
-      {!icon && conv.isOnline && (
+      <img
+        src={conv.avatar}
+        alt={conv.name}
+        className="w-10 h-10 rounded-xl object-cover shadow-sm"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/initials/svg?seed=${conv.name}`;
+        }}
+      />
+      {conv.isOnline && (
         <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
       )}
     </div>
 
-    <div className="flex-1 overflow-hidden">
+    <div className="flex-1 overflow-hidden text-left">
       <div className="flex justify-between items-baseline mb-0.5">
         <span className={`text-sm truncate ${isActive ? "font-bold text-slate-900" : "font-semibold text-slate-700"}`}>
           {conv.name}
         </span>
-        <span className="text-[10px] text-slate-400 font-medium">12:45 PM</span>
       </div>
       
       <div className="flex items-center justify-between">
-        <p className="text-xs text-slate-500 truncate pr-2">
+        <p className="text-xs text-slate-500 truncate pr-2 max-w-[160px]">
           {conv.lastMessage || "Click to start chatting..."}
         </p>
         {conv.unreadCount > 0 && (
