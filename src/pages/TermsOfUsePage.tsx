@@ -237,7 +237,7 @@ const TermsOfUsePage = () => {
               <p>
                 If you have any questions about these Terms of Use, please contact us at{" "}
                 <span className="text-yellow-400 font-medium">
-                  legal@teksoftllc.jonzjohn.com
+                  legal@teksoft.co.ke
                 </span>. We will respond to your inquiry within a reasonable timeframe.
               </p>
             </div>
