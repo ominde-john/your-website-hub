@@ -14,6 +14,7 @@ import MessagePanel from "./MessagePanel";
 import Chat from "./Chat";
 import Profile from "./Profile";
 import { Message } from "./types";
+import Dashboard from "./Dashboard";
 
 const MemberDashboard = () => {
   const [activeNav, setActiveNav] = useState("messages");
@@ -21,6 +22,7 @@ const MemberDashboard = () => {
   const [selectedConversationId, setSelectedConversationId] = useState("u-4");
   const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [messageText, setMessageText] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
 
   const handleSendMessage = () => {
     if (!messageText.trim()) return;
@@ -50,7 +52,7 @@ const MemberDashboard = () => {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans">
-      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} />
+      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} darkMode={darkMode} setDarkMode={setDarkMode} />
 
       {/* CONTENT WRAPPER */}
       <div className="flex-1 flex min-h-0">
@@ -93,7 +95,15 @@ const MemberDashboard = () => {
               onUpdate={(updatedProfile) => {}}
             />
           </div>
-        ) : (
+        )
+         : activeNav === "dashboard" ? (
+          <div className="flex-1 min-h-0 overflow-y-auto">
+            <Dashboard
+              profile={mockProfile}
+              onUpdate={(updatedProfile) => {}}
+            />
+          </div>
+          ) : (
           <main className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">

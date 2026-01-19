@@ -1,390 +1,306 @@
 import React, { useState, useEffect } from "react";
-import { 
-  LogOut, 
-  ChevronLeft, 
-  ChevronRight, 
-  User, 
-  Bell, 
-  Settings, 
-  Home, 
-  Users, 
-  MessageSquare, 
-  Calendar, 
-  FileText, 
-  BarChart3, 
-  Package, 
-  ShoppingBag, 
-  CreditCard, 
-  Shield, 
-  HelpCircle, 
-  LayoutDashboard,
-  Code2,
-  Terminal,
-  Menu,
-  X
-} from "lucide-react";
-import teksoftLogo from "@/assets/teksoft-logo.png";
+import { LogOut, ChevronLeft, ChevronRight, User, Bell, Settings, Home, Users, MessageSquare, Calendar, FileText, BarChart3, ShoppingBag, LayoutDashboard, Menu, X, Moon, Sun, BadgeCheck, Sparkles, Zap, TrendingUp, Award, Target } from "lucide-react";
 
-interface SidebarItemProps {
-  item: {
-    id: string;
-    icon: React.ComponentType<any>;
-    label: string;
-  };
-  isActive: boolean;
-  onClick: () => void;
-  expanded: boolean;
-  isMobile?: boolean;
-}
+const userData = {
+  name: "Alex Johnson",
+  role: "Senior Developer",
+  avatar: "https://i.pravatar.cc/150?img=32",
+  status: "active",
+  joinDate: "Jan 2023",
+  department: "Engineering",
+  notifications: 5,
+  stats: { projects: 12, tasks: 47, teams: 3 }
+};
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ item, isActive, onClick, expanded, isMobile = false }) => {
+const SidebarItem = ({ item, isActive, onClick, expanded, isMobile = false }) => {
   const Icon = item.icon;
   
-  // For mobile bottom navigation (WhatsApp style)
   if (isMobile) {
     return (
-      <button
-        onClick={onClick}
-        className={`flex flex-col items-center justify-center p-2 flex-1 min-w-0 transition-all duration-200 ${
-          isActive
-            ? "text-blue-600"
-            : "text-slate-500 hover:text-blue-600"
-        }`}
-        title={item.label}
-      >
-        <Icon className={`w-5 h-5 ${isActive ? "text-blue-600" : "text-current"}`} />
-        <span className={`text-xs mt-1 truncate max-w-full ${
-          isActive ? "text-blue-600 font-medium" : "text-slate-500"
-        }`}>
-          {item.label}
-        </span>
+      <button onClick={onClick} className={`relative flex flex-col items-center justify-center p-2 flex-1 min-w-0 transition-all duration-300 group ${isActive ? "text-blue-600" : "text-slate-500 hover:text-blue-600"}`}>
+        <div className="relative">
+          <Icon className={`w-5 h-5 transition-all duration-300 ${isActive ? "text-blue-600 scale-110" : "group-hover:scale-110"}`} />
+          {item.badge > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center font-bold animate-pulse">{item.badge > 9 ? '9+' : item.badge}</span>}
+        </div>
+        <span className={`text-xs mt-1 truncate max-w-full font-medium ${isActive ? "text-blue-600" : "text-slate-500"}`}>{item.label}</span>
+        {isActive && <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-10 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full shadow-lg"></div>}
       </button>
     );
   }
   
-  // For desktop sidebar (original style)
   return (
-    <button
-      onClick={onClick}
-      className={`flex items-center transition-all duration-200 rounded-lg ${
-        expanded ? "w-full px-4 py-3 justify-start" : "w-12 h-12 justify-center mx-auto"
-      } ${
-        isActive
-          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20"
-          : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
-      }`}
-      title={!expanded ? item.label : undefined}
-    >
-      <Icon className={`w-5 h-5 ${isActive ? "text-white" : "text-current"}`} />
-      
-      {/* Show label only when expanded */}
-      {expanded && (
-        <span className={`ml-3 font-medium text-sm ${
-          isActive ? "text-white font-semibold" : "text-slate-700"
-        }`}>
-          {item.label}
-        </span>
-      )}
+    <button onClick={onClick} className={`relative flex items-center transition-all duration-300 rounded-2xl group overflow-hidden ${expanded ? "w-full px-4 py-3.5 justify-start" : "w-14 h-14 justify-center mx-auto"} ${isActive ? "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-xl shadow-blue-500/30" : "text-slate-600 hover:bg-white/60 hover:shadow-lg hover:text-blue-600"}`}>
+      {isActive && <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 animate-pulse"></div>}
+      <div className="relative z-10 flex items-center w-full">
+        <div className="relative">
+          <Icon className={`w-5 h-5 transition-all duration-300 ${isActive ? "text-white scale-110" : "group-hover:scale-125 group-hover:rotate-12"}`} />
+          {item.badge > 0 && <span className="absolute -top-2 -right-2 w-5 h-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg animate-bounce">{item.badge > 9 ? '9+' : item.badge}</span>}
+        </div>
+        {expanded && (
+          <>
+            <span className={`ml-3 font-semibold text-sm ${isActive ? "text-white" : "text-slate-700 group-hover:text-blue-600"}`}>{item.label}</span>
+            {isActive && <div className="ml-auto flex items-center gap-1"><div className="w-2 h-2 bg-white rounded-full animate-pulse"></div></div>}
+          </>
+        )}
+      </div>
     </button>
   );
 };
 
-interface SidebarProps {
-  activeNav: string;
-  onNavChange: (nav: string) => void;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ activeNav, onNavChange }) => {
+const Sidebar = ({ activeNav, onNavChange, darkMode, setDarkMode }) => {
   const [expanded, setExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("dashboard");
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  // Detect mobile screen
   useEffect(() => {
     const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768); // md breakpoint
-      if (window.innerWidth < 768) {
-        setExpanded(false); // Auto-collapse on mobile
-      }
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) setExpanded(false);
     };
-
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Tech Team specific navigation items
-  const techTeamNavItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "projects", label: "Projects", icon: Home },
-    { id: "profile", label: "profile", icon: Users },
-    { id: "messages", label: "Messages", icon: MessageSquare },
-    { id: "calendar", label: "Calendar", icon: Calendar },
-    { id: "tasks", label: "Tasks", icon: FileText },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
+  const navItems = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, badge: 0 },
+    { id: "projects", label: "Projects", icon: Home, badge: 3 },
+    { id: "team", label: "Team", icon: Users, badge: 0 },
+    { id: "messages", label: "Messages", icon: MessageSquare, badge: 7 },
+    { id: "calendar", label: "Calendar", icon: Calendar, badge: 2 },
+    { id: "tasks", label: "Tasks", icon: FileText, badge: 5 },
+    { id: "analytics", label: "Analytics", icon: BarChart3, badge: 0 },
+    { id: "marketplace", label: "Marketplace", icon: ShoppingBag, badge: 0 },
   ];
 
-  // Top 4 items for mobile bottom navigation (like WhatsApp)
   const mobileBottomNavItems = [
-    { id: "dashboard", label: "Home", icon: LayoutDashboard },
-    { id: "messages", label: "Chats", icon: MessageSquare },
-    { id: "profile", label: "Profile", icon: Users },
-    { id: "tasks", label: "Tasks", icon: FileText },
+    { id: "dashboard", label: "Home", icon: LayoutDashboard, badge: 0 },
+    { id: "messages", label: "Chats", icon: MessageSquare, badge: 7 },
+    { id: "tasks", label: "Tasks", icon: FileText, badge: 5 },
+    { id: "team", label: "Team", icon: Users, badge: 0 },
   ];
 
-  // All items for mobile drawer menu
-  const mobileMenuItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "projects", label: "Projects", icon: Home },
-    { id: "profile", label: "Profile", icon: Users },
-    { id: "messages", label: "Messages", icon: MessageSquare },
-    { id: "calendar", label: "Calendar", icon: Calendar },
-    { id: "tasks", label: "Tasks", icon: FileText },
-    { id: "analytics", label: "Analytics", icon: BarChart3 },
-    { id: "profile", label: "Profile", icon: Users },
-    { id: "marketplace", label: "Marketplace", icon: ShoppingBag },
-    { id: "billing", label: "Billing", icon: CreditCard },
-    { id: "security", label: "Security", icon: Shield },
-    { id: "support", label: "Support", icon: HelpCircle },
-  ];
-
-  // WhatsApp-style mobile bottom navigation
   if (isMobile) {
     return (
       <>
-        {/* Mobile Drawer Menu (when hamburger is clicked) */}
         {mobileMenuOpen && (
           <>
-            {/* Overlay */}
-            <div 
-              className="fixed inset-0 bg-black/50 z-40"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            
-            {/* Drawer Menu */}
-            <div className="fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 animate-slide-in-left">
-              {/* Drawer Header */}
-              <div className="p-4 border-b">
-                <div className="flex items-center justify-between">
+            <div className="fixed inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/50 to-indigo-900/80 backdrop-blur-md z-40" onClick={() => setMobileMenuOpen(false)} />
+            <div className="fixed top-0 left-0 h-full w-80 bg-gradient-to-br shadow-2xl z-50 border-r overflow-y-auto transition-colors duration-300" style={{
+              background: darkMode ? 'linear-gradient(to bottom right, rgb(15 23 42), rgb(30 41 59))' : 'linear-gradient(to bottom right, white, rgba(219, 234, 254, 0.3), rgba(224, 231, 255, 0.5))',
+              borderColor: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.2)'
+            }}>
+              <div className={`p-6 border-b backdrop-blur-xl sticky top-0 z-20 transition-colors duration-300 ${darkMode ? 'bg-slate-800/40 border-white/10' : 'bg-white/40 border-white/20'}`}>
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-700 to-indigo-700 rounded-xl flex items-center justify-center shadow-md p-1.5">
-                      <img 
-                        src={teksoftLogo} 
-                        alt="Teksoft Logo" 
-                        className="w-full h-full object-contain"
-                      />
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+                      <Sparkles className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h1 className="font-bold text-slate-800">Teksoft Team</h1>
-                      <p className="text-xs text-slate-500">Tech Community</p>
+                      <h1 className={`font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent`}>Teksoft Team</h1>
+                      <p className={`text-xs font-medium ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>Tech Community</p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 hover:bg-gray-100 rounded-lg"
-                  >
-                    <X className="w-5 h-5" />
+                  <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-white/60 rounded-xl transition-all">
+                    <X className="w-5 h-5 text-slate-600" />
                   </button>
                 </div>
-              </div>
-
-              {/* User Profile in Drawer */}
-              <div className="p-4 border-b">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
-                    <User className="w-5 h-5 text-white" />
+                <div className="bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-2xl p-4 shadow-xl relative overflow-hidden">
+                  <div className="absolute inset-0 bg-white/10"></div>
+                  <div className="relative z-10 flex items-center gap-3 mb-3">
+                    <div className="relative">
+                      <img src={userData.avatar} alt={userData.name} className="w-14 h-14 rounded-2xl border-2 border-white/30 shadow-xl" />
+                      <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
+                        <Zap className="w-3 h-3 text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-white">{userData.name}</h3>
+                        <BadgeCheck className="w-4 h-4 text-yellow-300" />
+                      </div>
+                      <p className="text-sm text-blue-100">{userData.role}</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <span className="font-semibold text-slate-800 block">Tech Lead</span>
-                    <span className="text-xs text-slate-500">@dev_lead</span>
+                  <div className="flex gap-2">
+                    <span className="px-3 py-1 bg-white/20 text-white text-xs rounded-full font-medium">{userData.department}</span>
+                    <span className="px-3 py-1 bg-white/20 text-white text-xs rounded-full font-medium">{userData.status}</span>
                   </div>
-                  <Bell className="w-5 h-5 text-slate-500" />
                 </div>
               </div>
-
-              {/* Menu Items */}
-              <div className="p-2 overflow-y-auto h-[calc(100vh-200px)]">
-                {mobileMenuItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      onNavChange(item.id);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`flex items-center w-full p-3 rounded-lg mb-1 ${
-                      activeNav === item.id
-                        ? "bg-blue-50 text-blue-600"
-                        : "text-slate-700 hover:bg-gray-50"
-                    }`}
-                  >
+              <div className="p-4 border-b border-white/20 bg-white/30">
+                <div className="grid grid-cols-3 gap-2">
+                  {[{l:"Projects",v:userData.stats.projects,i:Target},{l:"Tasks",v:userData.stats.tasks,i:TrendingUp},{l:"Teams",v:userData.stats.teams,i:Award}].map((s,i) => (
+                    <div key={i} className="bg-white/60 rounded-xl p-3 text-center shadow-lg hover:scale-105 transition-all">
+                      <s.i className="w-5 h-5 mx-auto mb-1 text-blue-600" />
+                      <p className="text-2xl font-bold text-slate-800">{s.v}</p>
+                      <p className="text-xs text-slate-600 font-medium">{s.l}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="p-3">
+                {navItems.map(item => (
+                  <button key={item.id} onClick={() => { onNavChange(item.id); setMobileMenuOpen(false); }} className={`flex items-center w-full p-3 rounded-2xl mb-2 transition-all ${activeNav === item.id ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-xl" : "text-slate-700 hover:bg-white/60"}`}>
                     <item.icon className="w-5 h-5 mr-3" />
-                    <span className="font-medium">{item.label}</span>
+                    <span className="font-semibold flex-1 text-left">{item.label}</span>
+                    {item.badge > 0 && <span className="px-2 py-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full font-bold">{item.badge}</span>}
                   </button>
                 ))}
               </div>
-
-              {/* Drawer Footer */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
+              <div className="sticky bottom-0 p-4 border-t border-white/20 bg-white/40 backdrop-blur-xl">
                 <div className="flex items-center justify-between">
-                  <button className="flex items-center gap-2 p-2 text-slate-600 hover:text-red-500">
-                    <LogOut className="w-4 h-4" />
-                    <span className="text-sm">Logout</span>
+                  <button onClick={() => setDarkMode(!darkMode)} className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/60">
+                    {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                    <span className="text-sm font-medium">Theme</span>
                   </button>
-                  <span className="text-xs text-slate-500">v2.4.1</span>
+                  <button onClick={() => setShowLogoutConfirm(true)} className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-red-50 text-red-600">
+                    <LogOut className="w-4 h-4" />
+                    <span className="text-sm font-medium">Logout</span>
+                  </button>
                 </div>
               </div>
             </div>
           </>
         )}
-
-        {/* WhatsApp-style Bottom Navigation */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 md:hidden">
-          <div className="flex items-center justify-between px-2 py-1">
-            {/* Hamburger Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="flex flex-col items-center justify-center p-2 flex-1 min-w-0"
-            >
-              <Menu className="w-5 h-5 text-slate-600" />
-              <span className="text-xs mt-1 text-slate-500">Menu</span>
+        <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-2xl border-t border-white/20 shadow-2xl z-30 md:hidden">
+          <div className="flex items-center px-1 py-2">
+            <button onClick={() => setMobileMenuOpen(true)} className="flex flex-col items-center p-2 flex-1">
+              <div className="relative">
+                <Menu className="w-5 h-5 text-slate-600" />
+                {userData.notifications > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center font-bold">{userData.notifications}</span>}
+              </div>
+              <span className="text-xs mt-1 text-slate-500 font-medium">Menu</span>
             </button>
-
-            {/* Main Navigation Tabs */}
-            {mobileBottomNavItems.map((item) => (
-              <SidebarItem
-                key={item.id}
-                item={item}
-                isActive={activeNav === item.id}
-                onClick={() => onNavChange(item.id)}
-                expanded={false}
-                isMobile={true}
-              />
-            ))}
+            {mobileBottomNavItems.map(item => <SidebarItem key={item.id} item={item} isActive={activeNav === item.id} onClick={() => onNavChange(item.id)} expanded={false} isMobile={true} />)}
           </div>
         </nav>
-
-        {/* Spacer for bottom navigation */}
-        <div className="h-16 md:hidden" />
+        <div className="h-20 md:hidden" />
       </>
     );
   }
 
-  // Desktop Sidebar (Original)
   return (
-    <nav className={`hidden md:flex h-screen bg-gradient-to-b from-white to-blue-50 border-r border-slate-200/60 flex-col transition-all duration-300 shadow-sm ${
-      expanded ? "w-64" : "w-20"
-    }`}>
-      {/* Header with Logo and Toggle - FIXED LOGO SIZING */}
-      <div className="p-5 border-b border-slate-200/60">
-        <div className="flex items-center justify-between">
-          {expanded ? (
-            <div className="flex items-center gap-3">
-              {/* Logo Container for EXPANDED mode - larger */}
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-700 to-indigo-700 rounded-xl flex items-center justify-center shadow-md p-2">
-                <img 
-                  src={teksoftLogo} 
-                  alt="Teksoft Logo" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="font-bold text-slate-800 text-lg bg-gradient-to-r from-blue-700 to-indigo-700 bg-clip-text text-transparent">
-                  Teksoft Team
-                </h1>
-                <p className="text-xs text-slate-500 font-medium">Tech Community</p>
-              </div>
-            </div>
-          ) : (
-            /* Logo Container for COLLAPSED mode - smaller and simplified */
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-700 to-indigo-700 rounded-xl flex items-center justify-center shadow-md p-1.5">
-              <img 
-                src={teksoftLogo} 
-                alt="Teksoft Logo" 
-                className="w-full h-full object-contain"
-              />
-            </div>
-          )}
-          
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="p-2 hover:bg-blue-100 rounded-lg transition-colors duration-200"
-            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
-          >
+    <>
+      <nav className={`hidden md:flex h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50 border-r border-white/20 flex-col transition-all duration-500 shadow-2xl relative ${expanded ? "w-80" : "w-20"}`}>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-50"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="relative p-6 border-b border-white/20 bg-white/40 backdrop-blur-xl z-10">
+          <div className="flex items-center justify-between">
             {expanded ? (
-              <ChevronLeft className="w-4 h-4 text-blue-600" />
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Teksoft Team</h1>
+                  <p className="text-xs text-slate-600 font-medium">Tech Community</p>
+                </div>
+              </div>
             ) : (
-              <ChevronRight className="w-4 h-4 text-blue-600" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Navigation Items */}
-      <div className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
-        {techTeamNavItems.map((item) => (
-          <div key={item.id} className={`${expanded ? "px-2" : "px-1"}`}>
-            <SidebarItem
-              item={item}
-              isActive={activeNav === item.id}
-              onClick={() => onNavChange(item.id)}
-              expanded={expanded}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom Section - User & Actions */}
-      <div className="p-4 border-t border-slate-200/60">
-        {/* Quick Actions */}
-        <div className={`flex ${expanded ? "justify-between mb-4" : "justify-center mb-3"}`}>
-          <button className="p-2 hover:bg-blue-100 rounded-lg relative transition-colors duration-200 group">
-            <Bell className="w-5 h-5 text-slate-600 group-hover:text-blue-600" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-          </button>
-          
-          {expanded && (
-            <button className="p-2 hover:bg-blue-100 rounded-lg transition-colors duration-200 group">
-              <Settings className="w-5 h-5 text-slate-600 group-hover:text-blue-600" />
-            </button>
-          )}
-        </div>
-
-        {/* User Profile */}
-        <div className={`flex items-center ${
-          expanded ? "justify-between p-3 bg-white/80 rounded-xl shadow-sm" : "justify-center p-2"
-        } hover:bg-blue-50 rounded-xl transition-all duration-200 cursor-pointer border border-transparent hover:border-blue-100`}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-sm">
-              <User className="w-5 h-5 text-white" />
-            </div>
-            
-            {expanded && (
-              <div className="flex flex-col">
-                <span className="font-semibold text-slate-800">Tech Lead</span>
-                <span className="text-xs text-slate-500">@dev_lead</span>
+              <div className="w-11 h-11 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl mx-auto">
+                <Sparkles className="w-5 h-5 text-white" />
               </div>
             )}
-          </div>
-          
-          {expanded && (
-            <button className="p-2 hover:bg-blue-100 rounded-lg transition-colors duration-200">
-              <LogOut className="w-4 h-4 text-slate-500 hover:text-red-500" />
+            <button onClick={() => setExpanded(!expanded)} className="p-2 hover:bg-white/60 rounded-xl transition-all">
+              {expanded ? <ChevronLeft className="w-4 h-4 text-blue-600" /> : <ChevronRight className="w-4 h-4 text-blue-600" />}
             </button>
-          )}
+          </div>
         </div>
-        
-        {/* Version Info (only shown when expanded) */}
         {expanded && (
-          <div className="mt-3 pt-3 border-t border-slate-200/60">
-            <p className="text-xs text-slate-500 text-center">
-              Teksoft Team v2.4.1
-            </p>
+          <div className="relative p-4 border-b border-white/20 z-10">
+            <div className="bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-2xl p-4 shadow-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-white/10"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="relative">
+                    <img src={userData.avatar} alt={userData.name} className="w-14 h-14 rounded-2xl border-2 border-white/30 shadow-xl" />
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
+                      <Zap className="w-3 h-3 text-white" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-white text-sm truncate">{userData.name}</h3>
+                      <BadgeCheck className="w-4 h-4 text-yellow-300" />
+                    </div>
+                    <p className="text-xs text-blue-100 truncate">{userData.role}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <span className="px-3 py-1 bg-white/20 text-white text-xs rounded-full font-medium">{userData.department}</span>
+                  <span className="px-3 py-1 bg-white/20 text-white text-xs rounded-full font-medium">{userData.status}</span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
-      </div>
-    </nav>
+        <div className="relative flex-1 px-3 py-6 space-y-2 overflow-y-auto z-10">
+          {navItems.map(item => (
+            <div key={item.id} className={expanded ? "px-2" : "px-0"}>
+              <SidebarItem item={item} isActive={activeNav === item.id} onClick={() => onNavChange(item.id)} expanded={expanded} />
+            </div>
+          ))}
+        </div>
+        <div className="relative p-4 border-t border-white/20 space-y-3 bg-white/30 backdrop-blur-xl z-10">
+          <div className={`flex gap-2 ${expanded ? "justify-between" : "justify-center"}`}>
+            <button className="p-2.5 hover:bg-white/60 rounded-xl relative transition-all group">
+              <Bell className="w-5 h-5 text-slate-600 group-hover:text-blue-600" />
+              {userData.notifications > 0 && <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center font-bold">{userData.notifications}</span>}
+            </button>
+            {expanded && (
+              <>
+                <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 hover:bg-white/60 rounded-xl transition-all">
+                  {darkMode ? <Sun className="w-5 h-5 text-slate-600" /> : <Moon className="w-5 h-5 text-slate-600" />}
+                </button>
+                <button className="p-2.5 hover:bg-white/60 rounded-xl transition-all">
+                  <Settings className="w-5 h-5 text-slate-600" />
+                </button>
+              </>
+            )}
+          </div>
+          <div className={`flex items-center ${expanded ? "justify-between p-3 bg-white/60 rounded-2xl shadow-lg" : "justify-center p-2"} hover:bg-white/80 transition-all cursor-pointer group`}>
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <User className="w-5 h-5 text-white" />
+              </div>
+              {expanded && (
+                <div>
+                  <p className="font-semibold text-sm text-slate-800">{userData.name}</p>
+                  <p className="text-xs text-slate-500">{userData.role}</p>
+                </div>
+              )}
+            </div>
+            {expanded && (
+              <button onClick={() => setShowLogoutConfirm(true)} className="p-2 hover:bg-red-50 rounded-xl transition-all">
+                <LogOut className="w-4 h-4 text-slate-500 hover:text-red-500" />
+              </button>
+            )}
+          </div>
+          {expanded && <div className="pt-3 border-t border-white/20"><p className="text-xs text-slate-500 text-center">✨ Teksoft Team v3.0</p></div>}
+        </div>
+      </nav>EE
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-gradient-to-br from-slate-900/80 to-indigo-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+          <div className="bg-white/90 backdrop-blur-2xl rounded-3xl shadow-2xl max-w-md w-full p-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+                <LogOut className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">Logout Confirmation</h3>
+              <p className="text-slate-600 mb-6">Are you sure you want to log out?</p>
+              <div className="flex gap-3">
+                <button onClick={() => setShowLogoutConfirm(false)} className="flex-1 px-4 py-3 border-2 border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50">Cancel</button>
+                <button onClick={() => { console.log("Logged out"); setShowLogoutConfirm(false); }} className="flex-1 px-4 py-3 bg-gradient-to-r from-red-600 to-pink-600 text-white font-semibold rounded-xl hover:shadow-xl">Yes, Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
-export { Sidebar, SidebarItem };
+export { Sidebar };
