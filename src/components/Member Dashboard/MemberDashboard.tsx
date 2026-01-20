@@ -11,10 +11,11 @@ import DashboardContent from "./DashboardContent";
 import MessagePanel from "./MessagePanel";
 import Chat from "./Chat";
 import Profile from "./Profile";
-<<<<<<< HEAD
-import { Message } from "./types";
 import Dashboard from "./Dashboard";
-=======
+import ProjectsSection from "./sections/ProjectsSection";
+import CalendarSection from "./sections/CalendarSection";
+import TasksSection from "./sections/TasksSection";
+import AnalyticsSection from "./sections/AnalyticsSection";
 import { Message, StatCard, Conversation, User } from "./types";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -40,25 +41,21 @@ interface DBProfile {
   is_verified: boolean | null;
   member_label: string | null;
 }
->>>>>>> a306a1252555678119ea131bb2ccc2b6959a7b81
 
 const MemberDashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const [activeNav, setActiveNav] = useState("messages");
+  const [activeNav, setActiveNav] = useState("dashboard");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageText, setMessageText] = useState("");
-<<<<<<< HEAD
   const [darkMode, setDarkMode] = useState(false);
-=======
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentUserProfile, setCurrentUserProfile] = useState<DBProfile | null>(null);
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [profiles, setProfiles] = useState<Map<string, DBProfile>>(new Map());
->>>>>>> a306a1252555678119ea131bb2ccc2b6959a7b81
 
   const { getUnreadCount } = useUnreadMessages(user?.id);
   const { isUserOnline } = useOnlinePresence(user?.id);
@@ -392,13 +389,10 @@ const MemberDashboard = () => {
     return null;
   }
 
-  return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans">
-      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} darkMode={darkMode} setDarkMode={setDarkMode} />
-
-      {/* CONTENT WRAPPER */}
-      <div className="flex-1 flex min-h-0">
-        {activeNav === "bookings" ? (
+  const renderContent = () => {
+    switch (activeNav) {
+      case "dashboard":
+        return (
           <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
             <DashboardHeader
               searchQuery={searchQuery}
@@ -408,7 +402,13 @@ const MemberDashboard = () => {
               <DashboardContent stats={stats} bookings={[]} />
             </div>
           </main>
-        ) : activeNav === "messages" ? (
+        );
+      
+      case "projects":
+        return <ProjectsSection userId={user.id} />;
+      
+      case "messages":
+        return (
           <div className="flex flex-1 min-h-0 overflow-hidden">
             {loadingConversations ? (
               <div className="flex-1 flex items-center justify-center">
@@ -446,7 +446,19 @@ const MemberDashboard = () => {
               </>
             )}
           </div>
-        ) : activeNav === "profile" ? (
+        );
+      
+      case "calendar":
+        return <CalendarSection userId={user.id} />;
+      
+      case "tasks":
+        return <TasksSection userId={user.id} />;
+      
+      case "analytics":
+        return <AnalyticsSection userId={user.id} />;
+      
+      case "profile":
+        return (
           <div className="flex-1 min-h-0 overflow-y-auto">
             <Profile
               profile={
@@ -466,15 +478,10 @@ const MemberDashboard = () => {
               }}
             />
           </div>
-        )
-         : activeNav === "dashboard" ? (
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            <Dashboard
-              profile={mockProfile}
-              onUpdate={(updatedProfile) => {}}
-            />
-          </div>
-          ) : (
+        );
+      
+      default:
+        return (
           <main className="flex-1 flex items-center justify-center">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-slate-800 mb-2">
@@ -483,7 +490,17 @@ const MemberDashboard = () => {
               <p className="text-slate-500">This section is coming soon</p>
             </div>
           </main>
-        )}
+        );
+    }
+  };
+
+  return (
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans">
+      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} darkMode={darkMode} setDarkMode={setDarkMode} />
+
+      {/* CONTENT WRAPPER */}
+      <div className="flex-1 flex min-h-0">
+        {renderContent()}
       </div>
     </div>
   );
