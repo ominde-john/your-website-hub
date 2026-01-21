@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Settings } from "lucide-react";
+import { Search, Settings, X, ArrowLeft } from "lucide-react";
 import { Conversation } from "./types";
 
 interface MessagePanelProps {
@@ -12,6 +12,8 @@ interface MessagePanelProps {
     role: string;
     avatar: string;
   };
+  isMobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
 const MessagePanel: React.FC<MessagePanelProps> = ({
@@ -19,6 +21,8 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
   selectedConversationId,
   onConversationSelect,
   currentUser,
+  isMobileOpen = false,
+  onMobileClose,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -26,13 +30,47 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
     c.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleConversationSelect = (id: string) => {
+    onConversationSelect(id);
+    // Close panel on mobile after selecting a conversation
+    // On desktop, this has no visual effect since the panel is always visible
+    if (onMobileClose) {
+      onMobileClose();
+    }
+  };
+
   return (
-    <aside className="w-80 bg-slate-50 border-r border-slate-200 flex flex-col h-screen">
+    <>
+      {/* Mobile backdrop */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={onMobileClose}
+        />
+      )}
+      
+      <aside className={`
+        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        fixed md:relative z-50 md:z-auto
+        w-[85vw] max-w-[320px] md:w-80
+        bg-slate-50 border-r border-slate-200 
+        flex flex-col h-full md:h-screen
+        transition-transform duration-300 ease-in-out
+        top-0 left-0 bottom-0
+      `}>
       {/* User Profile Header */}
-      <div className="p-5 bg-white border-b border-slate-200">
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-3">
-            <div className="relative group cursor-pointer">
+      <div className="p-4 md:p-5 bg-white border-b border-slate-200">
+        <div className="flex items-center justify-between mb-4 md:mb-5">
+          {/* Mobile close button */}
+          <button 
+            onClick={onMobileClose}
+            className="p-2 -ml-2 mr-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors md:hidden"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="relative group cursor-pointer flex-shrink-0">
               <img
                 src={currentUser.avatar}
                 alt={currentUser.name}
@@ -43,14 +81,14 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
               />
               <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
-            <div>
-              <h2 className="font-bold text-slate-900 text-sm leading-tight">{currentUser.name}</h2>
-              <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tighter">
+            <div className="min-w-0 flex-1">
+              <h2 className="font-bold text-slate-900 text-sm leading-tight truncate">{currentUser.name}</h2>
+              <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tighter truncate">
                 {currentUser.role}
               </p>
             </div>
           </div>
-          <button className="p-2 text-slate-400 hover:bg-slate-100 rounded-lg transition-colors">
+          <button className="p-2 text-slate-400 hover:bg-slate-100 rounded-lg transition-colors flex-shrink-0">
             <Settings className="w-4 h-4" />
           </button>
         </div>
@@ -69,7 +107,7 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
       </div>
 
       {/* Conversations Scroll Area */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
+      <div className="flex-1 overflow-y-auto custom-scrollbar pb-20 md:pb-4">
         {/* Private Messages Section */}
         <div className="mt-4 px-3 pb-4">
           <div className="flex items-center justify-between px-3 mb-2">
@@ -92,7 +130,7 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
                   key={conv.id}
                   conv={conv}
                   isActive={selectedConversationId === conv.id}
-                  onClick={() => onConversationSelect(conv.id)}
+                  onClick={() => handleConversationSelect(conv.id)}
                 />
               ))}
             </div>
@@ -100,6 +138,7 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
         </div>
       </div>
     </aside>
+    </>
   );
 };
 
