@@ -43,13 +43,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   const [isStarred, setIsStarred] = useState(false);
 
   return (
-    <header className="h-16 px-6 bg-gradient-to-r from-white to-blue-50/30 border-b border-slate-200 flex items-center justify-between shadow-sm">
+    <header className="h-16 px-6 bg-gradient-to-r from-white to-amber-50/30 border-b border-slate-200 flex items-center justify-between shadow-sm">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-3">
           <div className="relative">
             <div className={`relative rounded-xl overflow-hidden ${
               isGroup 
-                ? "bg-gradient-to-br from-blue-100 to-indigo-100 p-2" 
+                ? "bg-gradient-to-br from-amber-100 to-yellow-100 p-2" 
                 : ""
             }`}>
               <img
@@ -66,7 +66,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
               )}
             </div>
             {isGroup && (
-              <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+              <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-techgold rounded-full border-2 border-white flex items-center justify-center">
                 <Users className="w-2 h-2 text-white" />
               </div>
             )}
@@ -78,7 +78,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
                 {isGroup ? "#" : ""}{selectedUser?.name}
               </h3>
               {isGroup && (
-                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">
                   {members} members
                 </span>
               )}
@@ -116,14 +116,14 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       <div className="flex items-center gap-1">
         {!isGroup && (
           <>
-            <button className="w-9 h-9 rounded-lg hover:bg-blue-50 flex items-center justify-center text-slate-600 hover:text-blue-600 transition-all duration-200 group relative">
+            <button className="w-9 h-9 rounded-lg hover:bg-amber-50 flex items-center justify-center text-slate-600 hover:text-techgold transition-all duration-200 group relative">
               <Phone className="w-5 h-5" />
               <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-xs text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 Voice Call
               </div>
             </button>
             
-            <button className="w-9 h-9 rounded-lg hover:bg-blue-50 flex items-center justify-center text-slate-600 hover:text-blue-600 transition-all duration-200 group relative">
+            <button className="w-9 h-9 rounded-lg hover:bg-amber-50 flex items-center justify-center text-slate-600 hover:text-techgold transition-all duration-200 group relative">
               <Video className="w-5 h-5" />
               <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-xs text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 Video Call
@@ -134,7 +134,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         
         <button 
           onClick={() => setIsStarred(!isStarred)}
-          className="w-9 h-9 rounded-lg hover:bg-blue-50 flex items-center justify-center text-slate-600 hover:text-blue-600 transition-all duration-200 group relative"
+          className="w-9 h-9 rounded-lg hover:bg-amber-50 flex items-center justify-center text-slate-600 hover:text-techgold transition-all duration-200 group relative"
         >
           <Star className={`w-5 h-5 ${isStarred ? "fill-amber-400 text-amber-400" : ""}`} />
           <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-xs text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -145,7 +145,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         {onToggleMute && (
           <button 
             onClick={onToggleMute}
-            className="w-9 h-9 rounded-lg hover:bg-blue-50 flex items-center justify-center text-slate-600 hover:text-blue-600 transition-all duration-200 group relative"
+            className="w-9 h-9 rounded-lg hover:bg-amber-50 flex items-center justify-center text-slate-600 hover:text-techgold transition-all duration-200 group relative"
           >
             {isMuted ? <BellOff className="w-5 h-5" /> : <Bell className="w-5 h-5" />}
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-xs text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -154,7 +154,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           </button>
         )}
         
-        <button className="w-9 h-9 rounded-lg hover:bg-blue-50 flex items-center justify-center text-slate-600 hover:text-blue-600 transition-all duration-200 group relative">
+        <button className="w-9 h-9 rounded-lg hover:bg-amber-50 flex items-center justify-center text-slate-600 hover:text-techgold transition-all duration-200 group relative">
           <Search className="w-5 h-5" />
           <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-xs text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
             Search messages
@@ -166,7 +166,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         <div className="relative">
           <button 
             onClick={() => setShowMoreMenu(!showMoreMenu)}
-            className="w-9 h-9 rounded-lg hover:bg-blue-50 flex items-center justify-center text-slate-600 hover:text-blue-600 transition-all duration-200"
+            className="w-9 h-9 rounded-lg hover:bg-amber-50 flex items-center justify-center text-slate-600 hover:text-techgold transition-all duration-200"
           >
             <MoreVertical className="w-5 h-5" />
           </button>
@@ -178,19 +178,19 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
                 {onViewInfo && (
                   <button 
                     onClick={onViewInfo}
-                    className="w-full px-3 py-2.5 text-sm text-slate-700 hover:bg-blue-50 rounded-lg flex items-center gap-3 transition-colors"
+                    className="w-full px-3 py-2.5 text-sm text-slate-700 hover:bg-amber-50 rounded-lg flex items-center gap-3 transition-colors"
                   >
-                    <Info className="w-4 h-4 text-blue-600" />
+                    <Info className="w-4 h-4 text-techgold" />
                     <span>View {isGroup ? "channel" : "user"} info</span>
                   </button>
                 )}
                 
-                <button className="w-full px-3 py-2.5 text-sm text-slate-700 hover:bg-blue-50 rounded-lg flex items-center gap-3 transition-colors">
+                <button className="w-full px-3 py-2.5 text-sm text-slate-700 hover:bg-amber-50 rounded-lg flex items-center gap-3 transition-colors">
                   <Pin className="w-4 h-4 text-amber-600" />
                   <span>Pin conversation</span>
                 </button>
                 
-                <button className="w-full px-3 py-2.5 text-sm text-slate-700 hover:bg-blue-50 rounded-lg flex items-center gap-3 transition-colors">
+                <button className="w-full px-3 py-2.5 text-sm text-slate-700 hover:bg-amber-50 rounded-lg flex items-center gap-3 transition-colors">
                   <Archive className="w-4 h-4 text-slate-600" />
                   <span>Archive chat</span>
                 </button>

@@ -176,7 +176,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ userId }) => {
 
   const getEventTypeColor = (type: string) => {
     switch (type) {
-      case "meeting": return "bg-blue-100 text-blue-700 border-blue-200";
+      case "meeting": return "bg-amber-100 text-amber-700 border-amber-200";
       case "deadline": return "bg-red-100 text-red-700 border-red-200";
       case "reminder": return "bg-amber-100 text-amber-700 border-amber-200";
       case "event": return "bg-purple-100 text-purple-700 border-purple-200";

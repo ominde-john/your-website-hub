@@ -98,9 +98,9 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ userId }) => {
       title: "Total Projects",
       value: stats.totalProjects,
       icon: FileText,
-      color: "from-blue-500 to-indigo-600",
-      bgColor: "bg-blue-50",
-      textColor: "text-blue-600",
+      color: "from-techgold to-amber-600",
+      bgColor: "bg-amber-50",
+      textColor: "text-techgold",
       trend: "+12%",
       trendUp: true
     },
@@ -148,7 +148,7 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ userId }) => {
       title: "Total Messages",
       value: stats.totalMessages,
       icon: MessageSquare,
-      color: "from-cyan-500 to-blue-600",
+      color: "from-cyan-500 to-teal-600",
       bgColor: "bg-cyan-50",
       textColor: "text-cyan-600",
       trend: "+45%",
@@ -223,7 +223,7 @@ const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ userId }) => {
                 </div>
                 <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-techgold to-amber-500 rounded-full"
                     style={{ width: stats.totalProjects ? `${(stats.completedProjects / stats.totalProjects) * 100}%` : "0%" }}
                   />
                 </div>

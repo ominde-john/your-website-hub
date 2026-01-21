@@ -15,7 +15,7 @@ const Dashboard = () => {
   };
 
   const taskStats = [
-    { count: 78, label: 'Active task', color: 'bg-blue-400', icon: '⚙️' },
+    { count: 78, label: 'Active task', color: 'bg-amber-400', icon: '⚙️' },
     { count: 24, label: 'In Progress task', color: 'bg-orange-400', icon: '⚙️' },
     { count: 19, label: 'Complete task', color: 'bg-green-400', icon: '✓' }
   ];
@@ -43,7 +43,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-yellow-100">
       {/* Top Navigation Bar */}
       
 
@@ -69,7 +69,7 @@ const Dashboard = () => {
                 <span>‹ Dec, 2024 ›</span>
               </div>
             </button>
-            <button className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg flex items-center space-x-2 hover:shadow-lg transition-shadow">
+            <button className="px-4 py-2 bg-gradient-to-r from-techgold to-amber-600 text-white rounded-lg flex items-center space-x-2 hover:shadow-lg transition-shadow">
               <Plus className="w-4 h-4" />
               <span>Add task</span>
             </button>
@@ -97,7 +97,7 @@ const Dashboard = () => {
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* XinoTask Brain */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 text-white">
+            <div className="bg-gradient-to-r from-techgold to-amber-600 rounded-2xl p-6 text-white">
               <div className="flex items-center space-x-2 mb-4">
                 <span className="text-sm">⚡</span>
                 <span className="font-semibold">XinoTask Brain</span>
@@ -129,9 +129,9 @@ const Dashboard = () => {
                     <span className="font-semibold">50.0</span>
                   </div>
                 </div>
-                <div className="bg-blue-50 rounded-lg p-3 mb-4">
+                <div className="bg-amber-50 rounded-lg p-3 mb-4">
                   <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center text-white text-xs">
+                    <div className="w-8 h-8 bg-techgold rounded flex items-center justify-center text-white text-xs">
                       📦
                     </div>
                     <div className="flex-1">
@@ -165,7 +165,7 @@ const Dashboard = () => {
                     {[40, 60, 80, 60, 90, 70].map((height, i) => (
                       <div 
                         key={i} 
-                        className="flex-1 bg-blue-500 rounded-t"
+                        className="flex-1 bg-techgold rounded-t"
                         style={{ height: `${height}%` }}
                       ></div>
                     ))}
@@ -181,7 +181,7 @@ const Dashboard = () => {
             <div className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-800">Last Projects <span className="text-gray-400 text-sm">3</span></h3>
-                <button className="text-sm text-blue-500 flex items-center space-x-1 hover:text-blue-600">
+                <button className="text-sm text-techgold flex items-center space-x-1 hover:text-techgold-dark">
                   <ExternalLink className="w-4 h-4" />
                   <span>View on Figma</span>
                 </button>
@@ -231,7 +231,7 @@ const Dashboard = () => {
                   />
                 </svg>
                 <div className="absolute top-4 right-4 space-y-2">
-                  <div className="bg-blue-100 px-2 py-1 rounded text-xs">+ 8 Tasks</div>
+                  <div className="bg-amber-100 px-2 py-1 rounded text-xs">+ 8 Tasks</div>
                   <div className="bg-green-100 px-2 py-1 rounded text-xs">+ 2 Tasks</div>
                   <div className="bg-purple-100 px-2 py-1 rounded text-xs">4 Tasks</div>
                 </div>
@@ -267,7 +267,7 @@ const Dashboard = () => {
               <div className="flex items-end justify-between h-32">
                 <div className="w-8 bg-gray-200 rounded-t" style={{height: '40%'}}></div>
                 <div className="w-8 bg-gray-200 rounded-t" style={{height: '50%'}}></div>
-                <div className="w-8 bg-blue-500 rounded-t" style={{height: '100%'}}></div>
+                <div className="w-8 bg-techgold rounded-t" style={{height: '100%'}}></div>
                 <div className="w-8 bg-gray-200 rounded-t" style={{height: '60%'}}></div>
                 <div className="w-8 bg-gray-200 rounded-t" style={{height: '70%'}}></div>
                 <div className="w-8 bg-gray-200 rounded-t" style={{height: '45%'}}></div>
@@ -283,7 +283,7 @@ const Dashboard = () => {
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
+            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-2xl p-6">
               <h3 className="font-semibold text-gray-800 mb-4">Quick Stats</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -340,8 +340,8 @@ const Dashboard = () => {
                   <tr key={i} className="border-b hover:bg-gray-50">
                     <td className="py-3">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded flex items-center justify-center">
-                          <FileText className="w-4 h-4 text-blue-600" />
+                        <div className="w-8 h-8 bg-amber-100 rounded flex items-center justify-center">
+                          <FileText className="w-4 h-4 text-techgold" />
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-800">Design homepage layout</p>
@@ -362,7 +362,7 @@ const Dashboard = () => {
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         i % 3 === 0 ? 'bg-green-100 text-green-700' :
                         i % 3 === 1 ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-blue-100 text-blue-700'
+                        'bg-amber-100 text-amber-700'
                       }`}>
                         {i % 3 === 0 ? 'Completed' : i % 3 === 1 ? 'In Progress' : 'Pending'}
                       </span>
@@ -383,7 +383,7 @@ const Dashboard = () => {
           </div>
           
           <div className="flex justify-center mt-4">
-            <button className="px-4 py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg">
+            <button className="px-4 py-2 text-sm text-techgold hover:text-techgold-dark hover:bg-amber-50 rounded-lg">
               View All Tasks →
             </button>
           </div>
@@ -398,7 +398,7 @@ const Dashboard = () => {
               key={item.id}
               onClick={() => setActiveNav(item.id)}
               className={`flex flex-col items-center p-2 flex-1 ${
-                activeNav === item.id ? 'text-blue-600' : 'text-gray-500'
+                activeNav === item.id ? 'text-techgold' : 'text-gray-500'
               }`}
             >
               <item.icon className="w-5 h-5" />
