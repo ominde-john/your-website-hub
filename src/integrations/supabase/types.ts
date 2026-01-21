@@ -286,51 +286,135 @@ export type Database = {
         }
         Relationships: []
       }
+      notifications: {
+        Row: {
+          action_url: string | null
+          created_at: string
+          id: string
+          message: string
+          metadata: Json | null
+          read: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          metadata?: Json | null
+          read?: boolean
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          read?: boolean
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
+          availability_status: string | null
           avatar_url: string | null
+          bio: string | null
+          company: string | null
           created_at: string
+          date_of_birth: string | null
           email: string
           first_name: string
+          github_url: string | null
+          headline: string | null
           id: string
+          interests: string[] | null
           is_verified: boolean | null
+          job_title: string | null
+          languages: string[] | null
           last_name: string
           last_seen: string | null
+          linkedin_url: string | null
+          location: string | null
           member_label: string | null
           phone_number: string | null
+          pronouns: string | null
+          skills: string[] | null
+          timezone: string | null
+          twitter_url: string | null
           updated_at: string
           user_id: string
           username: string
+          website: string | null
         }
         Insert: {
+          availability_status?: string | null
           avatar_url?: string | null
+          bio?: string | null
+          company?: string | null
           created_at?: string
+          date_of_birth?: string | null
           email: string
           first_name: string
+          github_url?: string | null
+          headline?: string | null
           id?: string
+          interests?: string[] | null
           is_verified?: boolean | null
+          job_title?: string | null
+          languages?: string[] | null
           last_name: string
           last_seen?: string | null
+          linkedin_url?: string | null
+          location?: string | null
           member_label?: string | null
           phone_number?: string | null
+          pronouns?: string | null
+          skills?: string[] | null
+          timezone?: string | null
+          twitter_url?: string | null
           updated_at?: string
           user_id: string
           username: string
+          website?: string | null
         }
         Update: {
+          availability_status?: string | null
           avatar_url?: string | null
+          bio?: string | null
+          company?: string | null
           created_at?: string
+          date_of_birth?: string | null
           email?: string
           first_name?: string
+          github_url?: string | null
+          headline?: string | null
           id?: string
+          interests?: string[] | null
           is_verified?: boolean | null
+          job_title?: string | null
+          languages?: string[] | null
           last_name?: string
           last_seen?: string | null
+          linkedin_url?: string | null
+          location?: string | null
           member_label?: string | null
           phone_number?: string | null
+          pronouns?: string | null
+          skills?: string[] | null
+          timezone?: string | null
+          twitter_url?: string | null
           updated_at?: string
           user_id?: string
           username?: string
+          website?: string | null
         }
         Relationships: []
       }
@@ -408,6 +492,75 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          calendar_reminders: boolean | null
+          created_at: string
+          email_notifications: boolean | null
+          id: string
+          language: string | null
+          marketing_emails: boolean | null
+          message_notifications: boolean | null
+          profile_visibility: string | null
+          push_notifications: boolean | null
+          session_timeout: number | null
+          show_online_status: boolean | null
+          show_read_receipts: boolean | null
+          show_typing_indicator: boolean | null
+          sms_notifications: boolean | null
+          task_reminders: boolean | null
+          theme: string | null
+          two_factor_enabled: boolean | null
+          updated_at: string
+          user_id: string
+          weekly_digest: boolean | null
+        }
+        Insert: {
+          calendar_reminders?: boolean | null
+          created_at?: string
+          email_notifications?: boolean | null
+          id?: string
+          language?: string | null
+          marketing_emails?: boolean | null
+          message_notifications?: boolean | null
+          profile_visibility?: string | null
+          push_notifications?: boolean | null
+          session_timeout?: number | null
+          show_online_status?: boolean | null
+          show_read_receipts?: boolean | null
+          show_typing_indicator?: boolean | null
+          sms_notifications?: boolean | null
+          task_reminders?: boolean | null
+          theme?: string | null
+          two_factor_enabled?: boolean | null
+          updated_at?: string
+          user_id: string
+          weekly_digest?: boolean | null
+        }
+        Update: {
+          calendar_reminders?: boolean | null
+          created_at?: string
+          email_notifications?: boolean | null
+          id?: string
+          language?: string | null
+          marketing_emails?: boolean | null
+          message_notifications?: boolean | null
+          profile_visibility?: string | null
+          push_notifications?: boolean | null
+          session_timeout?: number | null
+          show_online_status?: boolean | null
+          show_read_receipts?: boolean | null
+          show_typing_indicator?: boolean | null
+          sms_notifications?: boolean | null
+          task_reminders?: boolean | null
+          theme?: string | null
+          two_factor_enabled?: boolean | null
+          updated_at?: string
+          user_id?: string
+          weekly_digest?: boolean | null
         }
         Relationships: []
       }

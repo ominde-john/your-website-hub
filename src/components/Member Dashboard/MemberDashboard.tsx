@@ -10,12 +10,13 @@ import DashboardHeader from "./DashboardHeader";
 import DashboardContent from "./DashboardContent";
 import MessagePanel from "./MessagePanel";
 import Chat from "./Chat";
-import Profile from "./Profile";
-import Dashboard from "./Dashboard";
 import ProjectsSection from "./sections/ProjectsSection";
 import CalendarSection from "./sections/CalendarSection";
 import TasksSection from "./sections/TasksSection";
 import AnalyticsSection from "./sections/AnalyticsSection";
+import NotificationsSection from "./sections/NotificationsSection";
+import SettingsSection from "./sections/SettingsSection";
+import EnhancedProfileSection from "./sections/EnhancedProfileSection";
 import { Message, StatCard, Conversation, User } from "./types";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -458,26 +459,18 @@ const MemberDashboard = () => {
         return <AnalyticsSection userId={user.id} />;
       
       case "profile":
+        return <EnhancedProfileSection userId={user.id} />;
+      
+      case "notifications":
+        return <NotificationsSection userId={user.id} />;
+      
+      case "settings":
         return (
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            <Profile
-              profile={
-                currentUserProfile
-                  ? {
-                      fullName: `${currentUserProfile.first_name} ${currentUserProfile.last_name}`.trim(),
-                      email: currentUserProfile.email,
-                      phone: "",
-                      linkedinUrl: "",
-                      hasLinkedIn: false,
-                      resumeFile: null,
-                    }
-                  : undefined
-              }
-              onUpdate={(updatedProfile) => {
-                console.log("Profile updated:", updatedProfile);
-              }}
-            />
-          </div>
+          <SettingsSection
+            userId={user.id}
+            darkMode={darkMode}
+            setDarkMode={setDarkMode}
+          />
         );
       
       default:
