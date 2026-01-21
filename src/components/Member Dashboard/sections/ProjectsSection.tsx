@@ -341,7 +341,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ userId }) => {
                   </div>
                   <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full transition-all"
+                      className="h-full bg-gradient-to-r from-techgold to-amber-500 rounded-full transition-all"
                       style={{ width: `${project.progress}%` }}
                     />
                   </div>

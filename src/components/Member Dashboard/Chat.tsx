@@ -41,14 +41,14 @@ const Chat: React.FC<ChatProps> = ({
   return (
     <main className="flex-1 flex flex-col bg-white min-h-0 overflow-hidden relative">
       {/* Background Mesh Gradient - Subtle UI Depth */}
-      <div className="absolute inset-0 bg-[radial-gradient(at_top_right,_var(--tw-gradient-stops))] from-blue-50/20 via-white to-slate-50/50 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(at_top_right,_var(--tw-gradient-stops))] from-amber-50/20 via-white to-slate-50/50 pointer-events-none" />
 
       {/* --- Header Section --- */}
       <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 flex items-center justify-between shrink-0 z-10 sticky top-0">
         <div className="flex items-center gap-4">
           <div className={`relative flex items-center justify-center w-12 h-12 rounded-2xl shadow-sm transition-transform hover:scale-105 cursor-pointer ${
             isGroup 
-              ? "bg-gradient-to-tr from-blue-600 to-indigo-400" 
+              ? "bg-gradient-to-tr from-techgold to-amber-400" 
               : "bg-gradient-to-tr from-emerald-500 to-teal-400"
           }`}>
             {isGroup ? <Users className="w-6 h-6 text-white" /> : <Hash className="w-6 h-6 text-white" />}
@@ -100,7 +100,7 @@ const Chat: React.FC<ChatProps> = ({
       {showInfo && (
         <div className="bg-slate-900 text-white px-8 py-3 flex items-center justify-between animate-in slide-in-from-top duration-300">
           <div className="flex items-center gap-4 text-sm">
-            <span className="flex items-center gap-1.5 text-blue-400 font-bold">
+            <span className="flex items-center gap-1.5 text-techgold font-bold">
               <Shield className="w-4 h-4" /> End-to-end Encrypted
             </span>
             <span className="text-slate-400">|</span>
@@ -150,7 +150,7 @@ const HeaderAction = ({ icon, label, onClick, isActive }: any) => (
   <button 
     onClick={onClick}
     className={`p-2.5 rounded-xl transition-all duration-200 group relative ${
-      isActive ? "bg-blue-100 text-blue-600" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+      isActive ? "bg-amber-100 text-techgold" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
     }`}
   >
     {React.cloneElement(icon, { className: "w-5 h-5" })}
@@ -162,8 +162,8 @@ const HeaderAction = ({ icon, label, onClick, isActive }: any) => (
 
 const EmptyState = ({ conversationName }: { conversationName: string }) => (
   <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in zoom-in duration-700">
-    <div className="w-24 h-24 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-[2rem] flex items-center justify-center mb-8 border-2 border-dashed border-blue-200">
-      <Code className="w-10 h-10 text-blue-600" />
+    <div className="w-24 h-24 bg-gradient-to-br from-techgold/10 to-amber-500/10 rounded-[2rem] flex items-center justify-center mb-8 border-2 border-dashed border-amber-200">
+      <Code className="w-10 h-10 text-techgold" />
     </div>
     <h3 className="text-2xl font-black text-slate-900 mb-3">Begin the collaboration</h3>
     <p className="text-slate-500 max-w-sm mx-auto mb-10 leading-relaxed">

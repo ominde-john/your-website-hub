@@ -140,7 +140,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
       onClick={() => !disabled && onChange(!enabled)}
       disabled={disabled}
       className={`relative w-12 h-6 rounded-full transition-all ${
-        enabled ? "bg-blue-600" : "bg-slate-300"
+        enabled ? "bg-techgold" : "bg-slate-300"
       } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
     >
       <div
@@ -154,13 +154,13 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-techgold" />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-blue-50/20 min-h-screen">
+    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-amber-50/20 min-h-screen">
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
@@ -179,7 +179,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                   onClick={() => setActiveSection(section.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all ${
                     activeSection === section.id
-                      ? "bg-blue-50 text-blue-700 border-l-4 border-blue-600"
+                      ? "bg-amber-50 text-amber-700 border-l-4 border-techgold"
                       : "text-slate-600 hover:bg-slate-50 border-l-4 border-transparent"
                   }`}
                 >
@@ -218,7 +218,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                           }}
                           className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                             settings?.theme === theme.id
-                              ? "border-blue-500 bg-blue-50"
+                              ? "border-techgold bg-amber-50"
                               : "border-slate-200 hover:border-slate-300"
                           }`}
                         >
@@ -238,7 +238,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                     <select
                       value={settings?.language || "en"}
                       onChange={(e) => updateSetting("language", e.target.value)}
-                      className="w-full max-w-xs px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full max-w-xs px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-techgold focus:border-transparent"
                     >
                       <option value="en">English</option>
                       <option value="sw">Swahili</option>
@@ -398,7 +398,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                           }
                           className={`p-4 rounded-xl border-2 text-left transition-all ${
                             settings?.profile_visibility === option.id
-                              ? "border-blue-500 bg-blue-50"
+                              ? "border-techgold bg-amber-50"
                               : "border-slate-200 hover:border-slate-300"
                           }`}
                         >

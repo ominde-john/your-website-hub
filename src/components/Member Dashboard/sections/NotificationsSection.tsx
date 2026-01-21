@@ -66,7 +66,7 @@ const NotificationsSection: React.FC<NotificationsSectionProps> = ({ userId }) =
   const getNotificationColor = (type: string) => {
     switch (type) {
       case "message":
-        return "bg-blue-100 text-blue-600";
+        return "bg-amber-100 text-techgold";
       case "calendar":
         return "bg-purple-100 text-purple-600";
       case "task":
@@ -205,13 +205,13 @@ const NotificationsSection: React.FC<NotificationsSectionProps> = ({ userId }) =
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-techgold" />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-blue-50/20 min-h-screen">
+    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-amber-50/20 min-h-screen">
       <div className="max-w-4xl mx-auto p-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -229,7 +229,7 @@ const NotificationsSection: React.FC<NotificationsSectionProps> = ({ userId }) =
                 onClick={() => setFilter("all")}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                   filter === "all"
-                    ? "bg-blue-600 text-white"
+                    ? "bg-techgold text-white"
                     : "text-slate-600 hover:bg-slate-100"
                 }`}
               >
@@ -239,7 +239,7 @@ const NotificationsSection: React.FC<NotificationsSectionProps> = ({ userId }) =
                 onClick={() => setFilter("unread")}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
                   filter === "unread"
-                    ? "bg-blue-600 text-white"
+                    ? "bg-techgold text-white"
                     : "text-slate-600 hover:bg-slate-100"
                 }`}
               >
@@ -249,7 +249,7 @@ const NotificationsSection: React.FC<NotificationsSectionProps> = ({ userId }) =
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-techgold hover:bg-amber-50 rounded-lg transition-all"
               >
                 <CheckCheck className="w-4 h-4" />
                 Mark all read
@@ -295,7 +295,7 @@ const NotificationsSection: React.FC<NotificationsSectionProps> = ({ userId }) =
                   className={`bg-white rounded-xl border ${
                     notification.read
                       ? "border-slate-200"
-                      : "border-blue-200 bg-blue-50/30"
+                      : "border-blue-200 bg-amber-50/30"
                   } p-4 hover:shadow-md transition-all group`}
                 >
                   <div className="flex gap-4">
@@ -342,7 +342,7 @@ const NotificationsSection: React.FC<NotificationsSectionProps> = ({ userId }) =
                       </p>
                     </div>
                     {!notification.read && (
-                      <div className="w-2 h-2 bg-blue-600 rounded-full shrink-0 mt-2" />
+                      <div className="w-2 h-2 bg-techgold rounded-full shrink-0 mt-2" />
                     )}
                   </div>
                 </motion.div>

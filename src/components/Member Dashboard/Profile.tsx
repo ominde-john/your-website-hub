@@ -260,11 +260,11 @@ const Profile = ({ profile, onUpdate }: ProfileProps) => {
   };
 
   return (
-    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20 min-h-screen">
+    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-amber-50/20 min-h-screen">
       <div className="w-full max-w-[1600px] mx-auto">
         
         {/* Header Section */}
-        <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-blue-600 pt-8 pb-20">
+        <div className="bg-gradient-to-r from-techgold via-amber-500 to-amber-600 pt-8 pb-20">
           <div className="px-6 lg:px-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
@@ -394,7 +394,7 @@ const Profile = ({ profile, onUpdate }: ProfileProps) => {
                       <div className="px-6 py-5 border-b border-slate-100 bg-gradient-to-r from-white to-slate-50/50">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                           <div className="flex items-center gap-3">
-                            <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl text-white shadow-lg shadow-indigo-500/25">
+                            <div className="p-2.5 bg-gradient-to-br from-techgold to-amber-600 rounded-xl text-white shadow-lg shadow-techgold/25">
                               <FileText className="w-5 h-5" />
                             </div>
                             <div>
@@ -530,7 +530,7 @@ const Profile = ({ profile, onUpdate }: ProfileProps) => {
                             whileHover={{ y: -2 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={handleSave}
-                            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all flex items-center gap-2"
+                            className="px-6 py-3 bg-gradient-to-r from-techgold to-amber-600 text-white rounded-xl font-semibold shadow-lg shadow-techgold/25 hover:shadow-xl transition-all flex items-center gap-2"
                           >
                             <Check className="w-4 h-4" />
                             Save Changes

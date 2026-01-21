@@ -89,7 +89,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           <div className="flex flex-col gap-2">
             <button 
               onClick={handleFileUpload}
-              className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 group relative"
+              className="p-2 text-slate-500 hover:text-techgold hover:bg-amber-50 rounded-lg transition-all duration-200 group relative"
             >
               <Paperclip className="w-5 h-5" />
               <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 text-xs text-white rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -105,7 +105,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
               onChange={(e) => onMessageChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={isGroup ? "Message #channel..." : "Type your message here..."}
-              className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 resize-none min-h-[44px] max-h-[120px] scrollbar-thin shadow-sm"
+              className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-xl text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-techgold/20 focus:border-techgold transition-all duration-300 resize-none min-h-[44px] max-h-[120px] scrollbar-thin shadow-sm"
               rows={1}
             />
             
@@ -133,7 +133,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
               className={`p-2 rounded-lg transition-all duration-200 group relative ${
                 isRecording 
                   ? "bg-red-100 text-red-600" 
-                  : "text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                  : "text-slate-500 hover:text-techgold hover:bg-amber-50"
               }`}
             >
               <Mic className="w-5 h-5" />
@@ -147,7 +147,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           <button
             onClick={onSendMessage}
             disabled={!messageText.trim()}
-            className="p-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/20 flex items-center justify-center group"
+            className="p-3 rounded-xl bg-gradient-to-r from-techgold to-amber-600 hover:from-techgold-dark hover:to-amber-700 disabled:from-slate-300 disabled:to-slate-400 disabled:cursor-not-allowed text-white transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-techgold/20 flex items-center justify-center group"
           >
             <Send className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
           </button>

@@ -173,7 +173,7 @@ const TasksSection: React.FC<TasksSectionProps> = ({ userId }) => {
     switch (priority) {
       case "urgent": return "text-red-600 bg-red-50";
       case "high": return "text-orange-600 bg-orange-50";
-      case "medium": return "text-blue-600 bg-blue-50";
+      case "medium": return "text-techgold bg-amber-50";
       case "low": return "text-slate-600 bg-slate-50";
       default: return "text-slate-600 bg-slate-50";
     }

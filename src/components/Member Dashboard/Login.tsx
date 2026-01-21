@@ -150,12 +150,12 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-yellow-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 w-full max-w-md">
         
         {/* Logo/Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-techgold to-amber-600 rounded-xl mb-4">
             <span className="text-white text-2xl font-bold">T</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-800">Teksoft Team</h1>
@@ -182,7 +182,7 @@ export default function AuthForm() {
                     onChange={(e) => setEmail(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-techgold focus:border-transparent transition"
                     required
                     disabled={isLoading}
                   />
@@ -203,7 +203,7 @@ export default function AuthForm() {
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-techgold focus:border-transparent transition"
                     required
                     disabled={isLoading}
                   />
@@ -226,7 +226,7 @@ export default function AuthForm() {
                     id="remember"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 cursor-pointer text-blue-600 rounded"
+                    className="w-4 h-4 cursor-pointer text-techgold rounded"
                     disabled={isLoading}
                   />
                   <label htmlFor="remember" className="text-gray-600 text-sm cursor-pointer select-none">
@@ -235,7 +235,7 @@ export default function AuthForm() {
                 </div>
                 <button
                   onClick={() => setCurrentPage('forgot')}
-                  className="text-blue-600 hover:text-blue-700 text-sm font-medium transition cursor-pointer hover:underline"
+                  className="text-techgold hover:text-techgold-dark text-sm font-medium transition cursor-pointer hover:underline"
                   disabled={isLoading}
                 >
                   Forgot password?
@@ -257,7 +257,7 @@ export default function AuthForm() {
               <button
                 onClick={handleLogin}
                 disabled={isLoading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-gradient-to-r from-techgold to-amber-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -275,7 +275,7 @@ export default function AuthForm() {
                   Not a member yet?{' '}
                   <button
                     onClick={() => navigate('/register')}
-                    className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
+                    className="text-techgold hover:text-techgold-dark font-medium hover:underline"
                     disabled={isLoading}
                   >
                     Join our community
@@ -319,7 +319,7 @@ export default function AuthForm() {
                     onChange={(e) => setEmail(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="you@example.com"
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-techgold focus:border-transparent transition"
                     required
                     disabled={isLoading}
                   />
@@ -341,7 +341,7 @@ export default function AuthForm() {
               <button
                 onClick={handleForgotPassword}
                 disabled={isLoading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-gradient-to-r from-techgold to-amber-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -387,7 +387,7 @@ export default function AuthForm() {
                   onChange={(e) => setResetCode(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Enter 6-digit code"
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-techgold focus:border-transparent transition"
                   required
                   disabled={isLoading}
                 />
@@ -407,7 +407,7 @@ export default function AuthForm() {
                     onChange={(e) => setNewPassword(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-techgold focus:border-transparent transition"
                     required
                     disabled={isLoading}
                   />
@@ -436,7 +436,7 @@ export default function AuthForm() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="••••••••"
-                    className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-techgold focus:border-transparent transition"
                     required
                     disabled={isLoading}
                   />
@@ -466,7 +466,7 @@ export default function AuthForm() {
               <button
                 onClick={handleResetPassword}
                 disabled={isLoading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-gradient-to-r from-techgold to-amber-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isLoading ? (
                   <>
@@ -487,7 +487,7 @@ export default function AuthForm() {
             By signing in, you agree to our{' '}
             <button
               onClick={() => navigate('/terms')}
-              className="text-blue-600 hover:text-blue-700 hover:underline"
+              className="text-techgold hover:text-techgold-dark hover:underline"
               disabled={isLoading}
             >
               Terms of Service
@@ -495,7 +495,7 @@ export default function AuthForm() {
             and{' '}
             <button
               onClick={() => navigate('/privacy')}
-              className="text-blue-600 hover:text-blue-700 hover:underline"
+              className="text-techgold hover:text-techgold-dark hover:underline"
               disabled={isLoading}
             >
               Privacy Policy
