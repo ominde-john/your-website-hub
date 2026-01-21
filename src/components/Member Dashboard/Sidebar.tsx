@@ -246,7 +246,7 @@ const Sidebar = ({ activeNav, onNavChange, darkMode, setDarkMode }) => {
         </div>
         <div className="relative p-4 border-t border-white/20 space-y-3 bg-white/30 backdrop-blur-xl z-10">
           <div className={`flex gap-2 ${expanded ? "justify-between" : "justify-center"}`}>
-            <button className="p-2.5 hover:bg-white/60 rounded-xl relative transition-all group">
+            <button onClick={() => onNavChange("notifications")} className="p-2.5 hover:bg-white/60 rounded-xl relative transition-all group">
               <Bell className="w-5 h-5 text-slate-600 group-hover:text-blue-600" />
               {userData.notifications > 0 && <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center font-bold">{userData.notifications}</span>}
             </button>
@@ -255,13 +255,13 @@ const Sidebar = ({ activeNav, onNavChange, darkMode, setDarkMode }) => {
                 <button onClick={() => setDarkMode(!darkMode)} className="p-2.5 hover:bg-white/60 rounded-xl transition-all">
                   {darkMode ? <Sun className="w-5 h-5 text-slate-600" /> : <Moon className="w-5 h-5 text-slate-600" />}
                 </button>
-                <button className="p-2.5 hover:bg-white/60 rounded-xl transition-all">
+                <button onClick={() => onNavChange("settings")} className="p-2.5 hover:bg-white/60 rounded-xl transition-all">
                   <Settings className="w-5 h-5 text-slate-600" />
                 </button>
               </>
             )}
           </div>
-          <div className={`flex items-center ${expanded ? "justify-between p-3 bg-white/60 rounded-2xl shadow-lg" : "justify-center p-2"} hover:bg-white/80 transition-all cursor-pointer group`}>
+          <div onClick={() => onNavChange("profile")} className={`flex items-center ${expanded ? "justify-between p-3 bg-white/60 rounded-2xl shadow-lg" : "justify-center p-2"} hover:bg-white/80 transition-all cursor-pointer group`}>
             <div className="flex items-center gap-3">
               <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <User className="w-5 h-5 text-white" />
@@ -274,14 +274,14 @@ const Sidebar = ({ activeNav, onNavChange, darkMode, setDarkMode }) => {
               )}
             </div>
             {expanded && (
-              <button onClick={() => setShowLogoutConfirm(true)} className="p-2 hover:bg-red-50 rounded-xl transition-all">
+              <button onClick={(e) => { e.stopPropagation(); setShowLogoutConfirm(true); }} className="p-2 hover:bg-red-50 rounded-xl transition-all">
                 <LogOut className="w-4 h-4 text-slate-500 hover:text-red-500" />
               </button>
             )}
           </div>
           {expanded && <div className="pt-3 border-t border-white/20"><p className="text-xs text-slate-500 text-center">✨ Teksoft Team v3.0</p></div>}
         </div>
-      </nav>EE
+      </nav>
       {showLogoutConfirm && (
         <div className="fixed inset-0 bg-gradient-to-br from-slate-900/80 to-indigo-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div className="bg-white/90 backdrop-blur-2xl rounded-3xl shadow-2xl max-w-md w-full p-6">
