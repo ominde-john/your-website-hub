@@ -17,7 +17,7 @@ const TaskCard = ({ task }) => (
     <div className="flex items-center justify-between border-t border-gray-50 pt-4">
       <div className="flex -space-x-2">
         {task.members.map((m, i) => (
-          <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gradient-to-tr from-amber-100 to-yellow-100 flex items-center justify-center text-[10px] font-bold text-amber-600">
+          <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gradient-to-tr from-amber-100 to-amber-200 flex items-center justify-center text-[10px] font-bold text-amber-600">
             {m}
           </div>
         ))}
