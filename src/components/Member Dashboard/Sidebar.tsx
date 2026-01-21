@@ -1,15 +1,55 @@
 import React, { useState, useEffect } from "react";
 import { LogOut, ChevronLeft, ChevronRight, User, Bell, Settings, Home, Users, MessageSquare, Calendar, FileText, BarChart3, ShoppingBag, LayoutDashboard, Menu, X, Moon, Sun, BadgeCheck, Sparkles, Zap, TrendingUp, Award, Target } from "lucide-react";
 
-const userData = {
-  name: "Alex Johnson",
-  role: "Senior Developer",
-  avatar: "https://i.pravatar.cc/150?img=32",
-  status: "active",
-  joinDate: "Jan 2023",
-  department: "Engineering",
-  notifications: 5,
-  stats: { projects: 12, tasks: 47, teams: 3 }
+interface UserProfile {
+  id: string;
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
+  avatar_url: string | null;
+  member_label: string | null;
+  is_verified: boolean | null;
+}
+
+interface SidebarProps {
+  activeNav: string;
+  onNavChange: (nav: string) => void;
+  darkMode: boolean;
+  setDarkMode: (mode: boolean) => void;
+  userProfile?: UserProfile | null;
+}
+
+const getDefaultUserData = (profile?: UserProfile | null) => {
+  if (profile) {
+    const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.username || 'Member';
+    const avatarSeed = profile.first_name || profile.last_name || profile.username || 'M';
+    return {
+      name: fullName,
+      role: profile.member_label || "Member",
+      avatar: profile.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${avatarSeed}`,
+      status: "active",
+      joinDate: "",
+      department: profile.member_label || "Member",
+      notifications: 0,
+      stats: { projects: 0, tasks: 0, teams: 0 },
+      isVerified: profile.is_verified || false
+    };
+  }
+  
+  // Fallback placeholder data when profile is loading
+  return {
+    name: "Loading...",
+    role: "Member",
+    avatar: "https://api.dicebear.com/7.x/initials/svg?seed=M",
+    status: "active",
+    joinDate: "",
+    department: "Member",
+    notifications: 0,
+    stats: { projects: 0, tasks: 0, teams: 0 },
+    isVerified: false
+  };
 };
 
 const SidebarItem = ({ item, isActive, onClick, expanded, isMobile = false }) => {
@@ -47,11 +87,14 @@ const SidebarItem = ({ item, isActive, onClick, expanded, isMobile = false }) =>
   );
 };
 
-const Sidebar = ({ activeNav, onNavChange, darkMode, setDarkMode }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeNav, onNavChange, darkMode, setDarkMode, userProfile }) => {
   const [expanded, setExpanded] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  
+  // Use real profile data or fallback to loading state
+  const userData = getDefaultUserData(userProfile);
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -119,7 +162,7 @@ const Sidebar = ({ activeNav, onNavChange, darkMode, setDarkMode }) => {
                     <div>
                       <div className="flex items-center gap-2">
                         <h3 className="font-bold text-white">{userData.name}</h3>
-                        <BadgeCheck className="w-4 h-4 text-yellow-300" />
+                        {userData.isVerified && <BadgeCheck className="w-4 h-4 text-yellow-300" />}
                       </div>
                       <p className="text-sm text-blue-100">{userData.role}</p>
                     </div>
@@ -224,7 +267,7 @@ const Sidebar = ({ activeNav, onNavChange, darkMode, setDarkMode }) => {
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-white text-sm truncate">{userData.name}</h3>
-                      <BadgeCheck className="w-4 h-4 text-yellow-300" />
+                      {userData.isVerified && <BadgeCheck className="w-4 h-4 text-yellow-300" />}
                     </div>
                     <p className="text-xs text-blue-100 truncate">{userData.role}</p>
                   </div>

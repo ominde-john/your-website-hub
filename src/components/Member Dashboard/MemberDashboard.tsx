@@ -489,7 +489,7 @@ const MemberDashboard = () => {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans">
-      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} darkMode={darkMode} setDarkMode={setDarkMode} />
+      <Sidebar activeNav={activeNav} onNavChange={setActiveNav} darkMode={darkMode} setDarkMode={setDarkMode} userProfile={currentUserProfile} />
 
       {/* CONTENT WRAPPER */}
       <div className="flex-1 flex min-h-0">
