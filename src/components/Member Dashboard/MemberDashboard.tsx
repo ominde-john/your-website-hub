@@ -18,7 +18,7 @@ import NotificationsSection from "./sections/NotificationsSection";
 import SettingsSection from "./sections/SettingsSection";
 import EnhancedProfileSection from "./sections/EnhancedProfileSection";
 import { Message, StatCard, Conversation, User } from "./types";
-import { Loader2 } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import { toast } from "sonner";
 
 interface DBMessage {
@@ -57,6 +57,7 @@ const MemberDashboard = () => {
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [profiles, setProfiles] = useState<Map<string, DBProfile>>(new Map());
+  const [isMobilePanelOpen, setIsMobilePanelOpen] = useState(false);
 
   const { getUnreadCount } = useUnreadMessages(user?.id);
   const { isUserOnline } = useOnlinePresence(user?.id);
@@ -410,7 +411,7 @@ const MemberDashboard = () => {
       
       case "messages":
         return (
-          <div className="flex flex-1 min-h-0 overflow-hidden">
+          <div className="flex flex-1 min-h-0 overflow-hidden relative">
             {loadingConversations ? (
               <div className="flex-1 flex items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -422,6 +423,8 @@ const MemberDashboard = () => {
                   selectedConversationId={selectedConversationId || ""}
                   onConversationSelect={setSelectedConversationId}
                   currentUser={currentUser}
+                  isMobileOpen={isMobilePanelOpen}
+                  onMobileClose={() => setIsMobilePanelOpen(false)}
                 />
                 {selectedConversationId ? (
                   <Chat
@@ -431,14 +434,23 @@ const MemberDashboard = () => {
                     onMessageChange={setMessageText}
                     onSendMessage={handleSendMessage}
                     conversationName={selectedConversation?.name || "Messages"}
+                    onMobileMenuOpen={() => setIsMobilePanelOpen(true)}
                   />
                 ) : (
-                  <div className="flex-1 flex items-center justify-center bg-white">
+                  <div className="flex-1 flex flex-col items-center justify-center bg-white px-4">
+                    {/* Mobile button to open conversations list */}
+                    <button
+                      onClick={() => setIsMobilePanelOpen(true)}
+                      className="md:hidden mb-6 flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all"
+                    >
+                      <Users className="w-5 h-5" />
+                      View Conversations
+                    </button>
                     <div className="text-center">
-                      <h3 className="text-xl font-semibold text-slate-700 mb-2">
+                      <h3 className="text-lg md:text-xl font-semibold text-slate-700 mb-2">
                         Select a conversation
                       </h3>
-                      <p className="text-slate-500">
+                      <p className="text-slate-500 text-sm md:text-base">
                         Choose a conversation from the list to start chatting
                       </p>
                     </div>
