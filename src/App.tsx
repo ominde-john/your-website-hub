@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { CartProvider } from "@/hooks/useCart";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/i18n";
 import Cart from "@/components/Cart";
 
 import Layout from "./components/Layout";
@@ -134,9 +135,10 @@ const App = () => {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <CartProvider>
-            <AuthProvider>
-              <TooltipProvider>
+          <LanguageProvider>
+            <CartProvider>
+              <AuthProvider>
+                <TooltipProvider>
                 {/* Global SEO fallback */}
                 <Helmet>
                   <title>Teksoft Community | Empowering Technology Everywhere</title>
@@ -259,8 +261,9 @@ const App = () => {
                   <TeksoftNavigator />
                 </BrowserRouter>
               </TooltipProvider>
-            </AuthProvider>
-          </CartProvider>
+              </AuthProvider>
+            </CartProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </HelmetProvider>

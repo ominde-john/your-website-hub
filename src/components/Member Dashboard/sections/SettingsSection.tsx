@@ -22,6 +22,7 @@ import {
   Monitor,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useLanguage, languageNames, Language } from "@/i18n";
 
 interface UserSettings {
   id: string;
@@ -55,16 +56,17 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
   darkMode,
   setDarkMode,
 }) => {
+  const { language, setLanguage, t } = useLanguage();
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeSection, setActiveSection] = useState("appearance");
 
   const sections = [
-    { id: "appearance", label: "Appearance", icon: Moon },
-    { id: "notifications", label: "Notifications", icon: Bell },
-    { id: "privacy", label: "Privacy", icon: Eye },
-    { id: "security", label: "Security", icon: Shield },
+    { id: "appearance", label: t.settings.appearance, icon: Moon },
+    { id: "notifications", label: t.settings.notifications, icon: Bell },
+    { id: "privacy", label: t.settings.privacy, icon: Eye },
+    { id: "security", label: t.settings.security, icon: Shield },
   ];
 
   useEffect(() => {
@@ -99,7 +101,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
       }
     } catch (error) {
       console.error("Error fetching settings:", error);
-      toast.error("Failed to load settings");
+      toast.error(t.settings.failedToLoad);
     } finally {
       setLoading(false);
     }
@@ -118,13 +120,18 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
       if (error) throw error;
 
       setSettings((prev) => (prev ? { ...prev, [key]: value } : null));
-      toast.success("Setting updated");
+      toast.success(t.settings.settingUpdated);
     } catch (error) {
       console.error("Error updating setting:", error);
-      toast.error("Failed to update setting");
+      toast.error(t.settings.failedToUpdate);
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleLanguageChange = (newLanguage: Language) => {
+    setLanguage(newLanguage);
+    updateSetting("language", newLanguage);
   };
 
   const ToggleSwitch = ({
@@ -163,9 +170,9 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
     <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-amber-50/20 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen">
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Settings</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{t.settings.title}</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
-            Manage your account preferences and privacy
+            {t.settings.subtitle}
           </p>
         </div>
 
@@ -195,19 +202,19 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
             {activeSection === "appearance" && (
               <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
-                  Appearance
+                  {t.settings.appearance}
                 </h2>
 
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-                      Theme
+                      {t.settings.theme}
                     </h3>
                     <div className="grid grid-cols-3 gap-3">
                       {[
-                        { id: "light", label: "Light", icon: Sun },
-                        { id: "dark", label: "Dark", icon: Moon },
-                        { id: "system", label: "System", icon: Monitor },
+                        { id: "light", label: t.settings.light, icon: Sun },
+                        { id: "dark", label: t.settings.dark, icon: Moon },
+                        { id: "system", label: t.settings.system, icon: Monitor },
                       ].map((theme) => (
                         <button
                           key={theme.id}
@@ -233,17 +240,18 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
 
                   <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
                     <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
-                      Language
+                      {t.settings.language}
                     </h3>
                     <select
-                      value={settings?.language || "en"}
-                      onChange={(e) => updateSetting("language", e.target.value)}
+                      value={language}
+                      onChange={(e) => handleLanguageChange(e.target.value as Language)}
                       className="w-full max-w-xs px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-techgold focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
                     >
-                      <option value="en">English</option>
-                      <option value="sw">Swahili</option>
-                      <option value="fr">French</option>
-                      <option value="es">Spanish</option>
+                      {(Object.keys(languageNames) as Language[]).map((lang) => (
+                        <option key={lang} value={lang}>
+                          {languageNames[lang]}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -253,32 +261,32 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
             {activeSection === "notifications" && (
               <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
-                  Notification Preferences
+                  {t.notificationSettings.title}
                 </h2>
 
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
-                      Notification Channels
+                      {t.notificationSettings.channels}
                     </h3>
                     <div className="space-y-4">
                       {[
                         {
                           key: "email_notifications",
-                          label: "Email Notifications",
-                          desc: "Receive notifications via email",
+                          label: t.notificationSettings.emailNotifications,
+                          desc: t.notificationSettings.emailNotificationsDesc,
                           icon: Mail,
                         },
                         {
                           key: "push_notifications",
-                          label: "Push Notifications",
-                          desc: "Browser and mobile push notifications",
+                          label: t.notificationSettings.pushNotifications,
+                          desc: t.notificationSettings.pushNotificationsDesc,
                           icon: Bell,
                         },
                         {
                           key: "sms_notifications",
-                          label: "SMS Notifications",
-                          desc: "Receive text message alerts",
+                          label: t.notificationSettings.smsNotifications,
+                          desc: t.notificationSettings.smsNotificationsDesc,
                           icon: Smartphone,
                         },
                       ].map((item) => (
@@ -314,34 +322,34 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
 
                   <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
                     <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
-                      Activity Notifications
+                      {t.notificationSettings.activityNotifications}
                     </h3>
                     <div className="space-y-4">
                       {[
                         {
                           key: "message_notifications",
-                          label: "Messages",
-                          desc: "New messages and chat activity",
+                          label: t.notificationSettings.messages,
+                          desc: t.notificationSettings.messagesDesc,
                         },
                         {
                           key: "task_reminders",
-                          label: "Task Reminders",
-                          desc: "Upcoming and overdue tasks",
+                          label: t.notificationSettings.taskReminders,
+                          desc: t.notificationSettings.taskRemindersDesc,
                         },
                         {
                           key: "calendar_reminders",
-                          label: "Calendar Reminders",
-                          desc: "Event reminders and updates",
+                          label: t.notificationSettings.calendarReminders,
+                          desc: t.notificationSettings.calendarRemindersDesc,
                         },
                         {
                           key: "weekly_digest",
-                          label: "Weekly Digest",
-                          desc: "Summary of your weekly activity",
+                          label: t.notificationSettings.weeklyDigest,
+                          desc: t.notificationSettings.weeklyDigestDesc,
                         },
                         {
                           key: "marketing_emails",
-                          label: "Marketing Emails",
-                          desc: "Product updates and announcements",
+                          label: t.notificationSettings.marketingEmails,
+                          desc: t.notificationSettings.marketingEmailsDesc,
                         },
                       ].map((item) => (
                         <div
@@ -373,23 +381,23 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
             {activeSection === "privacy" && (
               <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
-                  Privacy Settings
+                  {t.privacySettings.title}
                 </h2>
 
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
-                      Profile Visibility
+                      {t.privacySettings.profileVisibility}
                     </h3>
                     <div className="grid grid-cols-3 gap-3">
                       {[
-                        { id: "public", label: "Public", desc: "Anyone can see" },
+                        { id: "public", label: t.privacySettings.public, desc: t.privacySettings.publicDesc },
                         {
                           id: "members",
-                          label: "Members Only",
-                          desc: "Only members",
+                          label: t.privacySettings.membersOnly,
+                          desc: t.privacySettings.membersOnlyDesc,
                         },
-                        { id: "private", label: "Private", desc: "Only you" },
+                        { id: "private", label: t.privacySettings.private, desc: t.privacySettings.privateDesc },
                       ].map((option) => (
                         <button
                           key={option.id}
@@ -415,24 +423,24 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
 
                   <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
                     <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
-                      Activity Status
+                      {t.privacySettings.activityStatus}
                     </h3>
                     <div className="space-y-4">
                       {[
                         {
                           key: "show_online_status",
-                          label: "Show Online Status",
-                          desc: "Let others see when you're online",
+                          label: t.privacySettings.showOnlineStatus,
+                          desc: t.privacySettings.showOnlineStatusDesc,
                         },
                         {
                           key: "show_read_receipts",
-                          label: "Read Receipts",
-                          desc: "Show when you've read messages",
+                          label: t.privacySettings.readReceipts,
+                          desc: t.privacySettings.readReceiptsDesc,
                         },
                         {
                           key: "show_typing_indicator",
-                          label: "Typing Indicator",
-                          desc: "Show when you're typing a message",
+                          label: t.privacySettings.typingIndicator,
+                          desc: t.privacySettings.typingIndicatorDesc,
                         },
                       ].map((item) => (
                         <div
@@ -465,7 +473,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
               <div className="space-y-6">
                 <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
                   <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
-                    Security Settings
+                    {t.securitySettings.title}
                   </h2>
 
                   <div className="space-y-4">
@@ -476,10 +484,10 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                         </div>
                         <div>
                           <p className="font-medium text-slate-900 dark:text-slate-100">
-                            Two-Factor Authentication
+                            {t.securitySettings.twoFactorAuth}
                           </p>
                           <p className="text-sm text-slate-500 dark:text-slate-400">
-                            Add an extra layer of security
+                            {t.securitySettings.twoFactorAuthDesc}
                           </p>
                         </div>
                       </div>
@@ -494,10 +502,10 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                     <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
                       <div>
                         <p className="font-medium text-slate-900 dark:text-slate-100">
-                          Session Timeout
+                          {t.securitySettings.sessionTimeout}
                         </p>
                         <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Auto-logout after inactivity
+                          {t.securitySettings.sessionTimeoutDesc}
                         </p>
                       </div>
                       <select
@@ -507,11 +515,11 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                         }
                         className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
                       >
-                        <option value={15}>15 minutes</option>
-                        <option value={30}>30 minutes</option>
-                        <option value={60}>1 hour</option>
-                        <option value={120}>2 hours</option>
-                        <option value={0}>Never</option>
+                        <option value={15}>15 {t.securitySettings.minutes}</option>
+                        <option value={30}>30 {t.securitySettings.minutes}</option>
+                        <option value={60}>1 {t.securitySettings.hour}</option>
+                        <option value={120}>2 {t.securitySettings.hours}</option>
+                        <option value={0}>{t.securitySettings.never}</option>
                       </select>
                     </div>
                   </div>
@@ -519,26 +527,26 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
 
                 <div className="bg-white dark:bg-slate-800 rounded-xl border border-red-200 dark:border-red-900/50 p-6">
                   <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">
-                    Danger Zone
+                    {t.securitySettings.dangerZone}
                   </h3>
                   <div className="space-y-3">
                     <button className="flex items-center gap-3 w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-left">
                       <LogOut className="w-5 h-5 text-slate-600 dark:text-slate-400" />
                       <div>
                         <p className="font-medium text-slate-900 dark:text-slate-100">
-                          Sign out all devices
+                          {t.securitySettings.signOutAllDevices}
                         </p>
                         <p className="text-sm text-slate-500 dark:text-slate-400">
-                          End all active sessions
+                          {t.securitySettings.signOutAllDevicesDesc}
                         </p>
                       </div>
                     </button>
                     <button className="flex items-center gap-3 w-full p-4 border border-red-200 dark:border-red-900/50 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-all text-left">
                       <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
                       <div>
-                        <p className="font-medium text-red-600 dark:text-red-400">Delete Account</p>
+                        <p className="font-medium text-red-600 dark:text-red-400">{t.securitySettings.deleteAccount}</p>
                         <p className="text-sm text-slate-500 dark:text-slate-400">
-                          Permanently delete your account
+                          {t.securitySettings.deleteAccountDesc}
                         </p>
                       </div>
                     </button>
