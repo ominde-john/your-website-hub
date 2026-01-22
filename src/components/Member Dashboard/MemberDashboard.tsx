@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "next-themes";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
@@ -46,13 +47,17 @@ interface DBProfile {
 const MemberDashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const { resolvedTheme, setTheme } = useTheme();
   const [activeNav, setActiveNav] = useState("dashboard");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [messageText, setMessageText] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  
+  // Derive darkMode from next-themes
+  const darkMode = resolvedTheme === "dark";
+  const setDarkMode = (value: boolean) => setTheme(value ? "dark" : "light");
   const [currentUserProfile, setCurrentUserProfile] = useState<DBProfile | null>(null);
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [loadingMessages, setLoadingMessages] = useState(false);
@@ -381,7 +386,7 @@ const MemberDashboard = () => {
 
   if (authLoading) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-slate-50">
+      <div className="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-900">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -437,7 +442,7 @@ const MemberDashboard = () => {
                     onMobileMenuOpen={() => setIsMobilePanelOpen(true)}
                   />
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center bg-white px-4">
+                  <div className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-slate-900 px-4">
                     {/* Mobile button to open conversations list */}
                     <button
                       onClick={() => setIsMobilePanelOpen(true)}
@@ -447,10 +452,10 @@ const MemberDashboard = () => {
                       View Conversations
                     </button>
                     <div className="text-center">
-                      <h3 className="text-lg md:text-xl font-semibold text-slate-700 mb-2">
+                      <h3 className="text-lg md:text-xl font-semibold text-slate-700 dark:text-slate-200 mb-2">
                         Select a conversation
                       </h3>
-                      <p className="text-slate-500 text-sm md:text-base">
+                      <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">
                         Choose a conversation from the list to start chatting
                       </p>
                     </div>
@@ -487,12 +492,12 @@ const MemberDashboard = () => {
       
       default:
         return (
-          <main className="flex-1 flex items-center justify-center">
+          <main className="flex-1 flex items-center justify-center bg-white dark:bg-slate-900">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">
                 {activeNav.charAt(0).toUpperCase() + activeNav.slice(1)}
               </h2>
-              <p className="text-slate-500">This section is coming soon</p>
+              <p className="text-slate-500 dark:text-slate-400">This section is coming soon</p>
             </div>
           </main>
         );
@@ -500,7 +505,7 @@ const MemberDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 font-sans">
+    <div className="flex h-screen w-screen overflow-hidden bg-slate-50 dark:bg-slate-900 font-sans">
       <Sidebar activeNav={activeNav} onNavChange={setActiveNav} darkMode={darkMode} setDarkMode={setDarkMode} userProfile={currentUserProfile} />
 
       {/* CONTENT WRAPPER */}

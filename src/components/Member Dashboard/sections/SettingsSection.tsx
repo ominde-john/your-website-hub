@@ -153,18 +153,18 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-slate-50">
+      <div className="flex-1 flex items-center justify-center bg-slate-50 dark:bg-slate-900">
         <Loader2 className="w-8 h-8 animate-spin text-techgold" />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-amber-50/20 min-h-screen">
+    <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-amber-50/20 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen">
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-          <p className="text-slate-500 mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Settings</h1>
+          <p className="text-slate-500 dark:text-slate-400 mt-1">
             Manage your account preferences and privacy
           </p>
         </div>
@@ -172,15 +172,15 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar */}
           <aside className="lg:w-64 shrink-0">
-            <nav className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <nav className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
               {sections.map((section) => (
                 <button
                   key={section.id}
                   onClick={() => setActiveSection(section.id)}
                   className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-all ${
                     activeSection === section.id
-                      ? "bg-amber-50 text-amber-700 border-l-4 border-techgold"
-                      : "text-slate-600 hover:bg-slate-50 border-l-4 border-transparent"
+                      ? "bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-l-4 border-techgold"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 border-l-4 border-transparent"
                   }`}
                 >
                   <section.icon className="w-5 h-5" />
@@ -193,14 +193,14 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
           {/* Content */}
           <main className="flex-1">
             {activeSection === "appearance" && (
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
-                <h2 className="text-lg font-semibold text-slate-900 mb-6">
+              <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
                   Appearance
                 </h2>
 
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-sm font-medium text-slate-700 mb-3">
+                    <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                       Theme
                     </h3>
                     <div className="grid grid-cols-3 gap-3">
@@ -218,12 +218,12 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                           }}
                           className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
                             settings?.theme === theme.id
-                              ? "border-techgold bg-amber-50"
-                              : "border-slate-200 hover:border-slate-300"
+                              ? "border-techgold bg-amber-50 dark:bg-amber-900/30"
+                              : "border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500"
                           }`}
                         >
-                          <theme.icon className="w-6 h-6" />
-                          <span className="text-sm font-medium">
+                          <theme.icon className={`w-6 h-6 ${settings?.theme === theme.id ? "text-techgold" : "text-slate-600 dark:text-slate-400"}`} />
+                          <span className={`text-sm font-medium ${settings?.theme === theme.id ? "text-techgold" : "text-slate-700 dark:text-slate-300"}`}>
                             {theme.label}
                           </span>
                         </button>
@@ -231,14 +231,14 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-200 pt-6">
-                    <h3 className="text-sm font-medium text-slate-700 mb-3">
+                  <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
+                    <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                       Language
                     </h3>
                     <select
                       value={settings?.language || "en"}
                       onChange={(e) => updateSetting("language", e.target.value)}
-                      className="w-full max-w-xs px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-techgold focus:border-transparent"
+                      className="w-full max-w-xs px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-techgold focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
                     >
                       <option value="en">English</option>
                       <option value="sw">Swahili</option>
@@ -251,14 +251,14 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
             )}
 
             {activeSection === "notifications" && (
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
-                <h2 className="text-lg font-semibold text-slate-900 mb-6">
+              <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
                   Notification Preferences
                 </h2>
 
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-sm font-medium text-slate-700 mb-4">
+                    <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
                       Notification Channels
                     </h3>
                     <div className="space-y-4">
@@ -284,17 +284,17 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                       ].map((item) => (
                         <div
                           key={item.key}
-                          className="flex items-center justify-between p-4 bg-slate-50 rounded-xl"
+                          className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                              <item.icon className="w-5 h-5 text-slate-600" />
+                            <div className="w-10 h-10 bg-white dark:bg-slate-600 rounded-lg flex items-center justify-center">
+                              <item.icon className="w-5 h-5 text-slate-600 dark:text-slate-300" />
                             </div>
                             <div>
-                              <p className="font-medium text-slate-900">
+                              <p className="font-medium text-slate-900 dark:text-slate-100">
                                 {item.label}
                               </p>
-                              <p className="text-sm text-slate-500">
+                              <p className="text-sm text-slate-500 dark:text-slate-400">
                                 {item.desc}
                               </p>
                             </div>
@@ -312,8 +312,8 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-200 pt-6">
-                    <h3 className="text-sm font-medium text-slate-700 mb-4">
+                  <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
+                    <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
                       Activity Notifications
                     </h3>
                     <div className="space-y-4">
@@ -349,10 +349,10 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                           className="flex items-center justify-between py-3"
                         >
                           <div>
-                            <p className="font-medium text-slate-900">
+                            <p className="font-medium text-slate-900 dark:text-slate-100">
                               {item.label}
                             </p>
-                            <p className="text-sm text-slate-500">{item.desc}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{item.desc}</p>
                           </div>
                           <ToggleSwitch
                             enabled={
@@ -371,14 +371,14 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
             )}
 
             {activeSection === "privacy" && (
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
-                <h2 className="text-lg font-semibold text-slate-900 mb-6">
+              <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
                   Privacy Settings
                 </h2>
 
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-sm font-medium text-slate-700 mb-4">
+                    <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
                       Profile Visibility
                     </h3>
                     <div className="grid grid-cols-3 gap-3">
@@ -398,14 +398,14 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                           }
                           className={`p-4 rounded-xl border-2 text-left transition-all ${
                             settings?.profile_visibility === option.id
-                              ? "border-techgold bg-amber-50"
-                              : "border-slate-200 hover:border-slate-300"
+                              ? "border-techgold bg-amber-50 dark:bg-amber-900/30"
+                              : "border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500"
                           }`}
                         >
-                          <p className="font-medium text-slate-900">
+                          <p className={`font-medium ${settings?.profile_visibility === option.id ? "text-techgold" : "text-slate-900 dark:text-slate-100"}`}>
                             {option.label}
                           </p>
-                          <p className="text-xs text-slate-500 mt-1">
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                             {option.desc}
                           </p>
                         </button>
@@ -413,8 +413,8 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-200 pt-6">
-                    <h3 className="text-sm font-medium text-slate-700 mb-4">
+                  <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
+                    <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
                       Activity Status
                     </h3>
                     <div className="space-y-4">
@@ -440,10 +440,10 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                           className="flex items-center justify-between py-3"
                         >
                           <div>
-                            <p className="font-medium text-slate-900">
+                            <p className="font-medium text-slate-900 dark:text-slate-100">
                               {item.label}
                             </p>
-                            <p className="text-sm text-slate-500">{item.desc}</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">{item.desc}</p>
                           </div>
                           <ToggleSwitch
                             enabled={
@@ -463,22 +463,22 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
 
             {activeSection === "security" && (
               <div className="space-y-6">
-                <div className="bg-white rounded-xl border border-slate-200 p-6">
-                  <h2 className="text-lg font-semibold text-slate-900 mb-6">
+                <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
                     Security Settings
                   </h2>
 
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                    <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                          <Lock className="w-5 h-5 text-slate-600" />
+                        <div className="w-10 h-10 bg-white dark:bg-slate-600 rounded-lg flex items-center justify-center">
+                          <Lock className="w-5 h-5 text-slate-600 dark:text-slate-300" />
                         </div>
                         <div>
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-slate-900 dark:text-slate-100">
                             Two-Factor Authentication
                           </p>
-                          <p className="text-sm text-slate-500">
+                          <p className="text-sm text-slate-500 dark:text-slate-400">
                             Add an extra layer of security
                           </p>
                         </div>
@@ -491,12 +491,12 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                    <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
                       <div>
-                        <p className="font-medium text-slate-900">
+                        <p className="font-medium text-slate-900 dark:text-slate-100">
                           Session Timeout
                         </p>
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
                           Auto-logout after inactivity
                         </p>
                       </div>
@@ -505,7 +505,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                         onChange={(e) =>
                           updateSetting("session_timeout", parseInt(e.target.value))
                         }
-                        className="px-3 py-2 border border-slate-200 rounded-lg"
+                        className="px-3 py-2 border border-slate-200 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
                       >
                         <option value={15}>15 minutes</option>
                         <option value={30}>30 minutes</option>
@@ -517,27 +517,27 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl border border-red-200 p-6">
-                  <h3 className="text-lg font-semibold text-red-600 mb-4">
+                <div className="bg-white dark:bg-slate-800 rounded-xl border border-red-200 dark:border-red-900/50 p-6">
+                  <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">
                     Danger Zone
                   </h3>
                   <div className="space-y-3">
-                    <button className="flex items-center gap-3 w-full p-4 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all text-left">
-                      <LogOut className="w-5 h-5 text-slate-600" />
+                    <button className="flex items-center gap-3 w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-left">
+                      <LogOut className="w-5 h-5 text-slate-600 dark:text-slate-400" />
                       <div>
-                        <p className="font-medium text-slate-900">
+                        <p className="font-medium text-slate-900 dark:text-slate-100">
                           Sign out all devices
                         </p>
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
                           End all active sessions
                         </p>
                       </div>
                     </button>
-                    <button className="flex items-center gap-3 w-full p-4 border border-red-200 rounded-xl hover:bg-red-50 transition-all text-left">
-                      <Trash2 className="w-5 h-5 text-red-600" />
+                    <button className="flex items-center gap-3 w-full p-4 border border-red-200 dark:border-red-900/50 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-all text-left">
+                      <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
                       <div>
-                        <p className="font-medium text-red-600">Delete Account</p>
-                        <p className="text-sm text-slate-500">
+                        <p className="font-medium text-red-600 dark:text-red-400">Delete Account</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
                           Permanently delete your account
                         </p>
                       </div>
