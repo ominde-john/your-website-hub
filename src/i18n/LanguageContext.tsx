@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { translations, Language, TranslationStrings, languageNames } from './translations';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+
+// Helper function to validate if a string is a valid Language
+const isValidLanguage = (lang: string): lang is Language => {
+  return lang in translations;
+};
 
 interface LanguageContextType {
   language: Language;
@@ -25,8 +31,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     const loadLanguage = async () => {
       try {
         // First check localStorage for immediate loading
-        const storedLang = localStorage.getItem('preferredLanguage') as Language | null;
-        if (storedLang && translations[storedLang]) {
+        const storedLang = localStorage.getItem('preferredLanguage');
+        if (storedLang && isValidLanguage(storedLang)) {
           setLanguageState(storedLang);
         }
 
@@ -39,8 +45,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
             .eq('user_id', user.id)
             .single();
 
-          if (!error && data?.language && translations[data.language as Language]) {
-            setLanguageState(data.language as Language);
+          if (!error && data?.language && isValidLanguage(data.language)) {
+            setLanguageState(data.language);
             localStorage.setItem('preferredLanguage', data.language);
           }
         }
@@ -64,11 +70,12 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         if (user) {
           supabase
             .from('user_settings')
-            .update({ language: lang, updated_at: new Date().toISOString() })
+            .update({ language: lang })
             .eq('user_id', user.id)
             .then(({ error }) => {
               if (error) {
                 console.error('Error saving language to database:', error);
+                toast.error('Failed to save language preference');
               }
             });
         }

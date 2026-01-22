@@ -131,7 +131,7 @@ const SettingsSection: React.FC<SettingsSectionProps> = ({
 
   const handleLanguageChange = (newLanguage: Language) => {
     setLanguage(newLanguage);
-    updateSetting("language", newLanguage);
+    // Note: setLanguage already handles database persistence
   };
 
   const ToggleSwitch = ({
