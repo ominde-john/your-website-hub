@@ -72,21 +72,21 @@ const Hero = () => {
         <div className="max-w-3xl text-center lg:text-left">
 
           {/* SEO-OPTIMIZED H1 with animations */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 animate-fade-in-up">
+          <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 ${!prefersReducedMotion ? 'animate-fade-in-up' : ''}`}>
             <span className="block">Teksoft Community</span>
-            <span className="block text-techgold animate-pulse-slow">
+            <span className={`block text-techgold ${!prefersReducedMotion ? 'animate-pulse-slow' : ''}`}>
               Empowering Technology Everywhere
             </span>
           </h1>
 
           {/* SHORT, CLEAN DESCRIPTION */}
-          <p className="text-lg md:text-xl text-gray-200 mb-8 animate-fade-in-up animation-delay-200">
+          <p className={`text-lg md:text-xl text-gray-200 mb-8 ${!prefersReducedMotion ? 'animate-fade-in-up animation-delay-200' : ''}`}>
             A global technology community for developers, innovators,
             and tech enthusiasts to learn, collaborate, and grow.
           </p>
 
           {/* CTA BUTTONS */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up animation-delay-400">
+          <div className={`flex flex-col sm:flex-row gap-4 justify-center lg:justify-start ${!prefersReducedMotion ? 'animate-fade-in-up animation-delay-400' : ''}`}>
             <Button
               asChild
               size="lg"
@@ -102,20 +102,20 @@ const Hero = () => {
               className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20 transition-all duration-300 hover:scale-105"
             >
               <Link to="/events" className="flex items-center">
-                Explore Events <ChevronRight className="ml-2 h-4 w-4 animate-bounce-x" />
+                Explore Events <ChevronRight className={`ml-2 h-4 w-4 ${!prefersReducedMotion ? 'animate-bounce-x' : ''}`} />
               </Link>
             </Button>
           </div>
 
           {/* WHATSAPP GROUP BUTTON */}
-          <div className="mt-6 flex justify-center lg:justify-start animate-fade-in-up animation-delay-600">
+          <div className={`mt-6 flex justify-center lg:justify-start ${!prefersReducedMotion ? 'animate-fade-in-up animation-delay-600' : ''}`}>
             <a
               href={WHATSAPP_GROUP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe57] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
             >
-              <FaWhatsapp className="h-6 w-6 animate-wiggle" />
+              <FaWhatsapp className={`h-6 w-6 ${!prefersReducedMotion ? 'animate-wiggle' : ''}`} />
               Join Our WhatsApp Group
             </a>
           </div>
