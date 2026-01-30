@@ -4,6 +4,8 @@ import { ChevronRight } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { WHATSAPP_GROUP_URL } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import TypewriterText from "@/components/ui/TypewriterText";
+import WaveText from "@/components/ui/WaveText";
 
 const Hero = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -71,16 +73,42 @@ const Hero = () => {
 
           {/* SEO-OPTIMIZED H1 with animations */}
           <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 ${!prefersReducedMotion ? 'animate-fade-in-up' : ''}`}>
-            <span className="block">Teksoft Community</span>
-            <span className={`block text-techgold ${!prefersReducedMotion ? 'animate-pulse-slow' : ''}`}>
-              Empowering Technology Everywhere
+            <span className="block">
+              {!prefersReducedMotion ? (
+                <TypewriterText 
+                  text="Teksoft Community" 
+                  typingSpeed={100}
+                  deletingSpeed={50}
+                  pauseDuration={2000}
+                />
+              ) : (
+                "Teksoft Community"
+              )}
+            </span>
+            <span className="block text-techgold">
+              {!prefersReducedMotion ? (
+                <WaveText 
+                  text="Empowering Technology Everywhere" 
+                  delay={0.3}
+                  duration={0.03}
+                />
+              ) : (
+                "Empowering Technology Everywhere"
+              )}
             </span>
           </h1>
 
           {/* SHORT, CLEAN DESCRIPTION */}
           <p className={`text-lg md:text-xl text-gray-200 mb-8 ${!prefersReducedMotion ? 'animate-fade-in-up animation-delay-200' : ''}`}>
-            A global technology community for developers, innovators,
-            and tech enthusiasts to learn, collaborate, and grow.
+            {!prefersReducedMotion ? (
+              <WaveText 
+                text="A global technology community for developers, innovators, and tech enthusiasts to learn, collaborate, and grow." 
+                delay={0.5}
+                duration={0.02}
+              />
+            ) : (
+              "A global technology community for developers, innovators, and tech enthusiasts to learn, collaborate, and grow."
+            )}
           </p>
 
           {/* CTA BUTTONS */}

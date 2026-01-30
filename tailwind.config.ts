@@ -145,6 +145,10 @@ export default {
           "25%": { transform: "rotate(-5deg)" },
           "75%": { transform: "rotate(5deg)" },
         },
+        "blink": {
+          "0%, 50%": { opacity: "1" },
+          "51%, 100%": { opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -163,6 +167,7 @@ export default {
         "pulse-slow": "pulse-slow 3s ease-in-out infinite",
         "bounce-x": "bounce-x 1.5s ease-in-out infinite",
         "wiggle": "wiggle 2s ease-in-out infinite",
+        "blink": "blink 1s step-end infinite",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
