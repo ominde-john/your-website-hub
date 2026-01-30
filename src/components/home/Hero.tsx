@@ -57,14 +57,12 @@ const Hero = () => {
       {/* Dark overlay for better text readability - reduced opacity to show video better */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-blue-900/60 to-slate-800/70" />
 
-      {/* Animated floating particles for visual interest */}
+      {/* Animated floating particles for visual interest - limited to 3 for performance */}
       {!prefersReducedMotion && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
           <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-techgold/30 rounded-full animate-float" />
           <div className="absolute top-1/3 right-1/4 w-3 h-3 bg-blue-400/20 rounded-full animate-float-delayed" />
-          <div className="absolute bottom-1/4 left-1/3 w-2 h-2 bg-white/20 rounded-full animate-float-slow" />
-          <div className="absolute top-1/2 right-1/3 w-1.5 h-1.5 bg-techgold/20 rounded-full animate-float" />
-          <div className="absolute bottom-1/3 right-1/5 w-2.5 h-2.5 bg-blue-300/20 rounded-full animate-float-delayed" />
+          <div className="absolute bottom-1/4 right-1/3 w-2 h-2 bg-white/20 rounded-full animate-float-slow" />
         </div>
       )}
 
@@ -99,10 +97,10 @@ const Hero = () => {
               asChild
               size="lg"
               variant="outline"
-              className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20 transition-all duration-300 hover:scale-105"
+              className="group bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-white/15"
             >
               <Link to="/events" className="flex items-center">
-                Explore Events <ChevronRight className={`ml-2 h-4 w-4 ${!prefersReducedMotion ? 'animate-bounce-x' : ''}`} />
+                Explore Events <ChevronRight className={`ml-2 h-4 w-4 transition-transform ${!prefersReducedMotion ? 'group-hover:translate-x-1' : ''}`} />
               </Link>
             </Button>
           </div>
@@ -113,9 +111,9 @@ const Hero = () => {
               href={WHATSAPP_GROUP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe57] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+              className="group inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe57] text-white font-semibold px-6 py-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
             >
-              <FaWhatsapp className={`h-6 w-6 ${!prefersReducedMotion ? 'animate-wiggle' : ''}`} />
+              <FaWhatsapp className={`h-6 w-6 transition-transform ${!prefersReducedMotion ? 'group-hover:rotate-12' : ''}`} />
               Join Our WhatsApp Group
             </a>
           </div>
