@@ -137,3 +137,21 @@
 .btn-accent {
   @apply bg-techgold text-white px-6 py-2 rounded-md hover:bg-techgold-dark transition-all;
 }
+
+/* Animation delay utilities for hero section */
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-600 {
+  animation-delay: 600ms;
+}
+
+/* Start animations with opacity 0 to prevent flash */
+.animate-fade-in-up {
+  opacity: 0;
+}
