@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface TypewriterTextProps {
   text: string;
@@ -16,10 +16,10 @@ const TypewriterText = ({
   pauseDuration = 2000,
 }: TypewriterTextProps) => {
   const [displayText, setDisplayText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const pauseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isDeletingRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isMountedRef = useRef(true);
 
   // Check for reduced motion preference
   useEffect(() => {
@@ -34,32 +34,6 @@ const TypewriterText = ({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  const animateText = useCallback(() => {
-    if (isPaused || prefersReducedMotion) return;
-
-    if (!isDeleting) {
-      // Typing phase
-      if (displayText.length < text.length) {
-        setDisplayText(text.slice(0, displayText.length + 1));
-      } else {
-        // Finished typing, pause before deleting
-        setIsPaused(true);
-        pauseTimeoutRef.current = setTimeout(() => {
-          setIsPaused(false);
-          setIsDeleting(true);
-        }, pauseDuration);
-      }
-    } else {
-      // Deleting phase
-      if (displayText.length > 0) {
-        setDisplayText(text.slice(0, displayText.length - 1));
-      } else {
-        // Finished deleting, start typing again
-        setIsDeleting(false);
-      }
-    }
-  }, [displayText, isDeleting, isPaused, text, pauseDuration, prefersReducedMotion]);
-
   useEffect(() => {
     // If reduced motion is preferred, show full text immediately
     if (prefersReducedMotion) {
@@ -67,15 +41,65 @@ const TypewriterText = ({
       return;
     }
 
-    const speed = isDeleting ? deletingSpeed : typingSpeed;
-    const timer = setTimeout(animateText, speed);
-    return () => {
-      clearTimeout(timer);
-      if (pauseTimeoutRef.current) {
-        clearTimeout(pauseTimeoutRef.current);
+    // Reset state when effect runs
+    isMountedRef.current = true;
+    isDeletingRef.current = false;
+    setDisplayText("");
+
+    const scheduleNextStep = (callback: () => void, delay: number) => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      timerRef.current = setTimeout(() => {
+        if (isMountedRef.current) {
+          callback();
+        }
+      }, delay);
+    };
+
+    const animate = (currentText: string) => {
+      if (!isMountedRef.current) return;
+
+      const isDeleting = isDeletingRef.current;
+
+      if (!isDeleting) {
+        // Typing phase
+        if (currentText.length < text.length) {
+          const newText = text.slice(0, currentText.length + 1);
+          setDisplayText(newText);
+          scheduleNextStep(() => animate(newText), typingSpeed);
+        } else {
+          // Finished typing, pause before deleting
+          scheduleNextStep(() => {
+            isDeletingRef.current = true;
+            animate(currentText);
+          }, pauseDuration);
+        }
+      } else {
+        // Deleting phase
+        if (currentText.length > 0) {
+          const newText = text.slice(0, currentText.length - 1);
+          setDisplayText(newText);
+          scheduleNextStep(() => animate(newText), deletingSpeed);
+        } else {
+          // Finished deleting, start typing again
+          isDeletingRef.current = false;
+          scheduleNextStep(() => animate(""), typingSpeed);
+        }
       }
     };
-  }, [animateText, isDeleting, typingSpeed, deletingSpeed, prefersReducedMotion, text]);
+
+    // Start the animation
+    scheduleNextStep(() => animate(""), typingSpeed);
+
+    return () => {
+      isMountedRef.current = false;
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [text, typingSpeed, deletingSpeed, pauseDuration, prefersReducedMotion]);
 
   // If reduced motion is preferred, just show the text without cursor animation
   if (prefersReducedMotion) {
