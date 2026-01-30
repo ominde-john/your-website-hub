@@ -30,3 +30,4 @@ dist-ssr
 
 # Build output
 dist/
+.env

@@ -23,21 +23,13 @@ import {
   ChevronDown,
   Users,
   Wrench,
-  Cpu,
-  Gamepad2,
-  Shield,
   Rocket,
   Building2,
   School,
   Handshake,
   Trophy,
-  Newspaper,
-  Megaphone,
-  Image,
   Video,
-  Mic,
   Globe,
-  Share2,
   LogOut,
   Facebook,
   Instagram,
@@ -57,20 +49,17 @@ interface Profile {
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [projectsDropdown, setProjectsDropdown] = useState(false);
   const [aboutDropdown, setAboutDropdown] = useState(false);
-  const [mediaDropdown, setMediaDropdown] = useState(false);
-  const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
+  const [companyDropdown, setCompanyDropdown] = useState(false);
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false);
-  const [mobileMediaOpen, setMobileMediaOpen] = useState(false);
+  const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
 
   const { openCart, totalItems } = useCart();
 
   const aboutRef = useRef<HTMLDivElement>(null);
-  const projectsRef = useRef<HTMLDivElement>(null);
-  const mediaRef = useRef<HTMLDivElement>(null);
+  const companyRef = useRef<HTMLDivElement>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -112,12 +101,10 @@ const Navbar = () => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
         !aboutRef.current?.contains(e.target as Node) &&
-        !projectsRef.current?.contains(e.target as Node) &&
-        !mediaRef.current?.contains(e.target as Node)
+        !companyRef.current?.contains(e.target as Node)
       ) {
-        setProjectsDropdown(false);
         setAboutDropdown(false);
-        setMediaDropdown(false);
+        setCompanyDropdown(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -132,23 +119,10 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about", dropdown: true },
-    { name: "Blogs", path: "/blogs" },
+    { name: "Company", path: "/company", dropdown: true },
     { name: "Events", path: "/events" },
-    { name: "Projects", path: "/projects", dropdown: true },
     { name: "Marketplace", path: "/marketplace" },
-    { name: "Media", path: "/media", dropdown: true },
-    { name: "Discussion", path: "/discussion" },
-    { name: "Career", path: "/careers" },
     { name: "Contact", path: "/contact" },
-  ];
-
-  const projectLinks = [
-    { name: "Developers Community Hub", path: "/projects/developers-hub", icon: <Users className="w-4 h-4 text-techgold" /> },
-    { name: "Tech Workshops & Bootcamps", path: "/projects/workshops", icon: <Wrench className="w-4 h-4 text-techgold" /> },
-    { name: "Cybersecurity Squad", path: "/projects/cybersecurity", icon: <Shield className="w-4 h-4 text-techgold" /> },
-    { name: "AI & Robotics Unit", path: "/projects/ai-robotics", icon: <Cpu className="w-4 h-4 text-techgold" /> },
-    { name: "Web & Mobile Dev Missions", path: "/projects/web-mobile", icon: <Rocket className="w-4 h-4 text-techgold" /> },
-    { name: "Gaming & Innovation League", path: "/projects/gaming", icon: <Gamepad2 className="w-4 h-4 text-techgold" /> },
   ];
 
   const aboutLinks = [
@@ -164,16 +138,12 @@ const Navbar = () => {
     { name: "Awards", path: "/about/awards", icon: <Trophy className="w-4 h-4 text-techgold" /> },
   ];
 
-  const mediaLinks = [
-    { name: "Newsletter", path: "/media/newsletter", icon: <Megaphone className="w-4 h-4 text-techgold" /> },
-    { name: "News & Announcements", path: "/media/news", icon: <Megaphone className="w-4 h-4 text-techgold" /> },
-    { name: "Press Releases", path: "/media/press", icon: <Newspaper className="w-4 h-4 text-techgold" /> },
-    { name: "Blog / Articles", path: "/blogs", icon: <Globe className="w-4 h-4 text-techgold" /> },
-    { name: "Gallery", path: "/media/gallery", icon: <Image className="w-4 h-4 text-techgold" /> },
-    { name: "Videos", path: "/media/videos", icon: <Video className="w-4 h-4 text-techgold" /> },
-    { name: "Podcasts", path: "/media/podcasts", icon: <Mic className="w-4 h-4 text-techgold" /> },
-    { name: "Media Appearances", path: "/media/appearances", icon: <Share2 className="w-4 h-4 text-techgold" /> },
-    { name: "Social Media Channels", path: "/contact", icon: <Globe className="w-4 h-4 text-techgold" /> },
+  const companyLinks = [
+    { name: "Projects", path: "/projects", icon: <Rocket className="w-4 h-4 text-techgold" /> },
+    { name: "Blogs", path: "/blogs", icon: <Globe className="w-4 h-4 text-techgold" /> },
+    { name: "Media", path: "/media", icon: <Video className="w-4 h-4 text-techgold" /> },
+    { name: "Discussion", path: "/discussion", icon: <Users className="w-4 h-4 text-techgold" /> },
+    { name: "Careers", path: "/careers", icon: <Building2 className="w-4 h-4 text-techgold" /> },
   ];
 
   return (
@@ -219,37 +189,29 @@ const Navbar = () => {
             item.dropdown ? (
               <div
                 key={item.name}
-                ref={item.name === "Projects" ? projectsRef : item.name === "About" ? aboutRef : mediaRef}
+                ref={item.name === "About" ? aboutRef : companyRef}
                 className="relative"
               >
                 <button
                   onClick={() => {
-                    setProjectsDropdown(item.name === "Projects" ? !projectsDropdown : false);
                     setAboutDropdown(item.name === "About" ? !aboutDropdown : false);
-                    setMediaDropdown(item.name === "Media" ? !mediaDropdown : false);
+                    setCompanyDropdown(item.name === "Company" ? !companyDropdown : false);
                   }}
                   className="flex items-center gap-1 px-3 py-2 text-[14px] font-semibold text-gray-700 dark:text-gray-200 hover:text-techgold transition-colors"
                 >
                   {item.name} <ChevronDown className="w-4 h-4" />
                 </button>
 
-                {((item.name === "Projects" && projectsDropdown) ||
-                  (item.name === "About" && aboutDropdown) ||
-                  (item.name === "Media" && mediaDropdown)) && (
+                {((item.name === "About" && aboutDropdown) ||
+                  (item.name === "Company" && companyDropdown)) && (
                   <div className="absolute left-0 mt-3 w-[540px] grid grid-cols-2 gap-2 rounded-xl bg-white dark:bg-gray-800 p-4 border dark:border-gray-700 shadow-xl animate-fade-in z-50">
-                    {(item.name === "Projects"
-                      ? projectLinks
-                      : item.name === "About"
-                      ? aboutLinks
-                      : mediaLinks
-                    ).map((link) => (
+                    {(item.name === "About" ? aboutLinks : companyLinks).map((link) => (
                       <Link
                         key={link.name}
                         to={link.path}
                         onClick={() => {
-                          setProjectsDropdown(false);
                           setAboutDropdown(false);
-                          setMediaDropdown(false);
+                          setCompanyDropdown(false);
                         }}
                         className="flex items-center gap-3 px-3 py-2 text-[13px] rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-techgold transition-colors"
                       >
@@ -367,25 +329,22 @@ const Navbar = () => {
                 <div key={item.name} className="border-b border-black/5 pb-2">
                   <button
                     onClick={() => {
-                      setMobileProjectsOpen(item.name === "Projects" ? !mobileProjectsOpen : false);
                       setMobileAboutOpen(item.name === "About" ? !mobileAboutOpen : false);
-                      setMobileMediaOpen(item.name === "Media" ? !mobileMediaOpen : false);
+                      setMobileCompanyOpen(item.name === "Company" ? !mobileCompanyOpen : false);
                     }}
                     className="w-full flex justify-between items-center py-4 text-lg font-bold"
                   >
                     {item.name}
                     <ChevronDown className={`w-5 h-5 transition-transform ${
-                        (item.name === "Projects" && mobileProjectsOpen) ||
                         (item.name === "About" && mobileAboutOpen) ||
-                        (item.name === "Media" && mobileMediaOpen) ? "rotate-180" : ""
+                        (item.name === "Company" && mobileCompanyOpen) ? "rotate-180" : ""
                     }`} />
                   </button>
 
-                  {((item.name === "Projects" && mobileProjectsOpen) ||
-                    (item.name === "About" && mobileAboutOpen) ||
-                    (item.name === "Media" && mobileMediaOpen)) && (
+                  {((item.name === "About" && mobileAboutOpen) ||
+                    (item.name === "Company" && mobileCompanyOpen)) && (
                     <div className="mt-2 space-y-1 bg-black/5 rounded-lg p-2">
-                      {(item.name === "Projects" ? projectLinks : item.name === "About" ? aboutLinks : mediaLinks).map((sub) => (
+                      {(item.name === "About" ? aboutLinks : companyLinks).map((sub) => (
                         <Link
                           key={sub.name}
                           to={sub.path}
