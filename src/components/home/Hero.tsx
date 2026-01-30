@@ -6,7 +6,7 @@ import { WHATSAPP_GROUP_URL } from "@/lib/utils";
 
 const Hero = () => {
   return (
-    <section className="relative text-white py-20 md:py-28 lg:py-32 overflow-hidden">
+    <section className="relative text-white py-20 md:py-28 lg:py-32 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
       <div className="container-custom relative z-10">
         <div className="max-w-3xl text-center lg:text-left">
 
