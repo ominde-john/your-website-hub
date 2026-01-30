@@ -207,12 +207,17 @@ const RegisterPage = () => {
   };
 
   const handleGoogleSignup = async () => {
-    const redirectUrl = "https://teksoftllc.jonzjohn.com/dashboard";
+    // Use dynamic redirect URL based on current origin for proper OAuth flow
+    const redirectUrl = `${window.location.origin}/dashboard`;
     
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: redirectUrl,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
     });
 
