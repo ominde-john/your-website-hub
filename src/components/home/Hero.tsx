@@ -3,10 +3,60 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { WHATSAPP_GROUP_URL } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 const Hero = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setPrefersReducedMotion(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
   return (
-    <section className="relative text-white py-20 md:py-28 lg:py-32 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+    <section className="relative text-white py-20 md:py-28 lg:py-32 overflow-hidden min-h-[600px] md:min-h-[700px]">
+      {/* Background Video - only shows if user doesn't prefer reduced motion */}
+      {!prefersReducedMotion && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+          poster="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1920"
+        >
+          {/* HD video for better performance */}
+          <source
+            src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4"
+            type="video/mp4"
+          />
+          Your browser does not support the video tag.
+        </video>
+      )}
+
+      {/* Static background image fallback for reduced motion preference */}
+      {prefersReducedMotion && (
+        <div
+          className="absolute inset-0 w-full h-full bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1920')",
+          }}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-blue-900/80 to-slate-800/85" />
+
       <div className="container-custom relative z-10">
         <div className="max-w-3xl text-center lg:text-left">
 
