@@ -92,16 +92,28 @@ Or via Supabase Dashboard:
 
 1. Go to **Authentication** → **Providers**
 2. **Email**: Enable email confirmations if desired
-3. **Google OAuth** (optional):
+3. **Google OAuth** (required for "Sign in with Google"):
    - Enable Google provider
-   - Set up OAuth credentials in [Google Cloud Console](https://console.cloud.google.com)
-   - Add redirect URL: `https://your-project-id.supabase.co/auth/v1/callback`
+   - Set up OAuth credentials in [Google Cloud Console](https://console.cloud.google.com):
+     1. Go to **APIs & Services** → **Credentials**
+     2. Create or select an **OAuth 2.0 Client ID**
+     3. Under **Authorized JavaScript origins**, add:
+        - `https://your-project-id.supabase.co`
+        - Your production domain (e.g., `https://teksoftllc.jonzjohn.com`)
+        - `http://localhost:5173` (for local development)
+     4. Under **Authorized redirect URIs**, add:
+        - `https://your-project-id.supabase.co/auth/v1/callback`
+     5. Copy the **Client ID** and **Client Secret** to Supabase
 
 ### Important Auth Settings
 
 Go to **Authentication** → **URL Configuration**:
 - **Site URL**: Your production domain (e.g., `https://teksoftllc.jonzjohn.com`)
-- **Redirect URLs**: Add your allowed redirect URLs
+- **Redirect URLs**: Add ALL your allowed redirect URLs:
+  - `https://teksoftllc.jonzjohn.com/dashboard`
+  - `https://teksoftllc.jonzjohn.com/**`
+  - `http://localhost:5173/dashboard` (for local development)
+  - `http://localhost:5173/**` (for local development)
 
 ## Step 7: Update Config File
 
@@ -161,8 +173,22 @@ The migration creates the following:
 - Ensure email domain is verified in Resend
 
 ### Google OAuth not working
+
+**"Access blocked: This app's request is invalid" error:**
+This error occurs when the OAuth configuration doesn't match. Fix it by:
+1. **In Google Cloud Console** (APIs & Services → Credentials):
+   - Ensure your OAuth 2.0 Client ID has the correct **Authorized JavaScript origins**
+   - Ensure **Authorized redirect URIs** includes `https://your-project-id.supabase.co/auth/v1/callback`
+   - Make sure the OAuth consent screen is configured (can be in "Testing" mode for development)
+2. **In Supabase Dashboard** (Authentication → URL Configuration):
+   - Add all redirect URLs your app uses (e.g., `https://your-domain.com/dashboard`, `http://localhost:5173/dashboard`)
+   - Wildcards are supported (e.g., `https://your-domain.com/**`)
+3. **In Supabase Dashboard** (Authentication → Providers → Google):
+   - Verify Client ID and Client Secret match Google Cloud Console
+
+**Other Google OAuth issues:**
 - Verify OAuth credentials are correct
-- Check redirect URLs match exactly
+- Check redirect URLs match exactly (no trailing slashes)
 - Ensure Google provider is enabled in Supabase
 
 ## Support
