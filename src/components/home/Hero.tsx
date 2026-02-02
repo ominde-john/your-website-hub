@@ -6,6 +6,7 @@ import { WHATSAPP_GROUP_URL } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import TypewriterText from "@/components/ui/TypewriterText";
 import WaveText from "@/components/ui/WaveText";
+import heroBackgroundVideo from "@/assets/hero-background.mp4";
 
 const Hero = () => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -33,11 +34,9 @@ const Hero = () => {
           playsInline
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover scale-105"
-          poster="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1920"
         >
-          {/* HD video for better performance */}
           <source
-            src="https://videos.pexels.com/video-files/3129671/3129671-hd_1920_1080_30fps.mp4"
+            src={heroBackgroundVideo}
             type="video/mp4"
           />
           Your browser does not support the video tag.
