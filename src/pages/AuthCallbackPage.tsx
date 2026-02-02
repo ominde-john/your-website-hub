@@ -54,7 +54,7 @@ const AuthCallbackPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="text-center">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto" />
-        <p className="mt-4 text-slate-700 font-medium">Signing you in…</p>
+        <p className="mt-4 text-slate-700 font-medium">Signing you in...</p>
       </div>
     </div>
   );
