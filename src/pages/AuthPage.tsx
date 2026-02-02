@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { useToast } from "@/hooks/use-toast";
 import { User, Lock, ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
@@ -127,13 +128,8 @@ const AuthPage = () => {
   };
 
   const handleGoogleLogin = async () => {
-    const redirectUrl = "https://teksoftllc.jonzjohn.com/dashboard";
-    
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: redirectUrl,
-      },
+    const { error } = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
     });
 
     if (error) {
