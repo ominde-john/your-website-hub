@@ -42,6 +42,7 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
+import AuthCallbackPage from "./pages/AuthCallbackPage";
 import SubscribersPage from "./pages/admin/SubscribersPage";
 import NotFound from "./pages/NotFound";
 import LoginForm from "./components/Member Dashboard/Login";
@@ -209,6 +210,7 @@ const App = () => {
                       
                       {/* Auth - with Layout */}
                       <Route path="auth" element={<AuthPage />} />
+                      <Route path="auth/callback" element={<AuthCallbackPage />} />
                       <Route path="register" element={<RegisterPage />} />
                       <Route path="verify-email" element={<VerifyEmailPage />} />
                       <Route path="forgot-password" element={<ForgotPasswordPage />} />
