@@ -12,6 +12,7 @@ import { LanguageProvider } from "@/i18n";
 import Cart from "@/components/Cart";
 
 import Layout from "./components/Layout";
+import PageLoader from "./components/PageLoader";
 import ScrollToTop from "./components/ScrollToTop";
 import TeksoftNavigator from "./components/TeksoftNavigator";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -149,6 +150,7 @@ const App = () => {
                   />
                 </Helmet>
 
+                <PageLoader />
                 <Toaster />
                 <Sonner />
 
