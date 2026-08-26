@@ -54,6 +54,10 @@ For partnerships, licensing, or official authorization, contact:
 
 © 2026 Teksoft Community — All Rights Reserved.
 
+## 📁 Repository Structure
+
+- `frontend/` — Vite + React website source code and deployment config.
+- `backend/` — API handlers and Supabase functions/migrations.
 
 
 
