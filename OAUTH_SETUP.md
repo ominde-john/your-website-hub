@@ -33,7 +33,7 @@ You MUST add your callback URL to Supabase's allowed redirect URLs:
 
 ### 3. Verify Environment Variables
 
-Make sure your `.env` file (or Vercel environment variables) includes:
+Make sure your `frontend/.env` file (or Vercel environment variables) includes:
 
 ```env
 VITE_SUPABASE_URL=https://your-project-id.supabase.co
@@ -42,7 +42,7 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your-anon-key
 
 ### 4. Vercel Configuration
 
-The `vercel.json` file has been updated to properly handle SPA routing. This ensures that:
+The `frontend/vercel.json` file has been updated to properly handle SPA routing. This ensures that:
 - All routes (including `/auth/callback`) are rewritten to `/index.html`
 - React Router can handle client-side routing
 - Service worker caching is properly configured
@@ -53,7 +53,7 @@ After making these changes:
 
 1. **Local Testing:**
    ```bash
-   npm run dev
+   cd frontend && npm run dev
    ```
    - Visit http://localhost:8080
    - Click "Sign in with Google"
@@ -93,7 +93,7 @@ After making these changes:
 - **CORS Errors:** Make sure your domain is added to Supabase Site URL
 - **Invalid Redirect URI:** Double-check Supabase redirect URL configuration
 - **Session Not Found:** Check that Supabase client is properly initialized
-- **404 on Vercel:** Ensure `vercel.json` is properly deployed (check build logs)
+- **404 on Vercel:** Ensure `frontend/vercel.json` is properly deployed (check build logs)
 
 ## Additional Resources
 

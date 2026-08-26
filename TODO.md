@@ -11,12 +11,12 @@
 
 ### Meta Tag Fix
 - **Status**: ✅ Fixed
-- **Change**: Changed `apple-mobile-web-app-capable` to `mobile-web-app-capable` in index.html.
+- **Change**: Changed `apple-mobile-web-app-capable` to `mobile-web-app-capable` in `frontend/index.html`.
 
 ### Supabase Environment Variables
 - **Status**: ⚠️ Required
 - **Issue**: The error "supabaseUrl is required" indicates missing environment variables.
-- **Solution**: Create a .env file in the root directory with:
+- **Solution**: Create a `.env` file in the `frontend` directory with:
   ```env
   VITE_SUPABASE_URL=your_supabase_url_here
   VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key_here
@@ -30,7 +30,7 @@
   1. Vercel SPA routing configuration
   2. Missing OAuth redirect URLs in Supabase
 - **Solution**: 
-  1. Updated `vercel.json` with proper SPA rewrites
+  1. Updated `frontend/vercel.json` with proper SPA rewrites
   2. Added security headers
   3. Created `OAUTH_SETUP.md` with detailed setup instructions
 
@@ -51,7 +51,6 @@
 1. Set up environment variables (`.env` file)
 2. Configure Supabase OAuth redirect URLs
 3. Enable and configure Google provider in Supabase
-4. Test locally: `npm run dev`
+4. Test locally: `cd frontend && npm run dev`
 5. Deploy to Vercel
 6. Test production OAuth flow
-
